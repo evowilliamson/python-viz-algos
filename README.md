@@ -2,8 +2,14 @@
 
 Composite repository containing algorithms, data structures, references, utilities and (sample) projects which are related to Python
 
+## Literature
 
-https://docs.python-guide.org/writing/structure/
+| Reference/article/book | description  |
+|--|--|
+| [Structure of a Python program](https://docs.python-guide.org/writing/structure/) | Gives a good overview of how a Python program should be structured |
+
+
+
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTQwNTc3OTU3Nl19
+eyJoaXN0b3J5IjpbLTE3NDM4ODE1MDldfQ==
 -->
