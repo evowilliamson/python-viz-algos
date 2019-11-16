@@ -11,10 +11,6 @@ class TestDirectedGraph(unittest.TestCase):
     def test_init(self):
         self.assertEqual(len(self.vertices.keys()), self.directed_graph.vertices_count())
 
-    def test_outdegree(self):
-        vertex = self.directed_graph.get_vertex(1)
-        self.assertEqual(vertex.get_outdegree(), len(vertex.get_tails()))
-
     def test_add_vertex(self):
         label = 7
         self.directed_graph.add_vertex(label)
@@ -30,9 +26,26 @@ class TestDirectedGraph(unittest.TestCase):
         with self.assertRaises(RuntimeError): 
             self.directed_graph.add_vertex(label)
 
-    def test_indegree(self):
-        vertex = self.directed_graph.get_vertex(6)
+    def test_add_tails(self):
+        vertex_to_test = 7
+        self.directed_graph.add_vertex(vertex_to_test)
+        vertex = self.directed_graph.get_vertex(vertex_to_test)
+        no_tails = 3
+        for i in range(no_tails):
+            vertex.add_tail(i)
+        self.assertEqual(len(vertex.get_tails()), no_tails)
+        self.assertEqual(vertex.get_outdegree(), len(vertex.get_tails()))        
+
+    def test_outdegree(self):
+        vertex = self.directed_graph.get_vertex(1)
         self.assertEqual(vertex.get_outdegree(), len(vertex.get_tails()))
+
+    def test_indegree(self):
+        vertex_to_test = 6
+        self.vertices = {0: [1], 1: [2, 3], 2: [3], 3: [4, vertex_to_test], 4: [5, vertex_to_test], 5: [5], vertex_to_test: []}
+        self.directed_graph = DirectedGraph(self.vertices)
+        vertex = self.directed_graph.get_vertex(vertex_to_test)
+        self.assertEqual(vertex.get_indegree(), 2)
 
 
 if __name__ == '__main__':
