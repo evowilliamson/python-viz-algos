@@ -48,5 +48,6 @@ class TestDirectedGraph(unittest.TestCase):
         self.assertEqual(vertex.get_indegree(), 2)
 
 
+
 if __name__ == '__main__':
     unittest.main()
