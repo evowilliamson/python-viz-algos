@@ -1,54 +1,67 @@
 """ Module that contains the definition of a directed graph as a class
 """
 
+from .vertex import Vertex
+
 class DirectedGraph(object):
     """ Class to represent directed graphs. https://en.wikipedia.org/wiki/Directed_graph """
     
 
-    def __init__(self, vertices=None, edges=None):
-        """ Initialises a directed graph
+    def __init__(self, vertices):
+        """ Initialises a directed graph with the provided vertices
 
         Args:
-            vertices(set): a set of vertices
-            edges(set): a set of edges
+            directed_graph: an initialised directe graph to be used
 
         """
 
-        self._vertices = dict()
+        self._vertices = dict()        
         if vertices is not None:
-            for vertex in vertices:
-                self._vertices[vertex] = set()
+            for label in vertices.keys():
+                self.add_vertex_tails(label, vertices[label])
 
-        if edges is not None:
-            for source, destination in edges:
-                self.add_edge(source, destination)
-
-    def add_vertex(self, vertex):
+    def add_vertex(self, label):
         """ Adds a vertex to the dictionary of vertices 
 
         Args:
-            vertex: a vertex
+            label: a vertex represented by its label
         """
 
-        if vertex in self._vertices:
-            raise RuntimeError("vertex = '{}'".format(vertex) + 
+        if label in self._vertices:
+            raise RuntimeError("vertex = '{}'".format(label) + 
                                "is already a vertex in this directed graph")
-        self._vertices[vertex] = set()
+        self._vertices[label] = Vertex()
 
-    def add_edge(self, source, destination):
-        """ Adds an edge to the graph
+    def add_vertex_tails(self, label, tails):
+        """ Adds a vertex to the dictionary of vertices and also its edges
 
         Args:
-            source: the edge that represents the source
-            destination: the edge that represents the destination
+            label: a vertex represented by its label
+            tails: the tails of this vertex
         """
 
-        if source not in self._vertices or destination not in self._vertices:
-            raise RuntimeError("Destination or source of edge ('{}'".format(source) +
-                                       ",'{}'".format(destination) + ") cannot be found as vertices")
+        self.add_vertex(label)
+        for tail in tails:
+            self._vertices[label].add_edge(tail)
+
+    def add_edge(self, head, tail):
+        """ Adds an edge to the graph, the edge is identified by a head and a tail vertex
+
+        Args:
+            head: the edge that represents the start vertex
+            tail: the edge that represents the destination vertex
+        """
+
+        if head not in self._vertices or tail not in self._vertices:
+            raise RuntimeError("Destination or source of edge ('{}'".format(head) +
+                                       ",'{}'".format(tail) + ") cannot be found as vertices")
         else:
-            self._vertices[source].add(destination)
+            self._vertices[head].add(tail)
+            self._vertices[tail].increase_indegree()
 
     def vertices_count(self):
         return len(self._vertices)
 
+    def __str__(self):
+        vertex = self._vertices[0]
+        return str([str(label) + ": " + str(self._vertices[label]) for label in self._vertices])
