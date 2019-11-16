@@ -32,8 +32,13 @@ class DirectedGraph(object):
 
         if label in self._vertices:
             raise RuntimeError("vertex = '{}'".format(label) + 
-                               "is already a vertex in this directed graph")
+                               " is already a vertex in this directed graph")
         self._vertices[label] = Vertex()
+
+    def get_vertex(self, label):
+        """ Returns the vertex that coincides with the label """
+
+        return self._vertices[label]
 
     def add_edge(self, head, tail):
         """ Adds an edge to the graph, the edge is identified by a head and a tail vertex

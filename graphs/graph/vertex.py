@@ -17,12 +17,18 @@ class Vertex:
 
         self._tails.add(tail)
 
+    def get_tails(self):
+        """ This method retrieves the tails from the vertex """
+
+        return self._tails
+
     def increase_indegree(self):
         """ This method increases the indegree for the incumbent vertex """
         self._indegree += 1
 
     def decrease_indegree(self):
         """ This method decreases the indegree for the incumbent vertex """
+        
         self._indegree -= 1
 
     def get_indegree(self):
