@@ -18,7 +18,10 @@ class DirectedGraph(object):
         self._vertices = dict()        
         if vertices is not None:
             for label in vertices.keys():
-                self.add_vertex_tails(label, vertices[label])
+                self.add_vertex(label)
+            for label, tails in vertices.items():
+                for tail in tails:
+                    self.add_edge(label, tail)
 
     def add_vertex(self, label):
         """ Adds a vertex to the dictionary of vertices 
@@ -32,18 +35,6 @@ class DirectedGraph(object):
                                "is already a vertex in this directed graph")
         self._vertices[label] = Vertex()
 
-    def add_vertex_tails(self, label, tails):
-        """ Adds a vertex to the dictionary of vertices and also its edges
-
-        Args:
-            label: a vertex represented by its label
-            tails: the tails of this vertex
-        """
-
-        self.add_vertex(label)
-        for tail in tails:
-            self._vertices[label].add_edge(tail)
-
     def add_edge(self, head, tail):
         """ Adds an edge to the graph, the edge is identified by a head and a tail vertex
 
@@ -56,12 +47,15 @@ class DirectedGraph(object):
             raise RuntimeError("Destination or source of edge ('{}'".format(head) +
                                        ",'{}'".format(tail) + ") cannot be found as vertices")
         else:
-            self._vertices[head].add(tail)
+            self._vertices[head].add_tail(tail)
             self._vertices[tail].increase_indegree()
 
     def vertices_count(self):
         return len(self._vertices)
 
     def __str__(self):
-        vertex = self._vertices[0]
-        return str([str(label) + ": " + str(self._vertices[label]) for label in self._vertices])
+        res = ""
+        for label in self._vertices:
+            res += "\n" + str(label) + ": " + str(self._vertices[label])
+
+        return res
