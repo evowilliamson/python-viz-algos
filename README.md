@@ -1,3 +1,3 @@
-# Python
+# Algorithms and datastructures in Python
 
-Composite repository containing algorithms, data structures, references, utilities and (sample) projects which are related to Python
+Composite repository containing algorithms and data structures implemented in Python
