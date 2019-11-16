@@ -1,5 +1,5 @@
 import unittest
-from graph.directed_graph import DirectedGraph
+from graph.directed_graph.directed_graph import DirectedGraph
 
 
 class TestDirectedGraph(unittest.TestCase):
