@@ -9,7 +9,7 @@ class TestDirectedGraph(unittest.TestCase):
         self.directed_graph = DirectedGraph(self.vertices)
 
     def test_init(self):
-        self.assertEqual(len(self.vertices.keys()), self.directed_graph.vertices_count())
+        self.assertEqual(len(self.vertices.keys()), self.directed_graph.get_vertices_count())
 
     def test_add_vertex(self):
         label = 7
@@ -47,6 +47,26 @@ class TestDirectedGraph(unittest.TestCase):
         vertex = self.directed_graph.get_vertex(vertex_to_test)
         self.assertEqual(vertex.get_indegree(), 2)
 
+    def test_create_SCCs(self):
+        self.vertices = {0: [1], 1: [2, 3], 2: [3], 3: [4], 4: [5, 2], 5: [6], 6: [7], 7 : [5]}
+        self.directed_graph = DirectedGraph(self.vertices)
+        sccs = self.directed_graph.create_SCCs()
+        ok = False
+        ok_234 = False
+        ok_567 = False
+        ok_0 = False
+        ok_1 = False
+        for key, vertices in sccs.items():
+            sorted_vertices = sorted(list(vertices))
+            if sorted_vertices == [2, 3, 4]:
+                ok_234 = True
+            elif sorted_vertices == [5, 6, 7]:
+                ok_567 = True
+            elif sorted_vertices == [1]:
+                ok_1 = True
+            elif sorted_vertices == [0]:
+                ok_0 = True
+        self.assertTrue(ok_234 == True and ok_567 == True and ok_0 == True and ok_1 == True)
 
 
 if __name__ == '__main__':

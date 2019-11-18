@@ -2,62 +2,59 @@ from collections import defaultdict
 
 class Graph: 
    
-    def __init__(self,vertices): 
-        self.V = vertices #No. of vertices 
+    def __init__(self, vertices): 
+        self.vertices = vertices #No. of vertices 
         self.graph = defaultdict(list) # default dictionary to store graph 
         self.scc = dict()
    
     # function to add an edge to graph 
-    def addEdge(self,u,v): 
+    def add_edge(self,u,v): 
         self.graph[u].append(v) 
    
     # A function used by DFS 
-    def DFSUtil(self, v, visited, scc): 
-        # Mark the current node as visited and print it 
-        visited[v]= True
-        print(v)
+    def visit_DFS(self, v, visited, scc): 
+        # Mark the current node as visited 
+        visited[v] = True
         scc.add(v)
         #Recur for all the vertices adjacent to this vertex 
         for i in self.graph[v]: 
-            if visited[i]==False: 
-                self.DFSUtil(i,visited, scc) 
+            if visited[i] == False: 
+                self.visit_DFS(i,visited, scc) 
   
-  
-    def fillOrder(self,v,visited, stack): 
+    def fill_order_DFS(self,v,visited, stack): 
         # Mark the current node as visited  
         visited[v]= True
         #Recur for all the vertices adjacent to this vertex 
         for i in self.graph[v]: 
-            if visited[i]==False: 
-                self.fillOrder(i, visited, stack) 
+            if not visited[i]: 
+                self.fill_order_DFS(i, visited, stack) 
         stack = stack.append(v) 
-      
   
     # Function that returns reverse (or transpose) of this graph 
-    def getTranspose(self): 
-        g = Graph(self.V) 
+    def get_reversed(self): 
+        g = Graph(self.vertices) 
   
         # Recur for all the vertices adjacent to this vertex 
         for i in self.graph: 
             for j in self.graph[i]: 
-                g.addEdge(j,i) 
+                g.add_edge(j,i) 
         return g 
    
     # The main function that finds and prints all strongly 
     # connected components 
-    def printSCCs(self): 
+    def create_SCCs(self): 
         stack = [] 
 
-        visited = [False] * (self.V)
-        for i in range(self.V): 
-            if visited[i]==False: 
-                self.fillOrder(i, visited, stack) 
+        visited = [False for i in range(self.vertices)]
+        for i in range(self.vertices): 
+            if not visited[i]: 
+                self.fill_order_DFS(i, visited, stack) 
   
         # Create a reversed graph 
-        gr = self.getTranspose() 
+        gr = self.get_reversed() 
            
          # Mark all the vertices as not visited (For second DFS) 
-        visited =[False]*(self.V) 
+        visited = [False for i in range(self.vertices)]
   
         # Now process all vertices in order defined by Stack 
         scc_id = 0
@@ -65,21 +62,21 @@ class Graph:
             i = stack.pop() 
             if visited[i]==False:
                 self.scc[scc_id] = set() 
-                gr.DFSUtil(i, visited, self.scc[scc_id]) 
-                print("")
+                gr.visit_DFS(i, visited, self.scc[scc_id]) 
                 scc_id += 1
    
-        a = 100
-
 # Create a graph given in the above diagram 
-g = Graph(5) 
-g.addEdge(1, 0) 
-g.addEdge(0, 2) 
-g.addEdge(2, 1) 
-g.addEdge(0, 3) 
-g.addEdge(3, 4) 
-  
-   
-print ("Following are strongly connected components " +
-                           "in given graph") 
-g.printSCCs() 
+g = Graph(8) 
+g.add_edge(0, 1) 
+g.add_edge(1, 2) 
+g.add_edge(1, 3) 
+g.add_edge(2, 3) 
+g.add_edge(3, 4)
+g.add_edge(4, 5)
+g.add_edge(4, 2)
+g.add_edge(5, 6)
+g.add_edge(6, 7)
+g.add_edge(7, 5)
+
+g.create_SCCs() 
+print(g.scc)
