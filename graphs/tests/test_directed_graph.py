@@ -69,5 +69,16 @@ class TestDirectedGraph(unittest.TestCase):
         self.assertTrue(ok_234 == True and ok_567 == True and ok_0 == True and ok_1 == True)
 
 
+    def test_is_cyclic(self):
+        self.vertices = {0: [1], 1: [2, 3], 2: [3], 3: [4], 4: [5, 2], 5: [6], 6: [7], 7 : [5]}
+        self.directed_graph = DirectedGraph(self.vertices)
+        self.assertTrue(self.directed_graph.is_cyclic())
+
+    def test_is_acyclic(self):
+        self.vertices = {0: [1], 1: [2, 3], 2: [3], 3: [4, 6], 4: [5, 6], 5: [], 6: []}
+        self.directed_graph = DirectedGraph(self.vertices)
+        self.assertFalse(self.directed_graph.is_cyclic())
+
+
 if __name__ == '__main__':
     unittest.main()
