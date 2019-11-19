@@ -1,56 +1,83 @@
-# The main function that finds and prints all strongly 
-# connected components 
+""" Helper module for DirectedGraph class
+"""
+
+
 def create_SCCs(directed_graph): 
+    """ Function that creates a list of strongly connected components
 
-    stack = [] 
-    scc = dict()
+    Args: 
+        directed_graph (DirectedGraph): The directed graph for which the SCCS should be calculated
 
-    visited = [False for i in range(directed_graph.get_vertices_count())]
+    Returns:
+        list(set()) of SCCs: Each SCC is a set of vertices
+
+    """
+
+    stack = []; scc, visited = list(), dict()
     for i in range(directed_graph.get_vertices_count()): 
-        if not visited[i]: 
+        if visited.get(i) is None: 
             fill_order_DFS_SCCS(directed_graph, i, visited, stack) 
 
-    # Create a reversed graph 
     reversed_graph = get_reversed_graph(directed_graph) 
-        
-    # Mark all the vertices as not visited (For second DFS) 
-    visited = [False for i in range(directed_graph.get_vertices_count())]
-
-    # Now process all vertices in order defined by Stack 
-    scc_id = 0
-    while stack: 
-        i = stack.pop() 
-        if not visited[i]:
-            scc[scc_id] = set() 
-            visit_DFS_SCCs(reversed_graph, i, visited, scc[scc_id]) 
-            scc_id += 1
+    visited = dict()
+    for i in reversed(stack):
+        if visited.get(i) is None:
+            scc.append(set())
+            visit_DFS_SCCs(reversed_graph, i, visited, scc[-1]) 
 
     return scc
 
-# A function used by DFS 
+
 def visit_DFS_SCCs(directed_graph, vertex, visited, scc): 
-    # Mark the current node as visited 
+    """ Function that performs a recursive depth first search on the directed graph
+    to check whether vertices have been visisted
+
+    Args:
+        directed_graph(DirectedGraph): The directed graph 
+        vertex (label): The current vertex
+        visited (dict): A dictionary that maintains whether vertices have been visisted
+        scc (set): The current scc being constructed
+
+    """
+
     visited[vertex] = True
     scc.add(vertex)
-    #Recur for all the vertices adjacent to this vertex 
     for i in directed_graph._vertices[vertex].get_tails(): 
-        if not visited[i]: 
+        if visited.get(i) is None: 
             visit_DFS_SCCs(directed_graph, i, visited, scc) 
 
+
 def fill_order_DFS_SCCS(directed_graph, vertex, visited, stack): 
-    # Mark the current node as visited  
+    """ Function that covers the first part of the algorith by determining
+    the order of vertices, traversing the graph with a depth first search, recursivelu
+
+    Args:
+        directed_graph (DirectedGraph): The directed graph 
+        vertex: The current vertex
+        visited (dict): A dictionary that maintains whether vertices have been visisted
+        stack (list): stack that will be processed, used to inverse the order
+
+    """
+
     visited[vertex] = True
-    #Recur for all the vertices adjacent to this vertex 
     for i in directed_graph._vertices[vertex].get_tails(): 
-        if not visited[i]: 
+        if visited.get(i) is None: 
             fill_order_DFS_SCCS(directed_graph, i, visited, stack) 
     stack = stack.append(vertex) 
+
    
-# Function that returns reverse of this graph 
 def get_reversed_graph(directed_graph): 
+    """ Function that returns the reverse of this graph  
+
+    Args:
+        directed_graph (DirectedGraph): The directed graph 
+
+    Returns:
+        DirectedGraph: The reversed graph
+
+    """
 
     reversed = directed_graph.create_new(None)
-    # Recur for all the vertices adjacent to this vertex 
 
     for i in directed_graph._vertices.keys(): 
         reversed.add_vertex(i)
@@ -59,37 +86,56 @@ def get_reversed_graph(directed_graph):
         vertex = directed_graph.get_vertex(i)
         for j in vertex.get_tails():
             reversed.add_edge(j, i) 
+
     return reversed 
 
+
 def is_cyclic_dfs(directed_graph, vertex, visited, stack): 
-  
-    # Mark current node as visited and  
-    # adds to recursion stack 
+    """ Function that recursively searches the directed graph depth first and checks
+    if a vertex was already stacked before
+
+    Args:
+        directed_graph (DirectedGraph): The directed graph 
+        vertex: The current vertex
+        visited (dict): A dictionary that maintains whether vertices have been visisted
+        stack (list): 
+
+    Returns:
+        bool: True if the vertex was stacked before, False otherwise
+
+    """
+
     visited[vertex] = True
     stack[vertex] = True
 
-    # Recur for all neighbours 
-    # if any neighbour is visited and in  
-    # stack then graph is cyclic 
     for i in directed_graph._vertices[vertex].get_tails(): 
-        if not visited[i]: 
+        if visited.get(i) is None: 
             if is_cyclic_dfs(directed_graph, i, visited, stack): 
                 return True
-        elif stack[i] == True: 
+        elif stack[i]: 
             return True
 
-    # The node needs to be poped from  
-    # recursion stack before function ends 
     stack[vertex] = False
     return False
 
-# Returns true if graph is cyclic else false 
+
 def is_cyclic(directed_graph): 
-    visited = [False for i in range(directed_graph.get_vertices_count())]
+    """ Function that checks whether a directed graph contains a cycle or not
+
+    Args:
+        directed_graph (DirectedGraph): The directed graph
+
+    Returns:
+        bool: True if the directed graph contains a cycle, otherwise False
+
+    """    
+
+    visited = dict()
     stack = [False for i in range(directed_graph.get_vertices_count())]
-    for node in range(directed_graph.get_vertices_count()): 
-        if not visited[node]: 
-            if is_cyclic_dfs(directed_graph, node, visited, stack): 
+    for i in range(directed_graph.get_vertices_count()): 
+        if visited.get(i) is None: 
+            if is_cyclic_dfs(directed_graph, i, visited, stack): 
                 return True
+                
     return False
 

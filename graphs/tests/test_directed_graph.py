@@ -56,7 +56,7 @@ class TestDirectedGraph(unittest.TestCase):
         ok_567 = False
         ok_0 = False
         ok_1 = False
-        for key, vertices in sccs.items():
+        for vertices in sccs:
             sorted_vertices = sorted(list(vertices))
             if sorted_vertices == [2, 3, 4]:
                 ok_234 = True
