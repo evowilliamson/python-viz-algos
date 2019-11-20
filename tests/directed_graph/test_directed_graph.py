@@ -75,12 +75,16 @@ class TestDirectedGraph(unittest.TestCase):
         self.vertices = {0: [1], 1: [2, 3], 2: [3], 3: [4], 4: [5, 2], 5: [6], 6: [7], 7 : [5]}
         self.directed_graph = DirectedGraph(self.vertices)
         self.directed_graph.render(file_name=TestDirectedGraph.DIGRAPH_VIZ)
+        self.assertTrue(os.path.exists(TestDirectedGraph.DIGRAPH_VIZ))
+        self.assertTrue(os.path.exists(TestDirectedGraph.DIGRAPH_VIZ + ".pdf"))
 
-    @unittest.skipIf(True, "Set to False for for viewing the graphviz representation")
+    @unittest.skipIf(True, "Set to False for viewing the graphviz representation")
     def test_graphviz_view(self):
         self.vertices = {0: [1], 1: [2, 3], 2: [3], 3: [4], 4: [5, 2], 5: [6], 6: [7], 7 : [5]}
         self.directed_graph = DirectedGraph(self.vertices)
         self.directed_graph.render(file_name=TestDirectedGraph.DIGRAPH_VIZ, view_type=True)
+        self.assertTrue(os.path.exists(TestDirectedGraph.DIGRAPH_VIZ))
+        self.assertTrue(os.path.exists(TestDirectedGraph.DIGRAPH_VIZ + ".pdf"))
         time.sleep(1)
 
     def tearDown(self):
@@ -88,8 +92,11 @@ class TestDirectedGraph(unittest.TestCase):
         try:
             os.remove(TestDirectedGraph.DIGRAPH_VIZ + ".pdf")
             os.remove(TestDirectedGraph.DIGRAPH_VIZ)
+            self.assertFalse(os.path.exists(TestDirectedGraph.DIGRAPH_VIZ))
+            self.assertFalse(os.path.exists(TestDirectedGraph.DIGRAPH_VIZ + ".pdf"))
         except:
             pass
+
 
 if __name__ == '__main__':
     unittest.main()
