@@ -15,6 +15,11 @@ class TestDirectedGraph(unittest.TestCase):
     def test_init(self):
         self.assertEqual(len(self.vertices.keys()), self.directed_graph.get_vertices_count())
 
+    def test_one_vertex_self_loop(self):
+        self.vertices = {0: [0]}
+        self.directed_graph = DirectedGraph(self.vertices)
+        a = 100
+
     def test_add_vertex(self):
         label = 7
         self.directed_graph.add_vertex(label)
@@ -51,11 +56,21 @@ class TestDirectedGraph(unittest.TestCase):
         vertex = self.directed_graph.get_vertex(vertex_to_test)
         self.assertEqual(vertex.get_indegree(), 2)
 
-    def test_create_SCCs(self):
-        self.vertices = {0: [1], 1: [2, 3], 2: [3], 3: [4], 4: [5, 2], 5: [6], 6: [7], 7 : [5]}
+    def test_create_SCCs_nontrivial(self):
+        self.vertices = {0: [1], 1: [2, 3], 2: [3], 3: [4], 4: [5, 2], 5: [6], 6: [7], 7 : [5], 8: [8], 9:[]}
         self.directed_graph = DirectedGraph(self.vertices)
         sccs = self.directed_graph.create_SCCs()
-        sccs_expected = [[2, 3, 4], [5, 6, 7], [0], [1]]
+        sccs_expected = [[2, 3, 4], [5, 6, 7], [8]]
+        for vertices in sccs:
+            sorted_vertices = sorted(list(vertices))
+            if sorted_vertices not in sccs_expected:
+                self.assertFalse(True, msg=str(sorted_vertices) + " not in expected sccs")
+
+    def test_create_SCCs_trivial(self):
+        self.vertices = {0: [1], 1: [2, 3], 2: [3], 3: [4], 4: [5, 2], 5: [6], 6: [7], 7 : [5], 8: [8], 9:[]}
+        self.directed_graph = DirectedGraph(self.vertices)
+        sccs = self.directed_graph.create_SCCs(nontrivial=False)
+        sccs_expected = [[2, 3, 4], [5, 6, 7], [0], [1], [8], [9]]
         for vertices in sccs:
             sorted_vertices = sorted(list(vertices))
             if sorted_vertices not in sccs_expected:

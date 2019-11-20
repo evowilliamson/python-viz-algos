@@ -2,18 +2,19 @@
 """
 
 
-def create_SCCs(directed_graph): 
+def create_SCCs(directed_graph, nontrivial): 
     """ Function that creates a list of strongly connected components
 
     Args: 
         directed_graph (DirectedGraph): The directed graph for which the SCCS should be calculated
+        nontrivial(bool): If True, only nontrivial sccs will be returned, otherwise all sccs
 
     Returns:
         list(set()) of SCCs: Each SCC is a set of vertices
 
     """
 
-    stack = []; scc, visited = list(), dict()
+    stack = []; sccs_trivial, visited = list(), dict()
     for i in range(directed_graph.get_vertices_count()): 
         if visited.get(i) is None: 
             fill_order_DFS_SCCS(directed_graph, i, visited, stack) 
@@ -22,10 +23,24 @@ def create_SCCs(directed_graph):
     visited = dict()
     for i in reversed(stack):
         if visited.get(i) is None:
-            scc.append(set())
-            visit_DFS_SCCs(reversed_graph, i, visited, scc[-1]) 
+            sccs_trivial.append(set())
+            visit_DFS_SCCs(reversed_graph, i, visited, sccs_trivial[-1]) 
 
-    return scc
+    if nontrivial:
+        # A scc is nontrivial, iff there are at least two vertices in it, 
+        # or there is only one vertex with a self-loop. A self-loop means
+        # that the indegree and the outdegree are both 1 and the head is equal
+        # to the tail
+        sccs_non_trivial = list()
+        for scc in sccs_trivial:
+            vertex = directed_graph.get_vertex(list(scc)[0])
+            if (len(scc) >= 2) or \
+            (len(scc) == 1 and vertex.get_indegree() == 1 and \
+            vertex.get_outdegree() == 1) and list(vertex.get_tails())[0] == list(scc)[0]:
+                sccs_non_trivial.append(scc)
+        return sccs_non_trivial
+    else:
+        return sccs_trivial
 
 
 def visit_DFS_SCCs(directed_graph, vertex, visited, scc): 
@@ -89,32 +104,36 @@ def get_reversed_graph(directed_graph):
     return reversed 
 
 
-def is_cyclic_dfs(directed_graph, vertex, visited, stack): 
+def is_cyclic_dfs(directed_graph, vertex, traversed, found): 
     """ Function that recursively searches the directed graph depth first and checks
-    if a vertex was already stacked before
+    if a vertex was already found before. 
+
+    It checks all vertices that have not been traversed before. The tails of those 
+    vertices are followed. If in that traversal, a vertex is found that is present in 
+    the dict "found", then a cycle is present
 
     Args:
         directed_graph (DirectedGraph): The directed graph 
         vertex: The current vertex
-        visited (dict): A dictionary that maintains whether vertices have been visisted
-        stack (list): 
+        traversed (dict): A dictionary that maintains whether vertices have been traversed
+        found (list): a list that contains all vertices already found in the path
 
     Returns:
-        bool: True if the vertex was stacked before, False otherwise
+        bool: True if the vertex was found before, False otherwise
 
     """
 
-    visited[vertex] = True
-    stack[vertex] = True
+    traversed[vertex] = True
+    found[vertex] = True
 
     for i in directed_graph._vertices[vertex].get_tails(): 
-        if visited.get(i) is None: 
-            if is_cyclic_dfs(directed_graph, i, visited, stack): 
+        if traversed.get(i) is None: 
+            if is_cyclic_dfs(directed_graph, i, traversed, found): 
                 return True
-        elif stack[i]: 
+        elif found[i]: 
             return True
 
-    stack[vertex] = False
+    found[vertex] = False
     return False
 
 
@@ -129,11 +148,11 @@ def is_cyclic(directed_graph):
 
     """    
 
-    visited = dict()
-    stack = [False for i in range(directed_graph.get_vertices_count())]
+    traversed = dict()
+    found = [False for i in range(directed_graph.get_vertices_count())]
     for i in range(directed_graph.get_vertices_count()): 
-        if visited.get(i) is None: 
-            if is_cyclic_dfs(directed_graph, i, visited, stack): 
+        if traversed.get(i) is None: 
+            if is_cyclic_dfs(directed_graph, i, traversed, found): 
                 return True
                 
     return False

@@ -105,8 +105,8 @@ class DirectedGraph(object):
     were moved from this class to a separate module in order to keep the class lean
     """
 
-    def create_SCCs(self): 
-        return directed_graph_helper.create_SCCs(self)
+    def create_SCCs(self, nontrivial=True): 
+        return directed_graph_helper.create_SCCs(self, nontrivial)
 
     def get_reversed_graph(self):
         return directed_graph_helper.get_reversed_graph(self)
