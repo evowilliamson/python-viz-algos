@@ -2,7 +2,7 @@
 """
 
 
-def create_SCCs(directed_graph, nontrivial): 
+def create_sccs(directed_graph, nontrivial): 
     """ Function that creates a list of strongly connected components
 
     Args: 
@@ -20,30 +20,48 @@ def create_SCCs(directed_graph, nontrivial):
             fill_order_DFS_SCCS(directed_graph, i, visited, stack) 
 
     reversed_graph = get_reversed_graph(directed_graph) 
+    
     visited = dict()
     for i in reversed(stack):
         if visited.get(i) is None:
             sccs_trivial.append(set())
-            visit_DFS_SCCs(reversed_graph, i, visited, sccs_trivial[-1]) 
+            visit_dfs_sccs(reversed_graph, i, visited, sccs_trivial[-1]) 
 
     if nontrivial:
-        # A scc is nontrivial, iff there are at least two vertices in it, 
-        # or there is only one vertex with a self-loop. A self-loop means
-        # that the indegree and the outdegree are both 1 and the head is equal
-        # to the tail
-        sccs_non_trivial = list()
-        for scc in sccs_trivial:
-            vertex = directed_graph.get_vertex(list(scc)[0])
-            if (len(scc) >= 2) or \
-            (len(scc) == 1 and vertex.get_indegree() == 1 and \
-            vertex.get_outdegree() == 1) and list(vertex.get_tails())[0] == list(scc)[0]:
-                sccs_non_trivial.append(scc)
-        return sccs_non_trivial
+        return filter_nontrivial(sccs_trivial, directed_graph)
     else:
         return sccs_trivial
 
 
-def visit_DFS_SCCs(directed_graph, vertex, visited, scc): 
+def filter_nontrivial(sccs_trivial, directed_graph):
+    """ This function filters out the trivial sccs
+
+    A scc is nontrivial, iff there are at least two vertices in it, 
+    or there is only one vertex with a self-loop. A self-loop means
+    that the indegree and the outdegree are both 1 and the head is equal
+    to the tail
+
+    Args:
+        sccs_trivial(list): The list of trivial sccs
+        directed_graph(DirectedGraph): The directed graph
+
+    Returns:
+        sccs_nontrivial(list): The list of nontrivial sccs
+    
+    """
+
+    sccs_non_trivial = list()
+    for scc in sccs_trivial:
+        vertex = directed_graph.get_vertex(list(scc)[0])
+        if (len(scc) >= 2) or \
+        (len(scc) == 1 and vertex.get_indegree() == 1 and \
+        vertex.get_outdegree() == 1) and list(vertex.get_tails())[0] == list(scc)[0]:
+            sccs_non_trivial.append(scc)
+
+    return sccs_non_trivial
+
+
+def visit_dfs_sccs(directed_graph, vertex, visited, scc): 
     """ Function that performs a recursive depth first search on the directed graph
     to check whether vertices have been visisted
 
@@ -59,7 +77,7 @@ def visit_DFS_SCCs(directed_graph, vertex, visited, scc):
     scc.add(vertex)
     for i in directed_graph._vertices[vertex].get_tails(): 
         if visited.get(i) is None: 
-            visit_DFS_SCCs(directed_graph, i, visited, scc) 
+            visit_dfs_sccs(directed_graph, i, visited, scc) 
 
 
 def fill_order_DFS_SCCS(directed_graph, vertex, visited, stack): 
