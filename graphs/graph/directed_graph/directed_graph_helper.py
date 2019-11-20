@@ -77,8 +77,7 @@ def get_reversed_graph(directed_graph):
 
     """
 
-    reversed = directed_graph.create_new(None)
-
+    reversed = directed_graph.__class__()
     for i in directed_graph._vertices.keys(): 
         reversed.add_vertex(i)
 

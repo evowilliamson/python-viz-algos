@@ -2,16 +2,16 @@
 """
 
 from graph.directed_graph.vertex import Vertex
-import graph.directed_graph.directed_graph_helper as dg_helper
+import graph.directed_graph.directed_graph_helper as directed_graph_helper
 
 class DirectedGraph(object):
     """ Class to represent directed graphs. https://en.wikipedia.org/wiki/Directed_graph """
 
-    def __init__(self, vertices):
-        """ Initialises a directed graph with the provided vertices
+    def __init__(self, vertices=None):
+        """ Initialises a directed graph (with the provided vertices)
 
         Args:
-            directed_graph: an initialised directe graph to be used
+            vertices(dict): a dict with the vertices and their tails in it
 
         """
 
@@ -22,9 +22,6 @@ class DirectedGraph(object):
             for label, tails in vertices.items():
                 for tail in tails:
                     self.add_edge(label, tail)
-
-    def create_new(self, vertices):
-        return DirectedGraph(vertices)
 
     def add_vertex(self, label):
         """ Adds a vertex to the dictionary of vertices 
@@ -39,16 +36,32 @@ class DirectedGraph(object):
         self._vertices[label] = Vertex()
 
     def get_vertex(self, label):
-        """ Returns the vertex that coincides with the label """
+        """ Returns the vertex that coincides with the label 
+
+        Args:
+            label: a vertex represented by its label
+
+        """
 
         return self._vertices[label]
 
+    def get_vertices(self):
+        """ Returns the vertices dictionary 
+
+        Returns:
+            self._vertices (dict)
+
+        """
+
+        return self._vertices
+        
     def add_edge(self, head, tail):
         """ Adds an edge to the graph, the edge is identified by a head and a tail vertex
 
         Args:
             head: the edge that represents the start vertex
             tail: the edge that represents the destination vertex
+
         """
 
         if head not in self._vertices or tail not in self._vertices:
@@ -68,13 +81,16 @@ class DirectedGraph(object):
 
         return res
 
-    # The main function that finds and prints all strongly 
-    # connected components 
+    """
+    The following methods call functions in the "directed_graph_helper" module. These functions
+    were moved from this class to a separate module in order to keep the class lean
+    """
+
     def create_SCCs(self): 
-        return dg_helper.create_SCCs(self)
+        return directed_graph_helper.create_SCCs(self)
 
     def get_reversed_graph(self):
-        return dg_helper.get_reversed_graph(self)
+        return directed_graph_helper.get_reversed_graph(self)
 
     def is_cyclic(self):
-        return dg_helper.is_cyclic(self)
+        return directed_graph_helper.is_cyclic(self)

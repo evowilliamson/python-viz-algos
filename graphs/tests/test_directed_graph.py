@@ -51,23 +51,11 @@ class TestDirectedGraph(unittest.TestCase):
         self.vertices = {0: [1], 1: [2, 3], 2: [3], 3: [4], 4: [5, 2], 5: [6], 6: [7], 7 : [5]}
         self.directed_graph = DirectedGraph(self.vertices)
         sccs = self.directed_graph.create_SCCs()
-        ok = False
-        ok_234 = False
-        ok_567 = False
-        ok_0 = False
-        ok_1 = False
+        sccs_expected = [[2, 3, 4], [5, 6, 7], [0], [1]]
         for vertices in sccs:
             sorted_vertices = sorted(list(vertices))
-            if sorted_vertices == [2, 3, 4]:
-                ok_234 = True
-            elif sorted_vertices == [5, 6, 7]:
-                ok_567 = True
-            elif sorted_vertices == [1]:
-                ok_1 = True
-            elif sorted_vertices == [0]:
-                ok_0 = True
-        self.assertTrue(ok_234 == True and ok_567 == True and ok_0 == True and ok_1 == True)
-
+            if sorted_vertices not in sccs_expected:
+                self.assertFalse(True, msg=str(sorted_vertices) + " not in expected sccs")
 
     def test_is_cyclic(self):
         self.vertices = {0: [1], 1: [2, 3], 2: [3], 3: [4], 4: [5, 2], 5: [6], 6: [7], 7 : [5]}

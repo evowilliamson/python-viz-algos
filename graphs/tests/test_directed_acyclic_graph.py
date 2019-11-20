@@ -1,5 +1,5 @@
 import unittest
-from graph.directed_graph.directed_acyclic_graph import DirectedAcyclicGraph
+from graph.directed_graph.directed_acyclic_graph.directed_acyclic_graph import DirectedAcyclicGraph
 
 
 class TestDirectedAcyclicGraph(unittest.TestCase):
@@ -22,6 +22,7 @@ class TestDirectedAcyclicGraph(unittest.TestCase):
     def test_init_basic_ok(self):
         self.vertices = {0: [1], 1: []}
         DirectedAcyclicGraph(self.vertices)
+
 
 if __name__ == '__main__':
     unittest.main()
