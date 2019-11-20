@@ -1,8 +1,12 @@
 import unittest
 from graph.directed_graph.directed_graph import DirectedGraph
+import os
+import time
 
 
 class TestDirectedGraph(unittest.TestCase):
+
+    DIGRAPH_VIZ = "digraph_viz"
 
     def setUp(self):
         self.vertices = {0: [1], 1: [2, 3], 2: [3], 3: [4, 6], 4: [5, 6], 5: [5], 6: [6]}
@@ -67,6 +71,25 @@ class TestDirectedGraph(unittest.TestCase):
         self.directed_graph = DirectedGraph(self.vertices)
         self.assertFalse(self.directed_graph.is_cyclic())
 
+    def test_graphviz_no_view(self):
+        self.vertices = {0: [1], 1: [2, 3], 2: [3], 3: [4], 4: [5, 2], 5: [6], 6: [7], 7 : [5]}
+        self.directed_graph = DirectedGraph(self.vertices)
+        self.directed_graph.render(file_name=TestDirectedGraph.DIGRAPH_VIZ)
+
+    @unittest.skipIf(True, "Set to False for for viewing the graphviz representation")
+    def test_graphviz_view(self):
+        self.vertices = {0: [1], 1: [2, 3], 2: [3], 3: [4], 4: [5, 2], 5: [6], 6: [7], 7 : [5]}
+        self.directed_graph = DirectedGraph(self.vertices)
+        self.directed_graph.render(file_name=TestDirectedGraph.DIGRAPH_VIZ, view_type=True)
+        time.sleep(1)
+
+    def tearDown(self):
+
+        try:
+            os.remove(TestDirectedGraph.DIGRAPH_VIZ + ".pdf")
+            os.remove(TestDirectedGraph.DIGRAPH_VIZ)
+        except:
+            pass
 
 if __name__ == '__main__':
     unittest.main()

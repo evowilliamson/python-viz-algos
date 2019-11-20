@@ -3,6 +3,8 @@
 
 from graph.directed_graph.vertex import Vertex
 import graph.directed_graph.directed_graph_helper as directed_graph_helper
+from graphviz import Digraph
+
 
 class DirectedGraph(object):
     """ Class to represent directed graphs. https://en.wikipedia.org/wiki/Directed_graph """
@@ -73,6 +75,23 @@ class DirectedGraph(object):
 
     def get_vertices_count(self):
         return len(self._vertices)
+
+    def render(self, file_name="digraph", view_type=False):
+        """ Renders the directed witht the Graphviz library
+
+        Args: 
+            file_name(str): path and file for the file to be generated
+            view_type(bool): True if the attached program for the file is to be started on
+
+        """ 
+
+        graph = Digraph()
+        for label, vertex in self._vertices.items():
+            for tail in vertex.get_tails():
+                graph.edge(str(label), str(tail))
+
+        graph.render(file_name, view=view_type)
+
 
     def __str__(self):
         res = ""
