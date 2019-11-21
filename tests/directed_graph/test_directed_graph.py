@@ -2,6 +2,7 @@ import unittest
 from graph.directed_graph.directed_graph import DirectedGraph
 import os
 import time
+from util.logging import Logging
 
 
 class TestDirectedGraph(unittest.TestCase):
@@ -77,6 +78,7 @@ class TestDirectedGraph(unittest.TestCase):
                 self.assertFalse(True, msg=str(sorted_vertices) + " not in expected sccs")
 
     def test_is_cyclic(self):
+        Logging.start()
         self.vertices = {0: [1], 1: [2, 3], 2: [3], 3: [4], 4: [5, 2], 5: [6], 6: [7], 7 : [5]}
         self.directed_graph = DirectedGraph(self.vertices)
         self.assertTrue(self.directed_graph.is_cyclic())
@@ -98,9 +100,9 @@ class TestDirectedGraph(unittest.TestCase):
         self.vertices = {0: [1], 1: [2, 3], 2: [3], 3: [4], 4: [5, 2], 5: [6], 6: [7], 7 : [5]}
         self.directed_graph = DirectedGraph(self.vertices)
         self.directed_graph.render(file_name=TestDirectedGraph.DIGRAPH_VIZ, view_type=True)
+        time.sleep(1)
         self.assertTrue(os.path.exists(TestDirectedGraph.DIGRAPH_VIZ))
         self.assertTrue(os.path.exists(TestDirectedGraph.DIGRAPH_VIZ + ".pdf"))
-        time.sleep(1)
 
     def tearDown(self):
 

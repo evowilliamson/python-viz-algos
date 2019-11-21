@@ -1,3 +1,5 @@
+from util.logging import Logging
+
 """ Helper module for DirectedGraph class
 """
 
@@ -145,11 +147,17 @@ def is_cyclic_dfs(directed_graph, vertex, traversed, found):
     found[vertex] = True
 
     for i in directed_graph._vertices[vertex].get_tails(): 
+        Logging.log("Vertex {0}, tail {1}", vertex, i)
         if traversed.get(i) is None: 
+            Logging.log("Tail {0} not yet traversed", i, inc=1)
             if is_cyclic_dfs(directed_graph, i, traversed, found): 
+                Logging.log("Vertex {0}, tail {1} just reported a cyclic", vertex, i, inc=-1)
                 return True
         elif found[i]: 
+            Logging.log("Vertex {0}, tail {1} cycle just found", vertex, i)
             return True
+        elif traversed.get(i): 
+            Logging.log("Tail {0} traversed already", i)
 
     found[vertex] = False
     return False
@@ -169,6 +177,7 @@ def is_cyclic(directed_graph):
     traversed = dict()
     found = [False for i in range(directed_graph.get_vertices_count())]
     for i in range(directed_graph.get_vertices_count()): 
+        Logging.log("Vertex {0}", i)
         if traversed.get(i) is None: 
             if is_cyclic_dfs(directed_graph, i, traversed, found): 
                 return True
