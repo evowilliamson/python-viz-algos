@@ -30,8 +30,19 @@ class Logging:
         """
 
         if Logging.logging:
-            Logging.inc_level += inc
+            if (inc != -1):
+                Logging.inc_level += inc
             print(" " * (Logging.inc_level * Logging.inc_size) + message.format(*args))
+            if (inc == -1):
+                Logging.inc_level -= 1
+
+    @classmethod            
+    def inc_indent(cls,):
+        Logging.inc_level += 1
+
+    @classmethod            
+    def dec_indent(cls,):
+        Logging.inc_level -= 1
 
     @classmethod            
     def set_inc_size(cls, size):

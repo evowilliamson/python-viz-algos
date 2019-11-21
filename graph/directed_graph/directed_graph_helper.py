@@ -16,10 +16,14 @@ def create_sccs(directed_graph, nontrivial):
 
     """
 
+    Logging.log("\nStarting")
     stack = []; sccs_trivial, visited = list(), dict()
-    for i in range(directed_graph.get_vertices_count()): 
-        if visited.get(i) is None: 
-            fill_order_DFS_SCCS(directed_graph, i, visited, stack) 
+    for vertex in directed_graph.get_vertices().keys():
+        if visited.get(vertex) is None: 
+            Logging.log("Vertex {0} not visited, go deep", vertex)
+            fill_order_DFS_SCCS(directed_graph, vertex, visited, stack) 
+        else:
+            Logging.log("Vertex {0} already visited, skipping", vertex)
 
     reversed_graph = get_reversed_graph(directed_graph) 
     
@@ -77,7 +81,7 @@ def visit_dfs_sccs(directed_graph, vertex, visited, scc):
 
     visited[vertex] = True
     scc.add(vertex)
-    for i in directed_graph._vertices[vertex].get_tails(): 
+    for i in directed_graph.get_vertices()[vertex].get_tails(): 
         if visited.get(i) is None: 
             visit_dfs_sccs(directed_graph, i, visited, scc) 
 
@@ -95,9 +99,18 @@ def fill_order_DFS_SCCS(directed_graph, vertex, visited, stack):
     """
 
     visited[vertex] = True
-    for i in directed_graph._vertices[vertex].get_tails(): 
+    for i in directed_graph.get_vertices()[vertex].get_tails(): 
+        Logging.log("Vertex {0}, tail {1} in fill order starting", vertex, i)
         if visited.get(i) is None: 
+            Logging.log("Vertex {0}, tail {1} not visited, go to fill order rec.", vertex, i)
+            Logging.inc_indent()
             fill_order_DFS_SCCS(directed_graph, i, visited, stack) 
+            Logging.dec_indent()
+            Logging.log("Vertex {0}, tail {1} returned from fill order", vertex, i)
+            Logging.log("Vertex {0}, tail {1} in fill order finished", vertex, i)
+        else:
+            Logging.log("Vertex {0}, tail {1} already visited, skipping", vertex, i)
+            Logging.log("Vertex {0}, tail {1} in fill order finished", vertex, i)
     stack = stack.append(vertex) 
 
    
@@ -113,10 +126,10 @@ def get_reversed_graph(directed_graph):
     """
 
     reversed = directed_graph.__class__()
-    for i in directed_graph._vertices.keys(): 
+    for i in directed_graph.get_vertices().keys(): 
         reversed.add_vertex(i)
 
-    for i in directed_graph._vertices.keys(): 
+    for i in directed_graph.get_vertices().keys(): 
         vertex = directed_graph.get_vertex(i)
         for j in vertex.get_tails():
             reversed.add_edge(j, i) 
@@ -146,7 +159,7 @@ def is_cyclic_dfs(directed_graph, vertex, traversed, found):
     traversed[vertex] = True
     found[vertex] = True
 
-    for i in directed_graph._vertices[vertex].get_tails(): 
+    for i in directed_graph.get_vertices()[vertex].get_tails(): 
         Logging.log("Vertex {0}, tail {1}", vertex, i)
         if traversed.get(i) is None: 
             Logging.log("Tail {0} not yet traversed", i, inc=1)
@@ -176,10 +189,10 @@ def is_cyclic(directed_graph):
 
     traversed = dict()
     found = [False for i in range(directed_graph.get_vertices_count())]
-    for i in range(directed_graph.get_vertices_count()): 
-        Logging.log("Vertex {0}", i)
-        if traversed.get(i) is None: 
-            if is_cyclic_dfs(directed_graph, i, traversed, found): 
+    for vertex in directed_graph.get_vertices().keys():
+        Logging.log("Vertex {0}", vertex)
+        if traversed.get(vertex) is None: 
+            if is_cyclic_dfs(directed_graph, vertex, traversed, found): 
                 return True
                 
     return False
