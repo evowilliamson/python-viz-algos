@@ -170,19 +170,19 @@ def is_cyclic_dfs(directed_graph, vertex, traversed, in_cycle):
     Logging.inc_indent()
     for i in directed_graph.get_vertices()[vertex].get_tails():
         Logging.log("Vertex {0}, tail {1}", vertex, i)
-        Logging.inc_indent()
         if traversed.get(i) is None:
             Logging.log("Tail {0} not yet traversed", i)
             if is_cyclic_dfs(directed_graph, i, traversed, in_cycle):
                 Logging.log(
-                    "Vertex {0}, tail {1} just reported a cyclic", vertex, i)
+                    "Vertex {0} just reported a cyclic", i)
+                Logging.dec_indent()
                 return True
         elif in_cycle[i]:
             Logging.log("Vertex {0}, tail {1} cycle just found", vertex, i)
+            Logging.dec_indent()
             return True
         elif traversed.get(i):
             Logging.log("Tail {0} traversed already", i)
-        Logging.dec_indent
 
     in_cycle[vertex] = False
     Logging.dec_indent()
