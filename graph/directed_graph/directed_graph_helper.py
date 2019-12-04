@@ -143,7 +143,7 @@ def get_reversed_graph(directed_graph):
     return reversed
 
 
-def is_cyclic_dfs(directed_graph, vertex, traversed, in_cycle):
+def is_cyclic_dfs(directed_graph, vertex, traversed_already, in_cycle):
     """ Function that recursively searches the directed graph depth first and checks
     if a vertex was already in_cycle before. 
 
@@ -154,8 +154,10 @@ def is_cyclic_dfs(directed_graph, vertex, traversed, in_cycle):
     Args:
         directed_graph (DirectedGraph): The directed graph 
         vertex: The current vertex
-        traversed (dict): A dictionary that maintains whether vertices have been traversed
-        in_cycle (list): a list that, if a vertex has been found to part be part of cycle,
+        traversed_already (dict): A dictionary that maintains whether vertices have been 
+            traversed already. It's a performance measure put in place in order to shortcut 
+            processing if a vertex was already processed by another subtree
+        in_cycle (list): A list that, if a vertex has been found to part be part of cycle,
             for that vertex, has a value of true. If that vertex is not part of a cycle, it's
             value is false
 
@@ -164,15 +166,15 @@ def is_cyclic_dfs(directed_graph, vertex, traversed, in_cycle):
 
     """
 
-    traversed[vertex] = True
+    traversed_already[vertex] = True
     in_cycle[vertex] = True
 
     Logging.inc_indent()
     for i in directed_graph.get_vertices()[vertex].get_tails():
         Logging.log("Vertex {0}, tail {1}", vertex, i)
-        if traversed.get(i) is None:
+        if traversed_already.get(i) is None:
             Logging.log("Tail {0} not yet traversed", i)
-            if is_cyclic_dfs(directed_graph, i, traversed, in_cycle):
+            if is_cyclic_dfs(directed_graph, i, traversed_already, in_cycle):
                 Logging.log(
                     "Vertex {0} just reported a cyclic", i)
                 Logging.dec_indent()
@@ -181,7 +183,7 @@ def is_cyclic_dfs(directed_graph, vertex, traversed, in_cycle):
             Logging.log("Vertex {0}, tail {1} cycle just found", vertex, i)
             Logging.dec_indent()
             return True
-        elif traversed.get(i):
+        elif traversed_already.get(i):
             Logging.log("Tail {0} traversed already", i)
 
     in_cycle[vertex] = False
@@ -201,12 +203,12 @@ def is_cyclic(directed_graph):
     """
 
     Logging.log("\nStarting cycle check")
-    traversed = dict()
+    traversed_already = dict()
     in_cycle = [False for i in range(directed_graph.get_vertices_count())]
     for vertex in directed_graph.get_vertices().keys():
         Logging.log("Vertex {0}", vertex)
-        if traversed.get(vertex) is None:
-            if is_cyclic_dfs(directed_graph, vertex, traversed, in_cycle):
+        if traversed_already.get(vertex) is None:
+            if is_cyclic_dfs(directed_graph, vertex, traversed_already, in_cycle):
                 return True
 
     return False
