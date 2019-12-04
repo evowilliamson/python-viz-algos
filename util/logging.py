@@ -11,11 +11,11 @@ class Logging:
     inc_size = 3
 
     @classmethod
-    def start(cls):
+    def enable(cls):
         Logging.logging = True
 
     @classmethod
-    def stop(cls):
+    def disable(cls):
         Logging.logging = False
 
     @classmethod
@@ -37,11 +37,11 @@ class Logging:
                 Logging.inc_level -= 1
 
     @classmethod            
-    def inc_indent(cls,):
+    def inc_indent(cls):
         Logging.inc_level += 1
 
     @classmethod            
-    def dec_indent(cls,):
+    def dec_indent(cls):
         Logging.inc_level -= 1
 
     @classmethod            
