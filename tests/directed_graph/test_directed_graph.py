@@ -18,6 +18,9 @@ class TestDirectedGraph(unittest.TestCase):
         self.assertEqual(len(self.vertices.keys()),
                          self.directed_graph.get_vertices_count())
 
+    def test_str(self):
+        print(self.directed_graph)
+
     def test_one_vertex_self_loop(self):
         self.vertices = {0: [0]}
         self.directed_graph = DirectedGraph(self.vertices)
@@ -108,7 +111,7 @@ class TestDirectedGraph(unittest.TestCase):
         self.assertTrue(os.path.exists(TestDirectedGraph.DIGRAPH_VIZ))
         self.assertTrue(os.path.exists(TestDirectedGraph.DIGRAPH_VIZ + ".pdf"))
 
-    @unittest.skipIf(True, "Set to False for viewing the graphviz representation")
+    @unittest.skipIf(False, "Set to False for viewing the graphviz representation")
     def test_graphviz_view(self):
         self.vertices = {0: [1], 1: [2, 3], 2: [3],
                          3: [4], 4: [5, 2], 5: [6], 6: [7], 7: [5]}

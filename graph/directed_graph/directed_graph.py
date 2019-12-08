@@ -88,7 +88,7 @@ class DirectedGraph(object):
         graph = Digraph()
         for label, vertex in self._vertices.items():
             for tail in vertex.get_tails():
-                graph.edge(str(label), str(tail))
+                graph.edge(str(label), str(tail.get_label()))
 
         graph.render(file_name, view=view_type)
 
