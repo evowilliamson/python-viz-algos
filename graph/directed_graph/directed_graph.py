@@ -35,7 +35,7 @@ class DirectedGraph(object):
         if label in self._vertices:
             raise RuntimeError("vertex = '{}'".format(label) + 
                                " is already a vertex in this directed graph")
-        self._vertices[label] = Vertex()
+        self._vertices[label] = Vertex(label)
 
     def get_vertex(self, label):
         """ Returns the vertex that coincides with the label 
@@ -70,7 +70,7 @@ class DirectedGraph(object):
             raise RuntimeError("Destination or source of edge ('{}'".format(head) +
                                        ",'{}'".format(tail) + ") cannot be found as a vertex")
         else:
-            self._vertices[head].add_tail(tail)
+            self._vertices[head].add_edge(self._vertices[tail])
             self._vertices[tail].increase_indegree()
 
     def get_vertices_count(self):

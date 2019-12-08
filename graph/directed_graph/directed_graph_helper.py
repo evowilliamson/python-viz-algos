@@ -89,7 +89,7 @@ def get_reversed_graph(directed_graph):
     for i in directed_graph.get_vertices().keys():
         vertex = directed_graph.get_vertex(i)
         for j in vertex.get_tails():
-            reversed.add_edge(j, i)
+            reversed.add_edge(j.get_label(), i)
 
     return reversed
 
@@ -121,21 +121,21 @@ def is_cyclic_dfs(directed_graph, vertex, traversed_already, in_cycle):
     in_cycle[vertex] = True
 
     Logging.inc_indent()
-    for i in directed_graph.get_vertices()[vertex].get_tails():
-        Logging.log("Vertex {0}, tail {1}", vertex, i)
-        if traversed_already.get(i) is None:
-            Logging.log("Tail {0} not yet traversed", i)
-            if is_cyclic_dfs(directed_graph, i, traversed_already, in_cycle):
+    for tail in directed_graph.get_vertices()[vertex].get_tails():
+        Logging.log("Vertex {0}, tail {1}", vertex, tail.get_label())
+        if traversed_already.get(tail.get_label()) is None:
+            Logging.log("Tail {0} not yet traversed", tail.get_label())
+            if is_cyclic_dfs(directed_graph, tail.get_label(), traversed_already, in_cycle):
                 Logging.log(
-                    "Vertex {0} just reported a cyclic", i)
+                    "Vertex {0} just reported a cyclic", tail.get_label())
                 Logging.dec_indent()
                 return True
-        elif in_cycle[i]:
-            Logging.log("Vertex {0}, tail {1} cycle just found", vertex, i)
+        elif in_cycle[tail.get_label()]:
+            Logging.log("Vertex {0}, tail {1} cycle just found", vertex, tail.get_label())
             Logging.dec_indent()
             return True
-        elif traversed_already.get(i):
-            Logging.log("Tail {0} traversed already", i)
+        elif traversed_already.get(tail.get_label()):
+            Logging.log("Tail {0} traversed already", tail.get_label())
 
     in_cycle[vertex] = False
     Logging.dec_indent()
@@ -155,7 +155,7 @@ def is_cyclic(directed_graph):
 
     Logging.log("\nStarting cycle check")
     traversed_already = dict()
-    in_cycle = [False for i in range(directed_graph.get_vertices_count())]
+    in_cycle = {i:False for i in directed_graph.get_vertices().keys()}
     for vertex in directed_graph.get_vertices().keys():
         Logging.log("Vertex {0}", vertex)
         if traversed_already.get(vertex) is None:

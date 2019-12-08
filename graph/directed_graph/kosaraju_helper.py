@@ -18,9 +18,9 @@ def visit_dfs_sccs(directed_graph, vertex, visited, scc):
 
     visited[vertex] = True
     scc.add(vertex)
-    for i in directed_graph.get_vertices()[vertex].get_tails():
-        if visited.get(i) is None:
-            visit_dfs_sccs(directed_graph, i, visited, scc)
+    for tail in directed_graph.get_vertices()[vertex].get_tails():
+        if visited.get(tail.get_label()) is None:
+            visit_dfs_sccs(directed_graph, tail.get_label(), visited, scc)
 
 
 def fill_order_dfd_sccs(directed_graph, vertex, visited, stack):
@@ -36,21 +36,21 @@ def fill_order_dfd_sccs(directed_graph, vertex, visited, stack):
     """
 
     visited[vertex] = True
-    for i in directed_graph.get_vertices()[vertex].get_tails():
-        Logging.log("Vertex {0}, tail {1} in fill order starting", vertex, i)
-        if visited.get(i) is None:
+    for tail in directed_graph.get_vertices()[vertex].get_tails():
+        Logging.log("Vertex {0}, tail {1} in fill order starting", vertex, tail.get_label())
+        if visited.get(tail.get_label()) is None:
             Logging.log(
-                "Vertex {0}, tail {1} not visited, go to fill order rec.", vertex, i)
+                "Vertex {0}, tail {1} not visited, go to fill order rec.", vertex, tail.get_label())
             Logging.inc_indent()
-            fill_order_dfd_sccs(directed_graph, i, visited, stack)
+            fill_order_dfd_sccs(directed_graph, tail.get_label(), visited, stack)
             Logging.dec_indent()
             Logging.log(
-                "Vertex {0}, tail {1} returned from fill order", vertex, i)
+                "Vertex {0}, tail {1} returned from fill order", vertex, tail.get_label())
             Logging.log(
-                "Vertex {0}, tail {1} in fill order finished", vertex, i)
+                "Vertex {0}, tail {1} in fill order finished", vertex, tail.get_label())
         else:
             Logging.log(
-                "Vertex {0}, tail {1} already visited, skipping", vertex, i)
+                "Vertex {0}, tail {1} already visited, skipping", vertex, tail.get_label())
             Logging.log(
-                "Vertex {0}, tail {1} in fill order finished", vertex, i)
+                "Vertex {0}, tail {1} in fill order finished", vertex, tail.get_label())
     stack = stack.append(vertex)
