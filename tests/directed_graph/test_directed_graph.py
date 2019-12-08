@@ -33,7 +33,7 @@ class TestDirectedGraph(unittest.TestCase):
         self.assertIsNotNone(vertex)
         self.assertEqual(vertex.get_outdegree(), 0)
         self.assertEqual(vertex.get_indegree(), 0)
-        self.assertListEqual(vertex.get_tails(), list())
+        self.assertListEqual(vertex.get_heads(), list())
 
     def test_add_duplicate_vertex(self):
         label = 7
@@ -41,19 +41,19 @@ class TestDirectedGraph(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             self.directed_graph.add_vertex(label)
 
-    def test_add_tails(self):
+    def test_add_heads(self):
         vertex_to_test = 7
         self.directed_graph.add_vertex(vertex_to_test)
         vertex = self.directed_graph.get_vertex(vertex_to_test)
-        no_tails = 3
-        for i in range(no_tails):
+        no_heads = 3
+        for i in range(no_heads):
             vertex.add_edge(self.directed_graph.get_vertex(i))
-        self.assertEqual(len(vertex.get_tails()), no_tails)
-        self.assertEqual(vertex.get_outdegree(), len(vertex.get_tails()))
+        self.assertEqual(len(vertex.get_heads()), no_heads)
+        self.assertEqual(vertex.get_outdegree(), len(vertex.get_heads()))
 
     def test_outdegree(self):
         vertex = self.directed_graph.get_vertex(1)
-        self.assertEqual(vertex.get_outdegree(), len(vertex.get_tails()))
+        self.assertEqual(vertex.get_outdegree(), len(vertex.get_heads()))
 
     def test_indegree(self):
         vertex_to_test = 6

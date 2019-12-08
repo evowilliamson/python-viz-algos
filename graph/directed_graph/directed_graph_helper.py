@@ -48,8 +48,8 @@ def filter_nontrivial(sccs_trivial, directed_graph):
 
     A scc is nontrivial, iff there are at least two vertices in it, 
     or there is only one vertex with a self-loop. A self-loop means
-    that the indegree and the outdegree are both 1 and the head is equal
-    to the tail
+    that the indegree and the outdegree are both 1 and the tail is equal
+    to the head
 
     Args:
         sccs_trivial(list): The list of trivial sccs
@@ -65,7 +65,7 @@ def filter_nontrivial(sccs_trivial, directed_graph):
         vertex = directed_graph.get_vertex(list(scc)[0])
         if (len(scc) >= 2) or \
             (len(scc) == 1 and vertex.get_indegree() == 1 and
-            vertex.get_outdegree() == 1) and list(vertex.get_tails())[0] == list(scc)[0]:
+            vertex.get_outdegree() == 1) and list(vertex.get_heads())[0] == list(scc)[0]:
             sccs_non_trivial.append(scc)
 
     return sccs_non_trivial
@@ -88,7 +88,7 @@ def get_reversed_graph(directed_graph):
 
     for i in directed_graph.get_vertices().keys():
         vertex = directed_graph.get_vertex(i)
-        for j in vertex.get_tails():
+        for j in vertex.get_heads():
             reversed.add_edge(j.get_label(), i)
 
     return reversed
@@ -98,7 +98,7 @@ def is_cyclic_dfs(directed_graph, vertex, traversed_already, in_cycle):
     """ Function that recursively searches the directed graph depth first and checks
     if a vertex was already in_cycle before. 
 
-    It checks all vertices that have not been traversed before. The tails of those 
+    It checks all vertices that have not been traversed before. The heads of those 
     vertices are followed. If in that traversal, a vertex is found that is present in 
     the dict "in_cycle" with a value of true, then a cycle is present
 
@@ -121,21 +121,21 @@ def is_cyclic_dfs(directed_graph, vertex, traversed_already, in_cycle):
     in_cycle[vertex] = True
 
     Logging.inc_indent()
-    for tail in directed_graph.get_vertices()[vertex].get_tails():
-        Logging.log("Vertex {0}, tail {1}", vertex, tail.get_label())
-        if traversed_already.get(tail.get_label()) is None:
-            Logging.log("Tail {0} not yet traversed", tail.get_label())
-            if is_cyclic_dfs(directed_graph, tail.get_label(), traversed_already, in_cycle):
+    for head in directed_graph.get_vertices()[vertex].get_heads():
+        Logging.log("Vertex {0}, head {1}", vertex, head.get_label())
+        if traversed_already.get(head.get_label()) is None:
+            Logging.log("Tail {0} not yet traversed", head.get_label())
+            if is_cyclic_dfs(directed_graph, head.get_label(), traversed_already, in_cycle):
                 Logging.log(
-                    "Vertex {0} just reported a cyclic", tail.get_label())
+                    "Vertex {0} just reported a cyclic", head.get_label())
                 Logging.dec_indent()
                 return True
-        elif in_cycle[tail.get_label()]:
-            Logging.log("Vertex {0}, tail {1} cycle just found", vertex, tail.get_label())
+        elif in_cycle[head.get_label()]:
+            Logging.log("Vertex {0}, head {1} cycle just found", vertex, head.get_label())
             Logging.dec_indent()
             return True
-        elif traversed_already.get(tail.get_label()):
-            Logging.log("Tail {0} traversed already", tail.get_label())
+        elif traversed_already.get(head.get_label()):
+            Logging.log("Tail {0} traversed already", head.get_label())
 
     in_cycle[vertex] = False
     Logging.dec_indent()

@@ -21,9 +21,9 @@ class DirectedGraph(object):
         if vertices is not None:
             for label in vertices.keys():
                 self.add_vertex(label)
-            for label, tails in vertices.items():
-                for tail in tails:
-                    self.add_edge(label, tail)
+            for label, heads in vertices.items():
+                for head in heads:
+                    self.add_edge(label, head)
 
     def add_vertex(self, label):
         """ Adds a vertex to the dictionary of vertices 
@@ -57,21 +57,21 @@ class DirectedGraph(object):
 
         return self._vertices
         
-    def add_edge(self, head, tail):
-        """ Adds an edge to the graph, the edge is identified by a head and a tail vertex
+    def add_edge(self, tail, head):
+        """ Adds an edge to the graph, the edge is identified by a tail and a head vertex
 
         Args:
-            head: the edge that represents the start vertex
-            tail: the edge that represents the destination vertex
+            tail: the edge that represents the start vertex
+            head: the edge that represents the destination vertex
 
         """
 
-        if head not in self._vertices or tail not in self._vertices:
+        if tail not in self._vertices or head not in self._vertices:
             raise RuntimeError("Destination or source of edge ('{}'".format(head) +
                                        ",'{}'".format(tail) + ") cannot be found as a vertex")
         else:
-            self._vertices[head].add_edge(self._vertices[tail])
-            self._vertices[tail].increase_indegree()
+            self._vertices[tail].add_edge(self._vertices[head])
+            self._vertices[head].increase_indegree()
 
     def get_vertices_count(self):
         return len(self._vertices)
@@ -87,8 +87,8 @@ class DirectedGraph(object):
 
         graph = Digraph()
         for label, vertex in self._vertices.items():
-            for tail in vertex.get_tails():
-                graph.edge(str(label), str(tail.get_label()))
+            for head in vertex.get_heads():
+                graph.edge(str(label), str(head.get_label()))
 
         graph.render(file_name, view=view_type)
 

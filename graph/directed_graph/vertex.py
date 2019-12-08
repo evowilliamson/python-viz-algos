@@ -10,23 +10,23 @@ class Vertex():
     """
 
     def __init__(self, label):
-        """ Initialises the vertex by calling the __init__ of the parent and adding
-        some specifics
+        """ Initialises the vertex by adding some specifics
         """
         
         self._label = label
         self._edges = list()
         self._indegree = 0
+        self._attrs = {}
 
-    def add_edge(self, tail_vertex):
+    def add_edge(self, head_vertex):
         """ This method adds an edge to the set of edges maintained by the vertex
 
         Args: 
-            tail_vertex: the tail vertex to be added
+            head_vertex: the head vertex to be added
 
         """
 
-        self._edges.append(Edge(self, tail_vertex))
+        self._edges.append(Edge(self, head_vertex))
 
     def get_label(self):
         return self._label
@@ -40,8 +40,8 @@ class Vertex():
         
         self._indegree -= 1
 
-    def get_tails(self):
-        return [e.get_tail() for e in self._edges]
+    def get_heads(self):
+        return [e.get_head() for e in self._edges]
 
     def get_indegree(self):
         return self._indegree
@@ -52,6 +52,6 @@ class Vertex():
     def __str__(self):
         return  "outdegree: {}".format(self.get_outdegree()) + \
                 ", indegree: {}".format(self.get_indegree()) + \
-                ", tails: " + ",".join([str(tail.get_label()) for tail in self.get_tails()])
+                ", heads: " + ",".join([str(tail.get_label()) for tail in self.get_heads()])
 
     
