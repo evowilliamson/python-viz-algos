@@ -64,7 +64,7 @@ class TestDirectedGraph(unittest.TestCase):
         self.vertices = {0: [1], 1: [2, 3], 2: [3], 3: [4],
                          4: [5, 2], 5: [6], 6: [7], 7: [5], 8: [8], 9: []}
         self.directed_graph = DirectedGraph(self.vertices)
-        sccs = self.directed_graph.create_sccs()
+        sccs = self.directed_graph.create_sccs_kosaraju_dfs()
         sccs_expected = [[2, 3, 4], [5, 6, 7], [8]]
         for vertices in sccs:
             sorted_vertices = sorted(list(vertices))
@@ -77,7 +77,7 @@ class TestDirectedGraph(unittest.TestCase):
         self.vertices = {"A": ["B"], "B": ["C", "D"], "C": ["A"], "D": ["E"], "E": ["F"],
                          "F": ["D"], "G": ["F", "H"], "H": ["I"], "I": ["J"], "J": ["G", "K"], "K": []}
         self.directed_graph = DirectedGraph(self.vertices)
-        sccs = self.directed_graph.create_sccs(nontrivial=False)
+        sccs = self.directed_graph.create_sccs_kosaraju_dfs(nontrivial=False)
         sccs_expected = [["A", "B", "C"], [
             "D", "E", "F"], ["G", "H", "I", "J"], ["K"]]
         for vertices in sccs:

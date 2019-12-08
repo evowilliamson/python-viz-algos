@@ -1,11 +1,14 @@
 from util.logging import Logging
+import graph.directed_graph.kosaraju_helper as kh
 
 """ Helper module for DirectedGraph class
 """
 
 
-def create_sccs(directed_graph, nontrivial):
-    """ Function that creates a list of strongly connected components
+def create_sccs_kosaraju_dfs(directed_graph, nontrivial):
+    """ Function that creates a list of strongly connected components according to 
+    Kosaraju's algorithm (https://en.wikipedia.org/wiki/Kosaraju%27s_algorithm) with a
+    depth-first-search approach.
 
     Args: 
         directed_graph (DirectedGraph): The directed graph for which the SCCS should be calculated
@@ -22,7 +25,7 @@ def create_sccs(directed_graph, nontrivial):
     for vertex in directed_graph.get_vertices().keys():
         if visited.get(vertex) is None:
             Logging.log("Vertex {0} not visited, go deep", vertex)
-            fill_order_dfd_sccs(directed_graph, vertex, visited, stack)
+            kh.fill_order_dfd_sccs(directed_graph, vertex, visited, stack)
         else:
             Logging.log("Vertex {0} already visited, skipping", vertex)
 
@@ -32,7 +35,7 @@ def create_sccs(directed_graph, nontrivial):
     for i in reversed(stack):
         if visited.get(i) is None:
             sccs_trivial.append(set())
-            visit_dfs_sccs(reversed_graph, i, visited, sccs_trivial[-1])
+            kh.visit_dfs_sccs(reversed_graph, i, visited, sccs_trivial[-1])
 
     if nontrivial:
         return filter_nontrivial(sccs_trivial, directed_graph)
@@ -62,62 +65,10 @@ def filter_nontrivial(sccs_trivial, directed_graph):
         vertex = directed_graph.get_vertex(list(scc)[0])
         if (len(scc) >= 2) or \
             (len(scc) == 1 and vertex.get_indegree() == 1 and
-             vertex.get_outdegree() == 1) and list(vertex.get_tails())[0] == list(scc)[0]:
+            vertex.get_outdegree() == 1) and list(vertex.get_tails())[0] == list(scc)[0]:
             sccs_non_trivial.append(scc)
 
     return sccs_non_trivial
-
-
-def visit_dfs_sccs(directed_graph, vertex, visited, scc):
-    """ Function that performs a recursive depth first search on the directed graph
-    to check whether vertices have been visisted
-
-    Args:
-        directed_graph(DirectedGraph): The directed graph 
-        vertex (label): The current vertex
-        visited (dict): A dictionary that maintains whether vertices have been visisted
-        scc (set): The current scc being constructed
-
-    """
-
-    visited[vertex] = True
-    scc.add(vertex)
-    for i in directed_graph.get_vertices()[vertex].get_tails():
-        if visited.get(i) is None:
-            visit_dfs_sccs(directed_graph, i, visited, scc)
-
-
-def fill_order_dfd_sccs(directed_graph, vertex, visited, stack):
-    """ Function that covers the first part of the algorith by determining
-    the order of vertices, traversing the graph with a depth first search, recursivelu
-
-    Args:
-        directed_graph (DirectedGraph): The directed graph 
-        vertex: The current vertex
-        visited (dict): A dictionary that maintains whether vertices have been visisted
-        stack (list): stack that will be processed, used to inverse the order
-
-    """
-
-    visited[vertex] = True
-    for i in directed_graph.get_vertices()[vertex].get_tails():
-        Logging.log("Vertex {0}, tail {1} in fill order starting", vertex, i)
-        if visited.get(i) is None:
-            Logging.log(
-                "Vertex {0}, tail {1} not visited, go to fill order rec.", vertex, i)
-            Logging.inc_indent()
-            fill_order_dfd_sccs(directed_graph, i, visited, stack)
-            Logging.dec_indent()
-            Logging.log(
-                "Vertex {0}, tail {1} returned from fill order", vertex, i)
-            Logging.log(
-                "Vertex {0}, tail {1} in fill order finished", vertex, i)
-        else:
-            Logging.log(
-                "Vertex {0}, tail {1} already visited, skipping", vertex, i)
-            Logging.log(
-                "Vertex {0}, tail {1} in fill order finished", vertex, i)
-    stack = stack.append(vertex)
 
 
 def get_reversed_graph(directed_graph):
