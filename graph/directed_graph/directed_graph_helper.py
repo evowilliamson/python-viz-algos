@@ -1,6 +1,5 @@
 from util.logging import Logging
 import graph.directed_graph.kosaraju_helper as kh
-import graph.directed_graph.directed_graph_viz_helper as dgvh
 
 """ Helper module for DirectedGraph class
 """

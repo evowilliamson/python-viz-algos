@@ -26,7 +26,7 @@ class VizTracing:
     IMAGE_NAME_PREFIX = "VIZ_TRACING_"
     DEFAULT = "default"
     IMAGE_TYPE = "png"
-    DEFAULT_STATE = {VizTracing.DEFAULT: {}}
+    DEFAULT_STATE = {"default": {}}
 
     snapshot_no = 1
 
