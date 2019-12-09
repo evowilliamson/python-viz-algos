@@ -36,7 +36,7 @@ class Vertex():
         self._attrs[attr] = value
 
     def get_attr(self, attr):
-        return self._attrs[attr]
+        return self._attrs.get(attr)
 
     def get_attrs(self):
         return self._attrs

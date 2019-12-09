@@ -1,8 +1,10 @@
 import unittest
 from graph.directed_graph.directed_graph import DirectedGraph
+from graph.directed_graph.viz_tracing import VizTracing
 import os
 import time
 from util.logging import Logging
+import util.test_tools as tt
 
 
 class TestDirectedGraph(unittest.TestCase):
@@ -111,7 +113,7 @@ class TestDirectedGraph(unittest.TestCase):
         self.assertTrue(os.path.exists(TestDirectedGraph.DIGRAPH_VIZ))
         self.assertTrue(os.path.exists(TestDirectedGraph.DIGRAPH_VIZ + ".pdf"))
 
-    @unittest.skipIf(False, "Set to False for viewing the graphviz representation")
+    @unittest.skipIf(True, "Set to False for viewing the graphviz representation")
     def test_graphviz_view(self):
         self.vertices = {0: [1], 1: [2, 3], 2: [3],
                          3: [4], 4: [5, 2], 5: [6], 6: [7], 7: [5]}
@@ -122,14 +124,35 @@ class TestDirectedGraph(unittest.TestCase):
         self.assertTrue(os.path.exists(TestDirectedGraph.DIGRAPH_VIZ))
         self.assertTrue(os.path.exists(TestDirectedGraph.DIGRAPH_VIZ + ".pdf"))
 
+    def test_viztracing_default(self):
+        dag_copy = self.directed_graph.copy()
+        tt.create_test_resources_dir()
+        VizTracing.enable(tt.get_test_resources_path(), dag_copy)
+        VizTracing.snapshot()
+        self.assertTrue(True)
+
+    def test_viztracing_vertext_only(self):
+        self.vertices = {0: [1], 1: [2, 3], 2: [3],
+                         3: [4, 6], 4: [5, 6], 5: [5], 6: [6]}
+        self.directed_graph = DirectedGraph(self.vertices)        
+        dag_copy = self.directed_graph.copy()
+        vertex_1 = dag_copy.get_vertex(1)
+        vertex_1.set_attr("activated", True)
+        vertex_2 = dag_copy.get_vertex(2)
+        vertex_2.set_attr("in_cycle", True)
+        tt.create_test_resources_dir()
+        VizTracing.enable(tt.get_test_resources_path(), dag_copy,
+            vertex_states=[
+                {"activated": {"fillcolor":"red", "style": "filled"}}, 
+                {"in_cycle": {"fillcolor":"blue", "style": "filled"}}])
+        VizTracing.snapshot()
+        self.assertTrue(True)
+
     def tearDown(self):
 
         try:
-            os.remove(TestDirectedGraph.DIGRAPH_VIZ + ".pdf")
-            os.remove(TestDirectedGraph.DIGRAPH_VIZ)
-            self.assertFalse(os.path.exists(TestDirectedGraph.DIGRAPH_VIZ))
-            self.assertFalse(os.path.exists(
-                TestDirectedGraph.DIGRAPH_VIZ + ".pdf"))
+            tt.clean_test_resources()
+            self.assertFalse(os.path.exists(tt.get_test_resources_path))
         except:
             pass
 

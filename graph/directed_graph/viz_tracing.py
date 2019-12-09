@@ -26,7 +26,7 @@ class VizTracing:
     IMAGE_NAME_PREFIX = "VIZ_TRACING_"
     DEFAULT = "default"
     IMAGE_TYPE = "png"
-    DEFAULT_STATE = {"default": {}}
+    DEFAULT_STATE = None
 
     snapshot_no = 1
 
@@ -35,8 +35,8 @@ class VizTracing:
         VizTracing.tracing = True
         VizTracing.path = path
         VizTracing.directed_graph = directed_graph
-        VizTracing.vertex_states = vertex_states or VizTracing.DEFAULT_STATE
-        VizTracing.edge_states = edge_states or VizTracing.DEFAULT_STATE
+        VizTracing.vertex_states = vertex_states or [{VizTracing.DEFAULT: VizTracing.DEFAULT_STATE}]
+        VizTracing.edge_states = edge_states or [{VizTracing.DEFAULT: VizTracing.DEFAULT_STATE}]
 
     @classmethod
     def disable(cls):
@@ -91,22 +91,23 @@ class VizTracing:
 
         """ 
 
-        graph = Digraph(format=format)
+        graph = Digraph(format=VizTracing.IMAGE_TYPE)
         for label, vertex in VizTracing.directed_graph._vertices.items():
             found = False; default_state = None
             for state in VizTracing.vertex_states:
-                if state.keys()[0] != VizTracing.DEFAULT and vertex.get_attr(state.keys()[0]):
-                    graph.node(label, state.values()[0][True])
+                attr_name, attr_values = next(iter(state.items()))
+                if attr_name != VizTracing.DEFAULT and vertex.get_attr(attr_name):
+                    graph.node(str(label), label=None, _attributes=None, **attr_values)
                     found = True
                     break
-                elif state.keys()[0] == VizTracing.DEFAULT:
-                    default_state = state.values()[0]
+                elif attr_name == VizTracing.DEFAULT:
+                    default_state = attr_values
             if not found:
-                graph.node(label, default_state or VizTracing.DEFAULT_STATE)
+                graph.node(str(label), default_state or VizTracing.DEFAULT_STATE)
 
             for head in vertex.get_heads():
                 graph.edge(str(label), str(head.get_label()))
 
         graph.render(path.join(VizTracing.path, 
-            VizTracing.IMAGE_NAME_PREFIX + str(VizTracing.snapshot_no) + VizTracing.IMAGE_TYPE))
+            VizTracing.IMAGE_NAME_PREFIX + str(VizTracing.snapshot_no)))
         VizTracing.snapshot_no += 1
