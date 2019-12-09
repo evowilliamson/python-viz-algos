@@ -4,6 +4,7 @@
 from graph.directed_graph.vertex import Vertex
 import graph.directed_graph.directed_graph_helper as directed_graph_helper
 from graphviz import Digraph
+from copy import deepcopy
 
 
 class DirectedGraph(object):
@@ -24,6 +25,15 @@ class DirectedGraph(object):
             for label, heads in vertices.items():
                 for head in heads:
                     self.add_edge(label, head)
+
+    def copy(self):
+        """ Copies the directed graph and returns it
+
+        Returns:
+            the copied directed graph
+        """
+        
+        return deepcopy(self)
 
     def add_vertex(self, label):
         """ Adds a vertex to the dictionary of vertices 
@@ -76,8 +86,8 @@ class DirectedGraph(object):
     def get_vertices_count(self):
         return len(self._vertices)
 
-    def render(self, file_name="digraph", view_type=False):
-        """ Renders the directed witht the Graphviz library
+    def render(self, file_name="digraph", view_type=False, format="pdf"):
+        """ Renders the directed with the Graphviz library
 
         Args: 
             file_name(str): path and file for the file to be generated
@@ -85,7 +95,7 @@ class DirectedGraph(object):
 
         """ 
 
-        graph = Digraph()
+        graph = Digraph(format=format)
         for label, vertex in self._vertices.items():
             for head in vertex.get_heads():
                 graph.edge(str(label), str(head.get_label()))

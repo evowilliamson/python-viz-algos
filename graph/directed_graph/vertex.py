@@ -9,14 +9,18 @@ class Vertex():
     generic Vertex class
     """
 
-    def __init__(self, label):
+    def __init__(self, label, **attrs):
         """ Initialises the vertex by adding some specifics
+
+        Args:
+            label(str): the label of the vertex
+            **attrs: additional attributes that define the vertex
         """
         
         self._label = label
         self._edges = list()
         self._indegree = 0
-        self._attrs = {}
+        self._attrs = attrs
 
     def add_edge(self, head_vertex):
         """ This method adds an edge to the set of edges maintained by the vertex
@@ -27,6 +31,15 @@ class Vertex():
         """
 
         self._edges.append(Edge(self, head_vertex))
+
+    def set_attr(self, attr, value):
+        self._attrs[attr] = value
+
+    def get_attr(self, attr):
+        return self._attrs[attr]
+
+    def get_attrs(self):
+        return self._attrs
 
     def get_label(self):
         return self._label
