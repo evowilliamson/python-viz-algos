@@ -145,6 +145,6 @@ class VizTracing:
                 graph.edge(str(label), str(head.get_label()))
 
         graph.render(path.join(VizTracing.path, 
-            VizTracing.IMAGE_NAME_PREFIX + str(VizTracing.snapshot_no)))
+            VizTracing.IMAGE_NAME_PREFIX + ("{:04d}".format(VizTracing.snapshot_no))))
         VizTracing.snapshot_no += 1
     

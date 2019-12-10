@@ -3,6 +3,9 @@ from graph.directed_graph.viz_tracing import VizTracing
 from util.logging import Logging
 import util.path_tools as pt
 from graph.directed_graph.directed_graph import DirectedGraph
+import cv2
+import os
+import util.video_tools as vt
 
 RESOURCES_PATH = "python-resources"
 
@@ -28,6 +31,8 @@ def viztrace(vertices, resource_path):
                     {VizTracing.VISISTED: {"fillcolor":"gray", "style": "filled"}}])
     directed_graph.is_cyclic()
     viztrace_log_finish(directed_graph)
+    vt.convert_images_to_video(pt.get_dir_in_user_home(work_path))
+   
 
 def viztrace_cycle():
     viztrace({0: [1], 1: [2], 2: [3],
@@ -44,5 +49,6 @@ def viztrace_no_cycle():
 if __name__ == '__main__':
     init()
     viztrace_cycle()
-    viztrace_no_cycle()
+    # viztrace_no_cycle()
+
 
