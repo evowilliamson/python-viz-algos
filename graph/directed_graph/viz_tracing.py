@@ -28,6 +28,10 @@ class VizTracing:
     IMAGE_TYPE = "png"
     DEFAULT_STATE = None
 
+    ACTIVATED = "activated"
+    IN_CYCLE = "in_cycle"
+    VISISTED = "visited"
+
     snapshot_no = 1
 
     @classmethod
@@ -43,7 +47,7 @@ class VizTracing:
         VizTracing.tracing = False
 
     @classmethod
-    def activate_vertex(cls, directed_graph, vertex: Vertex):
+    def change_activated_vertex(cls, directed_graph, vertex: Vertex):
         """ Function that sets the attribute "active" of the vertex to true. It deactivates all
         other vertices
 
@@ -55,31 +59,60 @@ class VizTracing:
         if not VizTracing.tracing:
             return
 
-        for v in directed_graph.get_vertices():
-            if v.get_label() == vertex.get_label:
-                vertex.set_attr("activated", True)
-            else:
-                vertex.set_attr("activated", False)
+        VizTracing.set_status(directed_graph, vertex, VizTracing.ACTIVATED)
+        for label, v in directed_graph.get_vertices().items():
+            if label != vertex.get_label():
+                VizTracing.reset_status(directed_graph, v, VizTracing.ACTIVATED)
 
     @classmethod
-    def activate_edge(cls, directed_graph, edge: Edge):
-        """ Function that sets the "active" of the edge to true. It deactivates all
+    def change_activated_edge(cls, directed_graph, edge: Edge):
+        """ Function that sets the "active" status of the edge to true. It deactivates all
         other edges
 
         Args:
             directed_graph(DirectedGraph): directed graph object
-            vertex(Vertex): the edge to be activated
+            edge(Edge): the edge to be activated
         """
 
         if not VizTracing.tracing:
             return
 
-        for v in directed_graph.get_vertices():
+        for v in directed_graph.get_vertices().items():
             for e in v.get_heads():
                 if e.get_label() == edge.get_head:
-                    e.set_attr("activate", True)
+                    e.set_attr(VizTracing.ACTIVATED, True)
                 else:
-                    e.set_attr("activate", False)
+                    e.set_attr(VizTracing.ACTIVATED, False)
+
+    @classmethod
+    def set_status(cls, directed_graph, object, status):
+        """ Function that tags the vertex as with the provided status
+        
+        Args:
+            directed_graph(DirectedGraph): directed graph object
+            object: the vertex of edge for which the status must be set
+            status(str): the status to be set
+        """
+
+        if not VizTracing.tracing:
+            return
+
+        object.set_attr(status, True)
+
+    @classmethod
+    def reset_status(cls, directed_graph, object, status):
+        """ Function that resets the status of the object
+        
+        Args:
+            directed_graph(DirectedGraph): directed graph object
+            object: the vertex of edge for which the status must be reset
+            status(str): the status to be reset
+        """
+
+        if not VizTracing.tracing:
+            return
+
+        object.set_attr(status, False)
 
     @classmethod
     def snapshot(cls):
@@ -90,6 +123,9 @@ class VizTracing:
             view_type(bool): True if the attached program for the file is to be started on
 
         """ 
+
+        if not VizTracing.tracing:
+            return
 
         graph = Digraph(format=VizTracing.IMAGE_TYPE)
         for label, vertex in VizTracing.directed_graph._vertices.items():
@@ -111,3 +147,4 @@ class VizTracing:
         graph.render(path.join(VizTracing.path, 
             VizTracing.IMAGE_NAME_PREFIX + str(VizTracing.snapshot_no)))
         VizTracing.snapshot_no += 1
+    

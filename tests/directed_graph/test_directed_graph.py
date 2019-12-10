@@ -4,12 +4,14 @@ from graph.directed_graph.viz_tracing import VizTracing
 import os
 import time
 from util.logging import Logging
-import util.test_tools as tt
+import util.path_tools as pt
+from os import path
 
 
 class TestDirectedGraph(unittest.TestCase):
 
     DIGRAPH_VIZ = "digraph_viz"
+    RESOURCES_PATH = "python-test-resources"
 
     def setUp(self):
         self.vertices = {0: [1], 1: [2, 3], 2: [3],
@@ -109,50 +111,142 @@ class TestDirectedGraph(unittest.TestCase):
         self.vertices = {0: [1], 1: [2, 3], 2: [3],
                          3: [4], 4: [5, 2], 5: [6], 6: [7], 7: [5]}
         self.directed_graph = DirectedGraph(self.vertices)
-        self.directed_graph.render(file_name=TestDirectedGraph.DIGRAPH_VIZ)
-        self.assertTrue(os.path.exists(TestDirectedGraph.DIGRAPH_VIZ))
-        self.assertTrue(os.path.exists(TestDirectedGraph.DIGRAPH_VIZ + ".pdf"))
+        pt.create_dir_in_user_home(TestDirectedGraph.RESOURCES_PATH)
+        digraph_file = path.join(pt.get_dir_in_user_home(
+            TestDirectedGraph.RESOURCES_PATH), TestDirectedGraph.DIGRAPH_VIZ)
+        self.directed_graph.render(file_name=digraph_file)
+        self.assertTrue(os.path.exists(digraph_file))
+        self.assertTrue(os.path.exists(digraph_file + ".pdf"))
 
     @unittest.skipIf(True, "Set to False for viewing the graphviz representation")
     def test_graphviz_view(self):
         self.vertices = {0: [1], 1: [2, 3], 2: [3],
                          3: [4], 4: [5, 2], 5: [6], 6: [7], 7: [5]}
         self.directed_graph = DirectedGraph(self.vertices)
+        pt.create_dir_in_user_home(TestDirectedGraph.RESOURCES_PATH)
+        digraph_file = path.join(pt.get_dir_in_user_home(
+            TestDirectedGraph.RESOURCES_PATH), TestDirectedGraph.DIGRAPH_VIZ)        
         self.directed_graph.render(
             file_name=TestDirectedGraph.DIGRAPH_VIZ, view_type=True)
         time.sleep(1)
-        self.assertTrue(os.path.exists(TestDirectedGraph.DIGRAPH_VIZ))
-        self.assertTrue(os.path.exists(TestDirectedGraph.DIGRAPH_VIZ + ".pdf"))
+        self.assertTrue(os.path.exists(digraph_file))
+        self.assertTrue(os.path.exists(digraph_file + ".pdf"))
 
     def test_viztracing_default(self):
-        dag_copy = self.directed_graph.copy()
-        tt.create_test_resources_dir()
-        VizTracing.enable(tt.get_test_resources_path(), dag_copy)
+        pt.create_dir_in_user_home(TestDirectedGraph.RESOURCES_PATH)
+        VizTracing.enable(
+            pt.get_dir_in_user_home(TestDirectedGraph.RESOURCES_PATH), 
+            self.directed_graph)
         VizTracing.snapshot()
         self.assertTrue(True)
 
-    def test_viztracing_vertext_only(self):
+    def test_viztracing_vertex_only(self):
         self.vertices = {0: [1], 1: [2, 3], 2: [3],
                          3: [4, 6], 4: [5, 6], 5: [5], 6: [6]}
         self.directed_graph = DirectedGraph(self.vertices)        
-        dag_copy = self.directed_graph.copy()
-        vertex_1 = dag_copy.get_vertex(1)
+        vertex_1 = self.directed_graph.get_vertex(1)
         vertex_1.set_attr("activated", True)
-        vertex_2 = dag_copy.get_vertex(2)
+        vertex_2 = self.directed_graph.get_vertex(2)
         vertex_2.set_attr("in_cycle", True)
-        tt.create_test_resources_dir()
-        VizTracing.enable(tt.get_test_resources_path(), dag_copy,
+        pt.create_dir_in_user_home(TestDirectedGraph.RESOURCES_PATH)
+        VizTracing.enable(pt.get_dir_in_user_home(TestDirectedGraph.RESOURCES_PATH),
+            self.directed_graph,
             vertex_states=[
-                {"activated": {"fillcolor":"red", "style": "filled"}}, 
-                {"in_cycle": {"fillcolor":"blue", "style": "filled"}}])
+                {VizTracing.ACTIVATED: {"fillcolor":"red", "style": "filled"}}, 
+                {VizTracing.IN_CYCLE: {"fillcolor":"blue", "style": "filled"}}])
         VizTracing.snapshot()
         self.assertTrue(True)
 
-    def tearDown(self):
+    def test_viztracing_activate_vertex(self):
+        self.vertices = {0: [1], 1: [2, 3], 2: [3],
+                         3: [4, 6], 4: [5, 6], 5: [5], 6: [6]}
+        self.directed_graph = DirectedGraph(self.vertices)        
+        vertex_1 = self.directed_graph.get_vertex(1)
+        pt.create_dir_in_user_home(TestDirectedGraph.RESOURCES_PATH)
+        VizTracing.enable(pt.get_dir_in_user_home(TestDirectedGraph.RESOURCES_PATH), 
+            self.directed_graph,
+            vertex_states=[
+                {VizTracing.ACTIVATED: {"fillcolor":"red", "style": "filled"}}, 
+                {VizTracing.IN_CYCLE: {"fillcolor":"blue", "style": "filled"}}])        
+        VizTracing.change_activated_vertex(self.directed_graph, vertex_1)
+        for label, vertex in self.directed_graph.get_vertices().items():
+            if vertex_1.get_label() == label:
+                self.assertTrue(vertex.get_attr(VizTracing.ACTIVATED))
+            else:
+                self.assertFalse(vertex.get_attr(VizTracing.ACTIVATED))
 
+    def test_viztracing_set_status(self):
+        self.vertices = {0: [1], 1: [2, 3], 2: [3],
+                         3: [4, 6], 4: [5, 6], 5: [5], 6: [6]}
+        self.directed_graph = DirectedGraph(self.vertices)        
+        vertex_5 = self.directed_graph.get_vertex(5)
+        vertex_6 = self.directed_graph.get_vertex(6)
+        pt.create_dir_in_user_home(TestDirectedGraph.RESOURCES_PATH)        
+        VizTracing.enable(pt.get_dir_in_user_home(TestDirectedGraph.RESOURCES_PATH), 
+            self.directed_graph,
+            vertex_states=[
+                {VizTracing.ACTIVATED: {"fillcolor":"red", "style": "filled"}}, 
+                {VizTracing.IN_CYCLE: {"fillcolor":"blue", "style": "filled"}}])        
+        VizTracing.set_status(self.directed_graph, vertex_5, VizTracing.IN_CYCLE)
+        VizTracing.set_status(self.directed_graph, vertex_6, VizTracing.IN_CYCLE)
+        for label, vertex in self.directed_graph.get_vertices().items():
+            if vertex_5.get_label() == label or vertex_6.get_label() == label:
+                self.assertTrue(vertex.get_attr(VizTracing.IN_CYCLE))
+            else:
+                self.assertFalse(vertex.get_attr(VizTracing.IN_CYCLE))
+
+    def test_viztracing_snapshot(self):
+        pt.create_dir_in_user_home(TestDirectedGraph.RESOURCES_PATH)
+        VizTracing.enable(pt.get_dir_in_user_home(TestDirectedGraph.RESOURCES_PATH), self.directed_graph)
+        VizTracing.snapshot() 
+        self.assertTrue(os.path.exists(path.join(pt.get_dir_in_user_home(TestDirectedGraph.RESOURCES_PATH),
+            VizTracing.IMAGE_NAME_PREFIX + str(VizTracing.snapshot_no - 1) + "." + 
+            VizTracing.IMAGE_TYPE)))
+        VizTracing.snapshot() 
+        self.assertTrue(os.path.exists(path.join(pt.get_dir_in_user_home(TestDirectedGraph.RESOURCES_PATH),
+            VizTracing.IMAGE_NAME_PREFIX + str(VizTracing.snapshot_no - 1) + "." + 
+            VizTracing.IMAGE_TYPE)))
+
+    def test_viztracing_acyclic(self):
+        Logging.enable()
+        self.vertices = {0: [1], 1: [2, 3], 2: [3],
+                         3: [4, 6], 4: [5, 6], 5: [7, 8],6:[7, 8], 
+                         7: [9, 10, 11], 8: [11, 12], 9: [], 
+                         10: [11], 11: [12], 12: []}
+        self.directed_graph = DirectedGraph(self.vertices)        
+        pt.create_dir_in_user_home(TestDirectedGraph.RESOURCES_PATH)
+        VizTracing.enable(
+            pt.get_dir_in_user_home(TestDirectedGraph.RESOURCES_PATH), 
+            self.directed_graph,
+            vertex_states=[
+                    {VizTracing.ACTIVATED: {"fillcolor":"red", "style": "filled"}}, 
+                    {VizTracing.IN_CYCLE: {"fillcolor":"blue", "style": "filled"}},
+                    {VizTracing.VISISTED: {"fillcolor":"gray", "style": "filled"}}])
+        self.directed_graph.is_cyclic()       
+        a = 100 
+
+    def test_viztracing_cyclic(self):
+        Logging.enable()
+        self.vertices = {0: [1], 1: [2, 3], 2: [3],
+                         3: [4, 6], 4: [5, 6], 5: [7, 8], 6:[7, 8], 
+                         7: [9, 10, 11], 8: [3], 9: [], 
+                         10: [11], 11: [12], 12: []}
+        self.directed_graph = DirectedGraph(self.vertices)        
+        pt.create_dir_in_user_home(TestDirectedGraph.RESOURCES_PATH)
+        VizTracing.enable(
+            pt.get_dir_in_user_home(TestDirectedGraph.RESOURCES_PATH), 
+            self.directed_graph,
+            vertex_states=[
+                    {VizTracing.ACTIVATED: {"fillcolor":"red", "style": "filled"}}, 
+                    {VizTracing.IN_CYCLE: {"fillcolor":"blue", "style": "filled"}},
+                    {VizTracing.VISISTED: {"fillcolor":"gray", "style": "filled"}}])
+        self.directed_graph.is_cyclic()       
+        a = 100 
+                
+    def tearDown(self):
         try:
-            tt.clean_test_resources()
-            self.assertFalse(os.path.exists(tt.get_test_resources_path))
+            pt.clean_dir_in_user_home(TestDirectedGraph.RESOURCES_PATH)
+            self.assertFalse(os.path.exists(pt.get_dir_in_user_home(TestDirectedGraph.RESOURCES_PATH)))
         except:
             pass
 

@@ -1,5 +1,6 @@
 from util.logging import Logging
 import graph.directed_graph.kosaraju_helper as kh
+from graph.directed_graph.viz_tracing import VizTracing
 
 """ Helper module for DirectedGraph class
 """
@@ -118,24 +119,23 @@ def is_cyclic_dfs(directed_graph, vertex, traversed_already, in_cycle):
     """
 
     traversed_already[vertex] = True
+    viztrace_visit_tail(directed_graph, directed_graph.get_vertices()[vertex])
     in_cycle[vertex] = True
 
     Logging.inc_indent()
     for head in directed_graph.get_vertices()[vertex].get_heads():
         Logging.log("Vertex {0}, head {1}", vertex, head.get_label())
         if traversed_already.get(head.get_label()) is None:
-            Logging.log("Tail {0} not yet traversed", head.get_label())
+            Logging.log("Head {0} not yet traversed", head.get_label())
             if is_cyclic_dfs(directed_graph, head.get_label(), traversed_already, in_cycle):
-                Logging.log(
-                    "Vertex {0} just reported a cyclic", head.get_label())
-                Logging.dec_indent()
+                viztrace_log_cycle_found(directed_graph, head)
                 return True
         elif in_cycle[head.get_label()]:
             Logging.log("Vertex {0}, head {1} cycle just found", vertex, head.get_label())
             Logging.dec_indent()
             return True
         elif traversed_already.get(head.get_label()):
-            Logging.log("Tail {0} traversed already", head.get_label())
+            Logging.log("Head {0} traversed already", head.get_label())
 
     in_cycle[vertex] = False
     Logging.dec_indent()
@@ -156,11 +156,30 @@ def is_cyclic(directed_graph):
     Logging.log("\nStarting cycle check")
     traversed_already = dict()
     in_cycle = {i:False for i in directed_graph.get_vertices().keys()}
-    for vertex in directed_graph.get_vertices().keys():
-        Logging.log("Vertex {0}", vertex)
-        if traversed_already.get(vertex) is None:
-            if is_cyclic_dfs(directed_graph, vertex, traversed_already, in_cycle):
+    for label, vertex in directed_graph.get_vertices().items():
+        viztrace_log_activated_vertex(directed_graph, vertex)
+        if traversed_already.get(label) is None:
+            if is_cyclic_dfs(directed_graph, label, traversed_already, in_cycle):
                 return True
 
     return False
+
+
+def viztrace_log_activated_vertex(directed_graph, vertex):
+    Logging.log("Vertex {0}", vertex.get_label())
+    VizTracing.change_activated_vertex(directed_graph, vertex)
+    VizTracing.snapshot()
+
+
+def viztrace_log_cycle_found(directed_graph, vertex):
+    Logging.log("Vertex {0} just reported a cyclic", vertex.get_label())
+    Logging.dec_indent()
+    VizTracing.set_status(directed_graph, vertex, VizTracing.IN_CYCLE)
+    VizTracing.snapshot()
+
+
+def viztrace_visit_tail(directed_graph, vertex):
+    VizTracing.change_activated_vertex(directed_graph, vertex)
+    VizTracing.set_status(directed_graph, vertex, VizTracing.VISISTED)
+    VizTracing.snapshot()
 
