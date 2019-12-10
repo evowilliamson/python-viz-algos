@@ -15,6 +15,15 @@ class VizTracing:
 
     [ {"some_state": {**args} ..., {"default": {**args} ]
 
+    For example:
+        vertex_states=[
+                        {VizTracing.ACTIVATED: {"fillcolor":"red", "style": "filled"}}, 
+                        {VizTracing.IN_CYCLE: {"fillcolor":"blue", "style": "filled"}},
+                        {VizTracing.VISISTED: {"fillcolor":"gray", "style": "filled"}}])
+
+    VizTracing.ACTIVATED takes precedence over VizTracing.IN_CYCLE takes predecence over
+    VizTracing.VISITED by definition of the list
+
     """
 
     tracing = False
@@ -34,6 +43,16 @@ class VizTracing:
 
     @classmethod
     def enable(cls, path, directed_graph, vertex_states=None, edge_states=None):
+        """ Class method that initialises the tracing functionality
+
+        Args:
+            path: the path that will contain the generated trace images
+            directed_graph(DirectedGraph): the directed graph
+            vertex_states(list): a list of stated definitions (see class) for the vertices
+            edge_states(list): a list of stated definitions (see class) for the edges
+
+        """
+
         VizTracing.tracing = True
         VizTracing.path = path
         VizTracing.directed_graph = directed_graph
@@ -58,11 +77,11 @@ class VizTracing:
 
         if not VizTracing.tracing:
             return
-
-        VizTracing.set_status(directed_graph, vertex, VizTracing.ACTIVATED)
-        for label, v in directed_graph.get_vertices().items():
-            if label != vertex.get_label():
-                VizTracing.reset_status(directed_graph, v, VizTracing.ACTIVATED)
+        else:
+            VizTracing.set_status(directed_graph, vertex, VizTracing.ACTIVATED)
+            for label, v in directed_graph.get_vertices().items():
+                if label != vertex.get_label():
+                    VizTracing.reset_status(directed_graph, v, VizTracing.ACTIVATED)
 
     @classmethod
     def change_activated_edge(cls, directed_graph, edge: Edge):
@@ -76,13 +95,13 @@ class VizTracing:
 
         if not VizTracing.tracing:
             return
-
-        for v in directed_graph.get_vertices().items():
-            for e in v.get_heads():
-                if e.get_label() == edge.get_head:
-                    e.set_attr(VizTracing.ACTIVATED, True)
-                else:
-                    e.set_attr(VizTracing.ACTIVATED, False)
+        else:
+            for v in directed_graph.get_vertices().items():
+                for e in v.get_heads():
+                    if e.get_label() == edge.get_head:
+                        e.set_attr(VizTracing.ACTIVATED, True)
+                    else:
+                        e.set_attr(VizTracing.ACTIVATED, False)
 
     @classmethod
     def set_status(cls, directed_graph, object, status):
@@ -96,8 +115,8 @@ class VizTracing:
 
         if not VizTracing.tracing:
             return
-
-        object.set_attr(status, True)
+        else:
+            object.set_attr(status, True)
 
     @classmethod
     def reset_status(cls, directed_graph, object, status):
@@ -111,8 +130,8 @@ class VizTracing:
 
         if not VizTracing.tracing:
             return
-
-        object.set_attr(status, False)
+        else:
+            object.set_attr(status, False)
 
     @classmethod
     def snapshot(cls):
@@ -126,25 +145,25 @@ class VizTracing:
 
         if not VizTracing.tracing:
             return
+        else:
+            graph = Digraph(format=VizTracing.IMAGE_TYPE)
+            for label, vertex in VizTracing.directed_graph._vertices.items():
+                found = False; default_state = None
+                for state in VizTracing.vertex_states:
+                    attr_name, attr_values = next(iter(state.items()))
+                    if attr_name != VizTracing.DEFAULT and vertex.get_attr(attr_name):
+                        graph.node(str(label), label=None, _attributes=None, **attr_values)
+                        found = True
+                        break
+                    elif attr_name == VizTracing.DEFAULT:
+                        default_state = attr_values
+                if not found:
+                    graph.node(str(label), default_state or VizTracing.DEFAULT_STATE)
 
-        graph = Digraph(format=VizTracing.IMAGE_TYPE)
-        for label, vertex in VizTracing.directed_graph._vertices.items():
-            found = False; default_state = None
-            for state in VizTracing.vertex_states:
-                attr_name, attr_values = next(iter(state.items()))
-                if attr_name != VizTracing.DEFAULT and vertex.get_attr(attr_name):
-                    graph.node(str(label), label=None, _attributes=None, **attr_values)
-                    found = True
-                    break
-                elif attr_name == VizTracing.DEFAULT:
-                    default_state = attr_values
-            if not found:
-                graph.node(str(label), default_state or VizTracing.DEFAULT_STATE)
+                for head in vertex.get_heads():
+                    graph.edge(str(label), str(head.get_label()))
 
-            for head in vertex.get_heads():
-                graph.edge(str(label), str(head.get_label()))
-
-        graph.render(path.join(VizTracing.path, 
-            VizTracing.IMAGE_NAME_PREFIX + ("{:04d}".format(VizTracing.snapshot_no))))
-        VizTracing.snapshot_no += 1
+            graph.render(path.join(VizTracing.path, 
+                VizTracing.IMAGE_NAME_PREFIX + ("{:04d}".format(VizTracing.snapshot_no))))
+            VizTracing.snapshot_no += 1
     

@@ -125,13 +125,12 @@ def is_cyclic_dfs(directed_graph, vertex, traversed_already, in_cycle):
     for head in vertex.get_heads():
         if traversed_already.get(head.get_label()) is None:
             if is_cyclic_dfs(directed_graph, head, traversed_already, in_cycle):
-                viztrace_log_cycle_reported(directed_graph, head)
+                viztrace_cycle_reported(directed_graph, head)
                 return True
             else:
-                VizTracing.change_activated_vertex(directed_graph, vertex)
-                VizTracing.snapshot()
+                viztrace_vertex(directed_graph, vertex)
         elif in_cycle[head.get_label()]:
-            viztrace_log_cycle_found(directed_graph, vertex, head)
+            viztrace_cycle_found(directed_graph, vertex, head)
             return True
 
     in_cycle[vertex.get_label()] = False
@@ -160,20 +159,58 @@ def is_cyclic(directed_graph):
     return False
 
 
-def viztrace_log_cycle_reported(directed_graph, vertex):
+def viztrace_cycle_reported(directed_graph, vertex):
+    """ Function that is used along the way back from the origin
+    of the cycle detection to the initial state. Along the way,
+    all vertices are tagged with the state in_cycle
+
+    Args:
+        directed_graph (DirectedGraph): The directed graph
+        vertex: the vertex that should get the status activated
+
+    """    
     VizTracing.set_status(directed_graph, vertex, VizTracing.IN_CYCLE)
     VizTracing.change_activated_vertex(directed_graph, vertex)    
     VizTracing.snapshot()
 
 
 def viztrace_visit_tail(directed_graph, vertex):
+    """ Function that is used to tag vertices with the state "visisted", 
+    if these vertices have been visited once. So next time, when another predecessor
+    of a tagged vertex is being considered, it is skipped
+
+    Args:
+        directed_graph (DirectedGraph): The directed graph
+        vertex: the vertex that should get the status "visited"
+
+    """
     VizTracing.change_activated_vertex(directed_graph, vertex)
     VizTracing.set_status(directed_graph, vertex, VizTracing.VISISTED)
     VizTracing.snapshot()
 
 
-def viztrace_log_cycle_found(directed_graph, tail, head):
+def viztrace_cycle_found(directed_graph, tail, head):
+    """ Changes the state of a vertex when the vertex is part of a cycle
+
+    Args:
+        directed_graph (DirectedGraph): The directed graph
+        tail: the tail vertex that should get the status activated
+        head: the head vertex that should get the in_cycle status
+
+    """
+        
     VizTracing.set_status(directed_graph, head, VizTracing.IN_CYCLE)
     VizTracing.change_activated_vertex(directed_graph, head)    
     VizTracing.snapshot()
 
+def viztrace_vertex(directed_graph, vertex):
+    """ Changes focus to the vertex and takes a snapshot
+
+    Args:
+        directed_graph (DirectedGraph): The directed graph
+        vertex: the vertex that should get the status activated
+
+    """
+
+    VizTracing.change_activated_vertex(directed_graph, vertex)
+    VizTracing.snapshot()
