@@ -32,8 +32,6 @@ class VizTracing:
     IN_CYCLE = "in_cycle"
     VISISTED = "visited"
 
-    snapshot_no = 1
-
     @classmethod
     def enable(cls, path, directed_graph, vertex_states=None, edge_states=None):
         VizTracing.tracing = True
@@ -41,6 +39,8 @@ class VizTracing:
         VizTracing.directed_graph = directed_graph
         VizTracing.vertex_states = vertex_states or [{VizTracing.DEFAULT: VizTracing.DEFAULT_STATE}]
         VizTracing.edge_states = edge_states or [{VizTracing.DEFAULT: VizTracing.DEFAULT_STATE}]
+        VizTracing.snapshot_no = 1
+
 
     @classmethod
     def disable(cls):

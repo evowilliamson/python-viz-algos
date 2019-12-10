@@ -222,8 +222,7 @@ class TestDirectedGraph(unittest.TestCase):
                     {VizTracing.ACTIVATED: {"fillcolor":"red", "style": "filled"}}, 
                     {VizTracing.IN_CYCLE: {"fillcolor":"blue", "style": "filled"}},
                     {VizTracing.VISISTED: {"fillcolor":"gray", "style": "filled"}}])
-        self.directed_graph.is_cyclic()       
-        a = 100 
+        self.assertFalse(self.directed_graph.is_cyclic())       
 
     def test_viztracing_cyclic(self):
         Logging.enable()
@@ -240,8 +239,7 @@ class TestDirectedGraph(unittest.TestCase):
                     {VizTracing.ACTIVATED: {"fillcolor":"red", "style": "filled"}}, 
                     {VizTracing.IN_CYCLE: {"fillcolor":"blue", "style": "filled"}},
                     {VizTracing.VISISTED: {"fillcolor":"gray", "style": "filled"}}])
-        self.directed_graph.is_cyclic()       
-        a = 100 
+        self.assertTrue(self.directed_graph.is_cyclic())       
                 
     def tearDown(self):
         try:
