@@ -200,11 +200,11 @@ class TestDirectedGraph(unittest.TestCase):
         VizTracing.enable(pt.get_dir_in_user_home(TestDirectedGraph.RESOURCES_PATH), self.directed_graph)
         VizTracing.snapshot() 
         self.assertTrue(os.path.exists(path.join(pt.get_dir_in_user_home(TestDirectedGraph.RESOURCES_PATH),
-            VizTracing.IMAGE_NAME_PREFIX + str(VizTracing.snapshot_no - 1) + "." + 
+            VizTracing.IMAGE_NAME_PREFIX + ("{:04d}".format(VizTracing.snapshot_no - 1)) + "." + 
             VizTracing.IMAGE_TYPE)))
         VizTracing.snapshot() 
         self.assertTrue(os.path.exists(path.join(pt.get_dir_in_user_home(TestDirectedGraph.RESOURCES_PATH),
-            VizTracing.IMAGE_NAME_PREFIX + str(VizTracing.snapshot_no - 1) + "." + 
+            VizTracing.IMAGE_NAME_PREFIX + ("{:04d}".format(VizTracing.snapshot_no - 1)) + "." + 
             VizTracing.IMAGE_TYPE)))
 
     def test_viztracing_acyclic(self):
