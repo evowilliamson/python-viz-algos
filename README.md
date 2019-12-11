@@ -1,3 +1,3 @@
-# Algorithms and datastructures in Python
+# Visualization of algorithms in Python
 
-Composite repository containing algorithms and data structures implemented in Python
+This repository aims to make good visualizations of algorithms which are used in computer science
