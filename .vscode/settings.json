@@ -8,5 +8,29 @@
     ],
     "python.testing.pytestEnabled": false,
     "python.testing.nosetestsEnabled": false,
-    "python.testing.unittestEnabled": true
+    "python.testing.unittestEnabled": true,
+    "editor.suggestSelection": "first",
+    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+    "python.jediEnabled": false,
+    "java.configuration.checkProjectSettingsExclusions": false,
+    "[java]": {},
+    "files.exclude": {
+        "**/__pycache__": true
+    },
+    "java.home": "/usr/lib/jvm/java-11-amazon-corretto",
+    "java.completion.importOrder": [
+        "java",
+        "javax"
+    ],
+    "workbench.settings.editor": "json",
+    "workbench.settings.openDefaultSettings": true,
+    "window.zoomLevel": 0,
+    "python.pythonPath": "${workspaceFolder}/venv/bin/python",
+    "files.watcherExclude": {
+        "**/venv/*/**": true
+    },
+    "breadcrumbs.enabled": true,
+    "task.problemMatchers.neverPrompt": {
+        "shell": true
+    }    
 }
