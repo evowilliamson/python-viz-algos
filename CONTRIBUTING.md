@@ -48,7 +48,6 @@ Go to your virtual environment directory and activate it:
 In the root of the *py-viz-algs* project, run the test cases:
 
  ```python setup.py test```
-
 </br>
 </br>
 
