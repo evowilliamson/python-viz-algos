@@ -27,8 +27,8 @@ Before you start, just make sure that the test cases work!
 ### Activate your virtual environment
 Go to your virtual environment directory and activate it:
 
-```source \<venv\>/bin/activate``` (unix and mac) or
-```\<venv\>\Scripts\activate``` (windows) 
+* ```source \<venv\>/bin/activate``` (unix and mac) or
+* ```\<venv\>\Scripts\activate``` (windows) 
 
 ### Run the tests
 In the root of *py-viz-algs* project, run the test cases:
