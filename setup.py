@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 with open("README.md") as f:
     long_desc = f.read()
 
-setup(name="python-algorithms-datastructures",
+setup(name="py-visualize-algorithms",
       version=0.1,
       description="A set of algorithms and data structures",
       long_description=long_desc,
@@ -14,7 +14,7 @@ setup(name="python-algorithms-datastructures",
       author="Evo Williamson",
       author_email="evowilliamson@gmail.com",
       license="GNU General Public License, version 2",
-      url="https://github.com/evowilliamson/python-algorithms-datastructures",
+      url="https://github.com/evowilliamson/py-visualize-algorithms",
       packages=find_packages(),
       install_requires=[
           "graphviz",

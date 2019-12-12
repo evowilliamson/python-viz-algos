@@ -1,5 +1,4 @@
 *.pyc
-launch.json
 venv/
-.vscode/settings.json
+.vscode/
 
