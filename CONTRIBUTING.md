@@ -1,8 +1,10 @@
 
+
 # Contributing
 
 If you feel like contributing to this open-source project, this section contains some useful information to get started.
-
+</br>
+</br>
 ## Setting things up
 There is some stuff you should get:
 
@@ -17,12 +19,13 @@ You will need to install Graphviz on your system in order to render generated **
 
 ### Virtual environment
 It's advisable to create a Python virtual environment for this open-source project, as you don't want other libraries to cause dependency issue in this project. Take a look at this [link](https://docs.python.org/3/library/venv.html#module-venv).
-
+</br>
+</br>
 
 ## Getting the source 
 OK, so get the source of this project: Fork the repository and clone it to your system.
-
-
+</br>
+</br>
 ## Running the tests
 Before you start, just make sure that the test cases work! 
 
