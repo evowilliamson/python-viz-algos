@@ -6,7 +6,7 @@
 If you feel like contributing to this open-source project, this section contains some useful information to get started.
 </br>
 
-[Custom foo description](#setting-things-up)
+
 
 </br>
 ## Setting things up
