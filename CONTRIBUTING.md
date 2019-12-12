@@ -9,6 +9,8 @@ If you feel like contributing to this open-source project, this section contains
 [Setting things up](#setting-things-up)</br>
 [Getting the source](#getting-the-source)</br>
 [Running the tests](#running-the-tests)</br>
+[Making good pull requests](#making-good-pull-requests)</br>
+
 </br>
 </br>
 
@@ -46,4 +48,7 @@ Go to your virtual environment directory and activate it:
 In the root of the *py-viz-algs* project, run the test cases:
 
  ```python setup.py test```
+
+## Making good pull requests
+WIP - For the time being, just make sure that your merge the upstream master regularly, so the amount of conflicts will be kept to a minimum
 
