@@ -1,0 +1,29 @@
+{
+    "editor.suggestSelection": "first",
+    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+    "python.jediEnabled": false,
+    "files.exclude": {
+        "**/__pycache__": true
+    },
+    "workbench.settings.editor": "json",
+    "workbench.settings.openDefaultSettings": true,
+    "window.zoomLevel": 0,
+    "python.pythonPath": "${workspaceFolder}/venv/bin/python",
+    "files.watcherExclude": {
+        "**/venv/*/**": true
+    },
+    "breadcrumbs.enabled": true,
+    "task.problemMatchers.neverPrompt": {
+        "shell": true
+    },
+    "python.testing.unittestArgs": [
+        "-v",
+        "-s",
+        "./tests",
+        "-p",
+        "test*.py"
+    ],
+    "python.testing.pytestEnabled": false,
+    "python.testing.nosetestsEnabled": false,
+    "python.testing.unittestEnabled": true    
+}
