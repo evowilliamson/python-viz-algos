@@ -40,6 +40,7 @@ class VizTracing:
     ACTIVATED = "activated"
     IN_CYCLE = "in_cycle"
     VISISTED = "visited"
+    DISABLED = "disabled"
 
     @classmethod
     def enable(cls, path, directed_graph, vertex_states=None, edge_states=None):
@@ -82,26 +83,6 @@ class VizTracing:
             for label, v in directed_graph.get_vertices().items():
                 if label != vertex.get_label():
                     VizTracing.reset_status(directed_graph, v, VizTracing.ACTIVATED)
-
-    @classmethod
-    def change_activated_edge(cls, directed_graph, edge: Edge):
-        """ Function that sets the "active" status of the edge to true. It deactivates all
-        other edges
-
-        Args:
-            directed_graph(DirectedGraph): directed graph object
-            edge(Edge): the edge to be activated
-        """
-
-        if not VizTracing.tracing:
-            return
-        else:
-            for v in directed_graph.get_vertices().items():
-                for e in v.get_heads():
-                    if e.get_label() == edge.get_head:
-                        e.set_attr(VizTracing.ACTIVATED, True)
-                    else:
-                        e.set_attr(VizTracing.ACTIVATED, False)
 
     @classmethod
     def set_status(cls, directed_graph, object, status):
@@ -160,9 +141,24 @@ class VizTracing:
                 if not found:
                     graph.node(str(label), default_state or VizTracing.DEFAULT_STATE)
 
-                for head in vertex.get_heads():
-                    graph.edge(str(label), str(head.get_label()))
-
+                for edge in vertex.get_edges():
+                    found = False; default_state = None
+                    for state in VizTracing.edge_states:
+                        attr_name, attr_values = next(iter(state.items()))
+                        if attr_name != VizTracing.DEFAULT and edge.get_attr(attr_name):
+                            graph.edge(
+                                str(edge.get_tail().get_label()), 
+                                str(edge.get_head().get_label()),
+                                label=None, _attributes=None, **attr_values)
+                            found = True
+                            break
+                        elif attr_name == VizTracing.DEFAULT:
+                            default_state = attr_values
+                    if not found:
+                        graph.edge(
+                            str(edge.get_tail().get_label()), 
+                            str(edge.get_head().get_label()))
+             
             graph.render(path.join(VizTracing.path, 
                 VizTracing.IMAGE_NAME_PREFIX + ("{:04d}".format(VizTracing.snapshot_no))))
             VizTracing.snapshot_no += 1

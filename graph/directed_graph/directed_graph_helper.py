@@ -122,16 +122,18 @@ def is_cyclic_dfs(directed_graph, vertex, traversed_already, in_cycle):
     in_cycle[vertex.get_label()] = True
     viztrace_visit_tail(directed_graph, vertex)
 
-    for head in vertex.get_heads():
-        if traversed_already.get(head.get_label()) is None:
-            if is_cyclic_dfs(directed_graph, head, traversed_already, in_cycle):
-                viztrace_cycle_reported(directed_graph, head)
+    for edge in vertex.get_edges():
+        if traversed_already.get(edge.get_head().get_label()) is None:
+            if is_cyclic_dfs(directed_graph, edge.get_head(), traversed_already, in_cycle):
+                viztrace_cycle_reported(directed_graph, edge.get_head())
                 return True
             else:
                 viztrace_vertex(directed_graph, vertex)
-        elif in_cycle[head.get_label()]:
-            viztrace_cycle_found(directed_graph, vertex, head)
+        elif in_cycle[edge.get_head().get_label()]:
+            viztrace_cycle_found(directed_graph, vertex, edge.get_head())
             return True
+        elif traversed_already.get(edge.get_head().get_label()):
+            viztrace_already_traversed(directed_graph, edge)
 
     in_cycle[vertex.get_label()] = False
     return False
@@ -203,14 +205,36 @@ def viztrace_cycle_found(directed_graph, tail, head):
     VizTracing.change_activated_vertex(directed_graph, head)    
     VizTracing.snapshot()
 
+
 def viztrace_vertex(directed_graph, vertex):
     """ Changes focus to the vertex and takes a snapshot
 
     Args:
-        directed_graph (DirectedGraph): The directed graph
+        directed_graph(DirectedGraph): The directed graph
         vertex: the vertex that should get the status activated
 
     """
 
     VizTracing.change_activated_vertex(directed_graph, vertex)
     VizTracing.snapshot()
+
+
+def viztrace_already_traversed(directed_graph, edge):
+    """ Function that takes a snapshot after having disabled the
+    edge. This is to indicate that the transition cannot be taken
+
+    Args:
+        directed_graph(DirectedGraph): The directed graph
+        edge(Edge): the edge to be disabled
+    """
+
+    VizTracing.set_status(directed_graph, edge, VizTracing.DISABLED)
+    VizTracing.snapshot()
+    VizTracing.reset_status(directed_graph, edge, VizTracing.DISABLED)
+    VizTracing.snapshot()    
+
+
+
+
+
+    

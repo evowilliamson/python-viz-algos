@@ -56,6 +56,9 @@ class Vertex():
     def get_heads(self):
         return [e.get_head() for e in self._edges]
 
+    def get_edges(self):
+        return self._edges
+
     def get_indegree(self):
         return self._indegree
 

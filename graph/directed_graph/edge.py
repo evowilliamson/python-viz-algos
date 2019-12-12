@@ -24,4 +24,4 @@ class Edge(object):
         self._attrs[attr] = value
 
     def get_attr(self, attr):
-        return self._attrs[attr]
+        return self._attrs.get(attr)
