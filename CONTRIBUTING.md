@@ -6,9 +6,9 @@
 If you feel like contributing to this open-source project, this section contains some useful information to get started.
 </br>
 
-[Setting things up](#setting-things-up)
-[Getting the source](#getting-the-source)
-[Running the tests](#running-the-tests)
+[Setting things up](#setting-things-up)</br>
+[Getting the source](#getting-the-source)</br>
+[Running the tests](#running-the-tests)</br>
 </br>
 </br>
 
