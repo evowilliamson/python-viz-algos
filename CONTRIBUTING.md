@@ -36,7 +36,7 @@ Go to your virtual environment directory and activate it:
 * ```\<venv\>\Scripts\activate``` (windows) 
 
 ### Run the tests
-In the root of *py-viz-algs* project, run the test cases:
+In the root of the *py-viz-algs* project, run the test cases:
 
  ```python setup.py test```
 
