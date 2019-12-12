@@ -49,6 +49,8 @@ In the root of the *py-viz-algs* project, run the test cases:
 
  ```python setup.py test```
 
+</br>
+</br>
 ## Making good pull requests
 WIP - For the time being, just make sure that your merge the upstream master regularly, so the amount of conflicts will be kept to a minimum
 
