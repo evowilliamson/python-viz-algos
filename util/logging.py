@@ -1,7 +1,6 @@
 """ Module that defines a logging class that offers basic logging with indentation
 and log yes/no switch
 """
-
 class Logging:
     """ Class that is accessed in a static way. It contains functions for basic logging
     """

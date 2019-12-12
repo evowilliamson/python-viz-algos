@@ -3,7 +3,6 @@ import cv2
 
 """ Module that contains tools for handling videos
 """
-
 def convert_images_to_video(
         resource_path, 
         video_name="video.avi", image_type="png", video_type="mp4v", fps=2.0):
