@@ -1,5 +1,6 @@
 
 
+
 # Contributing
 
 If you feel like contributing to this open-source project, this section contains some useful information to get started.
@@ -32,8 +33,8 @@ Before you start, just make sure that the test cases work!
 ### Activate your virtual environment
 Go to your virtual environment directory and activate it:
 
-* ```source \<venv\>/bin/activate``` (unix and mac) or
-* ```\<venv\>\Scripts\activate``` (windows) 
+* ```source <venv-dir>/bin/activate``` (unix and mac) or
+* ```<venv-dir>\Scripts\activate``` (windows) 
 
 ### Run the tests
 In the root of the *py-viz-algs* project, run the test cases:
