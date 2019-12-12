@@ -9,6 +9,7 @@ If you feel like contributing to this open-source project, this section contains
 
 
 </br>
+
 ## Setting things up
 There is some stuff you should get:
 
