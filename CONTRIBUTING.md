@@ -1,10 +1,19 @@
 
 
+
 # Contributing
 
 If you feel like contributing to this open-source project, this section contains some useful information to get started.
 </br>
+
+[Setting things up](#setting-things-up)</br>
+[Getting the source](#getting-the-source)</br>
+[Running the tests](#running-the-tests)</br>
+[Making good pull requests](#making-good-pull-requests)</br>
+
 </br>
+</br>
+
 ## Setting things up
 There is some stuff you should get:
 
@@ -32,11 +41,16 @@ Before you start, just make sure that the test cases work!
 ### Activate your virtual environment
 Go to your virtual environment directory and activate it:
 
-* ```source \<venv\>/bin/activate``` (unix and mac) or
-* ```\<venv\>\Scripts\activate``` (windows) 
+* ```source <venv-dir>/bin/activate``` (unix and mac) or
+* ```<venv-dir>\Scripts\activate``` (windows) 
 
 ### Run the tests
 In the root of the *py-viz-algs* project, run the test cases:
 
  ```python setup.py test```
+</br>
+</br>
+
+## Making good pull requests
+WIP - For the time being, just make sure that your merge the upstream master regularly, so the amount of conflicts will be kept to a minimum
 
