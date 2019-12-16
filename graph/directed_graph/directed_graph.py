@@ -53,6 +53,9 @@ class DirectedGraph(object):
         Args:
             label: a vertex represented by its label
 
+        Returns:
+            Vertex: the requested vertex
+
         """
 
         return self._vertices[label]
