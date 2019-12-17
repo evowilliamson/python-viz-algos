@@ -132,6 +132,9 @@ class TestDirectedGraph(unittest.TestCase):
         self.assertTrue(os.path.exists(digraph_file))
         self.assertTrue(os.path.exists(digraph_file + ".pdf"))
 
+    # TODO Move the below test cases to the main runner ?
+    # TODO A new package needs to be created for this 
+    
     # def test_viztracing_default(self):
     #     pt.create_dir_in_user_home(TestDirectedGraph.RESOURCES_PATH)
     #     VizTracing.enable(

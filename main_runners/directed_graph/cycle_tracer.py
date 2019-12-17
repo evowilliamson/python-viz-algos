@@ -9,6 +9,7 @@ from graph.directed_graph.viz_tracing import VizTracing
 from util.logging import Logging
 from util import path_tools as pt, video_tools as vt
 from graph.directed_graph.directed_graph import DirectedGraph
+from main_runners.viz_tracing_advisor import VizTracingAdvisor
 
 RESOURCES_PATH = "python-resources"
 
@@ -59,7 +60,7 @@ def viztrace(vertices, resource_path):
                     {VizTracing.IN_CYCLE: {"fillcolor":"blue", "style": "filled"}},
                     {VizTracing.VISISTED: {"fillcolor":"gray", "style": "filled"}}],
         edge_states=[{VizTracing.DISABLED: {"color":"red"}}])
-    directed_graph.is_cyclic()
+    directed_graph.is_cyclic(VizTracingAdvisor())
     viztrace_log_finish(directed_graph)
     vt.convert_images_to_video(pt.get_dir_in_user_home(work_path))
    

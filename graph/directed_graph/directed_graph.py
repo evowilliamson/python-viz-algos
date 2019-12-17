@@ -125,18 +125,13 @@ class DirectedGraph(object):
     def get_reversed_graph(self):
         return directed_graph_helper.get_reversed_graph(self)
 
-    def is_cyclic(self):
+    def is_cyclic(self, advisor=Advisor()):
+        """ Method that uses a helper module to check for cycles in the directed graph
 
-        return cyclic.is_cyclic(self, RealAdvice())
+        Args:
+            advisor(Advisor): The class that implements the advice that is to be inserted
+                at join points in the algorith. The default advice is empty
+        
+        """
 
-
-class RealAdvice(Advisor):
-
-    def __init__(self):
-        super().__init__()
-
-    def advice_1(self, **kwargs):
-        print(kwargs)
-
-    def advice_2(self, **kwargs):
-        print(kwargs)        
+        return cyclic.is_cyclic(self, advisor)
