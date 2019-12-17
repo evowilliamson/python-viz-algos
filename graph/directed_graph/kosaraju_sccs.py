@@ -1,7 +1,6 @@
 from util.logging import Logging
-import graph.directed_graph.kosaraju_helper as kh
 
-""" Helper module for DirectedGraph class
+""" Module that contains the logic for kosaraju's SCCs algorithm
 """
 
 
@@ -25,17 +24,17 @@ def create_sccs_kosaraju_dfs(directed_graph, nontrivial):
     for vertex in directed_graph.get_vertices().keys():
         if visited.get(vertex) is None:
             Logging.log("Vertex {0} not visited, go deep", vertex)
-            kh.fill_order_dfd_sccs(directed_graph, vertex, visited, stack)
+            fill_order_dfd_sccs(directed_graph, vertex, visited, stack)
         else:
             Logging.log("Vertex {0} already visited, skipping", vertex)
 
-    reversed_graph = get_reversed_graph(directed_graph)
+    reversed_graph = directed_graph.get_reversed_graph()
 
     visited = dict()
     for i in reversed(stack):
         if visited.get(i) is None:
             sccs_trivial.append(set())
-            kh.visit_dfs_sccs(reversed_graph, i, visited, sccs_trivial[-1])
+            visit_dfs_sccs(reversed_graph, i, visited, sccs_trivial[-1])
 
     if nontrivial:
         return filter_nontrivial(sccs_trivial, directed_graph)
@@ -71,28 +70,42 @@ def filter_nontrivial(sccs_trivial, directed_graph):
     return sccs_non_trivial
 
 
-def get_reversed_graph(directed_graph):
-    """ Function that returns the reverse of this graph  
+def visit_dfs_sccs(directed_graph, vertex, visited, scc):
+    """ Function that performs a recursive depth first search on the directed graph
+    to check whether vertices have been visisted
 
     Args:
-        directed_graph (DirectedGraph): The directed graph 
-
-    Returns:
-        DirectedGraph: The reversed graph
+        directed_graph(DirectedGraph): The directed graph 
+        vertex (label): The current vertex
+        visited (dict): A dictionary that maintains whether vertices have been visisted
+        scc (set): The current scc being constructed
 
     """
 
-    reversed = directed_graph.__class__()
-    for i in directed_graph.get_vertices().keys():
-        reversed.add_vertex(i)
+    visited[vertex] = True
+    scc.add(vertex)
+    for head in directed_graph.get_vertices()[vertex].get_heads():
+        if visited.get(head.get_label()) is None:
+            visit_dfs_sccs(directed_graph, head.get_label(), visited, scc)
 
-    for i in directed_graph.get_vertices().keys():
-        vertex = directed_graph.get_vertex(i)
-        for j in vertex.get_heads():
-            reversed.add_edge(j.get_label(), i)
 
-    return reversed
+def fill_order_dfd_sccs(directed_graph, vertex, visited, stack):
+    """ Function that covers the first part of the algorith by determining
+    the order of vertices, traversing the graph with a depth first search, recursively
 
+    Args:
+        directed_graph (DirectedGraph): The directed graph 
+        vertex: The current vertex
+        visited (dict): A dictionary that maintains whether vertices have been visisted
+        stack (list): stack that will be processed, used to inverse the order
+
+    """
+
+    visited[vertex] = True
+    for head in directed_graph.get_vertices()[vertex].get_heads():
+        if visited.get(head.get_label()) is None:
+            fill_order_dfd_sccs(directed_graph, head.get_label(), visited, stack)
+    stack = stack.append(vertex)
 
 
 

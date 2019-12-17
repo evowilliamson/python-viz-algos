@@ -2,10 +2,10 @@
 """
 
 from graph.directed_graph.vertex import Vertex
-import graph.directed_graph.directed_graph_helper as directed_graph_helper
+from graph.directed_graph import kosaraju_sccs
+from graph.directed_graph import cyclic as cyclic
 from graphviz import Digraph
 from copy import deepcopy
-from graph.directed_graph import cyclic as cyclic
 from util.advisor import Advisor
 
 class DirectedGraph(object):
@@ -114,16 +114,30 @@ class DirectedGraph(object):
 
         return res
 
-    """
-    The following methods call functions in the "directed_graph_helper" module. These functions
-    were moved from this class to a separate module in order to keep the class lean
-    """
+    def get_reversed_graph(self):
+        """ Function that returns the reverse of this graph  
+
+        Args:
+            directed_graph (DirectedGraph): The directed graph 
+
+        Returns:
+            DirectedGraph: The reversed graph
+
+        """
+
+        reversed = DirectedGraph()
+        for i in self.get_vertices().keys():
+            reversed.add_vertex(i)
+
+        for i in self.get_vertices().keys():
+            vertex = self.get_vertex(i)
+            for j in vertex.get_heads():
+                reversed.add_edge(j.get_label(), i)
+
+        return reversed
 
     def create_sccs_kosaraju_dfs(self, nontrivial=True): 
-        return directed_graph_helper.create_sccs_kosaraju_dfs(self, nontrivial)
-
-    def get_reversed_graph(self):
-        return directed_graph_helper.get_reversed_graph(self)
+        return kosaraju_sccs.create_sccs_kosaraju_dfs(self, nontrivial)
 
     def is_cyclic(self, advisor=Advisor()):
         """ Method that uses a helper module to check for cycles in the directed graph

@@ -128,9 +128,6 @@ class TestDirectedGraph(unittest.TestCase):
             TestDirectedGraph.RESOURCES_PATH), TestDirectedGraph.DIGRAPH_VIZ)        
         self.directed_graph.render(
             file_name=TestDirectedGraph.DIGRAPH_VIZ, view_type=True)
-        time.sleep(1)
-        self.assertTrue(os.path.exists(digraph_file))
-        self.assertTrue(os.path.exists(digraph_file + ".pdf"))
 
     # TODO Move the below test cases to the main runner ?
     # TODO A new package needs to be created for this 
