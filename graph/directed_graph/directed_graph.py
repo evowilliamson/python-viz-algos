@@ -6,7 +6,7 @@ import graph.directed_graph.directed_graph_helper as directed_graph_helper
 from graphviz import Digraph
 from copy import deepcopy
 from graph.directed_graph import cyclic as cyclic
-
+from util.advisor import Advisor
 
 class DirectedGraph(object):
     """ Class to represent directed graphs. https://en.wikipedia.org/wiki/Directed_graph """
@@ -126,4 +126,17 @@ class DirectedGraph(object):
         return directed_graph_helper.get_reversed_graph(self)
 
     def is_cyclic(self):
-        return cyclic.is_cyclic(self)
+
+        return cyclic.is_cyclic(self, RealAdvice())
+
+
+class RealAdvice(Advisor):
+
+    def __init__(self):
+        super().__init__()
+
+    def advice_1(self, **kwargs):
+        print(kwargs)
+
+    def advice_2(self, **kwargs):
+        print(kwargs)        
