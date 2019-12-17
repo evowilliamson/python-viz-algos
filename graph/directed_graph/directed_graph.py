@@ -5,6 +5,7 @@ from graph.directed_graph.vertex import Vertex
 import graph.directed_graph.directed_graph_helper as directed_graph_helper
 from graphviz import Digraph
 from copy import deepcopy
+from graph.directed_graph import cyclic as cyclic
 
 
 class DirectedGraph(object):
@@ -125,4 +126,4 @@ class DirectedGraph(object):
         return directed_graph_helper.get_reversed_graph(self)
 
     def is_cyclic(self):
-        return directed_graph_helper.is_cyclic(self)
+        return cyclic.is_cyclic(self)
