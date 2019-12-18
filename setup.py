@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 with open("README.md") as f:
     long_desc = f.read()
 
-setup(name="py-viz-algs",
+setup(name="python-viz-algos",
       version=0.1,
       description="A set of algorithms and data structures",
       long_description=long_desc,
@@ -14,10 +14,10 @@ setup(name="py-viz-algs",
       author="Evo Williamson",
       author_email="evowilliamson@gmail.com",
       license="GNU General Public License, version 2",
-      url="https://github.com/evowilliamson/py-viz-algs",
+      url="https://github.com/evowilliamson/python-viz-algos",
       packages=find_packages(),
       install_requires=[
-          "graphviz",
+          "graphviz", "graphviz", "opencv-python", "python-algos"
       ],
       test_suite="tests",
       classifiers=[

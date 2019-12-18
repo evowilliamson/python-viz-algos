@@ -1,6 +1,6 @@
 import unittest
 from pythonalgos.graph.directed_graph import DirectedGraph
-from graph.viz_cyclic_tracing import VizCyclicTracing
+from pythonvizalgos.graph.viz_cyclic_tracing import VizCyclicTracing
 import os
 import time
 from pythonalgos.util.logging import Logging
