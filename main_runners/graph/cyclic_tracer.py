@@ -5,11 +5,12 @@ of the project """
 root_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 sys.path.append(root_dir)
 import cv2
-from graph.directed_graph.viz_tracing import VizTracing
-from util.logging import Logging
-from util import path_tools as pt, video_tools as vt
-from graph.directed_graph.directed_graph import DirectedGraph
-from main_runners.viz_tracing_advisor import VizTracingAdvisor
+from graph.viz_cyclic_tracing import VizCyclicTracing
+from pythonalgos.util.logging import Logging
+from pythonalgos.util import path_tools as pt
+from util import video_tools as vt
+from pythonalgos.graph.directed_graph import DirectedGraph
+from main_runners.viz_tracing_advisor import VizCyclicTracingAdvisor
 
 RESOURCES_PATH = "python-resources"
 
@@ -34,8 +35,8 @@ def viztrace_log_finish(directed_graph):
     """
 
     starting_vertex = next(iter(directed_graph.get_vertices().items()))[1]
-    VizTracing.change_activated_vertex(directed_graph, starting_vertex)    
-    VizTracing.snapshot()
+    VizCyclicTracing.change_activated_vertex(directed_graph, starting_vertex)    
+    VizCyclicTracing.snapshot()
 
 def viztrace(vertices, resource_path):
     """ Main function that takes a number of vertices (of a directed graph),
@@ -52,15 +53,15 @@ def viztrace(vertices, resource_path):
     directed_graph = DirectedGraph(vertices)
     work_path = os.path.join(RESOURCES_PATH, resource_path)
     pt.create_dir_in_user_home(work_path)
-    VizTracing.enable(
+    VizCyclicTracing.enable(
         pt.get_dir_in_user_home(work_path), 
         directed_graph,
         vertex_states=[
-                    {VizTracing.ACTIVATED: {"fillcolor":"red", "style": "filled"}}, 
-                    {VizTracing.IN_CYCLE: {"fillcolor":"blue", "style": "filled"}},
-                    {VizTracing.VISISTED: {"fillcolor":"gray", "style": "filled"}}],
-        edge_states=[{VizTracing.DISABLED: {"color":"red"}}])
-    directed_graph.is_cyclic(VizTracingAdvisor())
+                    {VizCyclicTracing.ACTIVATED: {"fillcolor":"red", "style": "filled"}}, 
+                    {VizCyclicTracing.IN_CYCLE: {"fillcolor":"blue", "style": "filled"}},
+                    {VizCyclicTracing.VISISTED: {"fillcolor":"gray", "style": "filled"}}],
+        edge_states=[{VizCyclicTracing.DISABLED: {"color":"red"}}])
+    directed_graph.is_cyclic(VizCyclicTracingAdvisor())
     viztrace_log_finish(directed_graph)
     vt.convert_images_to_video(pt.get_dir_in_user_home(work_path))
    

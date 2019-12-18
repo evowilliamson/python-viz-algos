@@ -1,11 +1,10 @@
 """ Module that contains the logic for inserting advice at join points for visualization
 of the cyclic check algorithm
 """
+from graph.viz_cyclic_tracing import VizCyclicTracing
+from pythonalgos.util.advisor import Advisor
 
-from graph.directed_graph.viz_tracing import VizTracing
-from util.advisor import Advisor
-
-class VizTracingAdvisor(Advisor):
+class VizCyclicTracingAdvisor(Advisor):
 
     def __init__(self):
         super().__init__()
@@ -20,9 +19,9 @@ class VizTracingAdvisor(Advisor):
             vertex: the vertex that should get the status activated
 
         """    
-        VizTracing.set_status(directed_graph, vertex, VizTracing.IN_CYCLE)
-        VizTracing.change_activated_vertex(directed_graph, vertex)    
-        VizTracing.snapshot()
+        VizCyclicTracing.set_status(directed_graph, vertex, VizCyclicTracing.IN_CYCLE)
+        VizCyclicTracing.change_activated_vertex(directed_graph, vertex)    
+        VizCyclicTracing.snapshot()
 
 
     def visit_vertex(self, directed_graph, vertex):
@@ -35,9 +34,9 @@ class VizTracingAdvisor(Advisor):
             vertex: the vertex that should get the status "visited"
 
         """
-        VizTracing.change_activated_vertex(directed_graph, vertex)
-        VizTracing.set_status(directed_graph, vertex, VizTracing.VISISTED)
-        VizTracing.snapshot()
+        VizCyclicTracing.change_activated_vertex(directed_graph, vertex)
+        VizCyclicTracing.set_status(directed_graph, vertex, VizCyclicTracing.VISISTED)
+        VizCyclicTracing.snapshot()
 
 
     def cycle_found(self, directed_graph, tail, head):
@@ -50,9 +49,9 @@ class VizTracingAdvisor(Advisor):
 
         """
             
-        VizTracing.set_status(directed_graph, head, VizTracing.IN_CYCLE)
-        VizTracing.change_activated_vertex(directed_graph, head)    
-        VizTracing.snapshot()
+        VizCyclicTracing.set_status(directed_graph, head, VizCyclicTracing.IN_CYCLE)
+        VizCyclicTracing.change_activated_vertex(directed_graph, head)    
+        VizCyclicTracing.snapshot()
 
 
     def no_cycle_reported_recursive(self, directed_graph, vertex):
@@ -64,8 +63,8 @@ class VizTracingAdvisor(Advisor):
 
         """
 
-        VizTracing.change_activated_vertex(directed_graph, vertex)
-        VizTracing.snapshot()
+        VizCyclicTracing.change_activated_vertex(directed_graph, vertex)
+        VizCyclicTracing.snapshot()
 
 
     def vertex_already_visited(self, directed_graph, edge):
@@ -77,8 +76,8 @@ class VizTracingAdvisor(Advisor):
             edge(Edge): the edge to be disabled
         """
 
-        VizTracing.set_status(directed_graph, edge, VizTracing.DISABLED)
-        VizTracing.snapshot()
-        VizTracing.reset_status(directed_graph, edge, VizTracing.DISABLED)
-        VizTracing.snapshot()    
+        VizCyclicTracing.set_status(directed_graph, edge, VizCyclicTracing.DISABLED)
+        VizCyclicTracing.snapshot()
+        VizCyclicTracing.reset_status(directed_graph, edge, VizCyclicTracing.DISABLED)
+        VizCyclicTracing.snapshot()    
 

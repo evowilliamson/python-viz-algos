@@ -1,14 +1,14 @@
 from graphviz import Digraph
-from graph.directed_graph.vertex import Vertex
-from graph.directed_graph.edge import Edge
+from pythonalgos.graph.vertex import Vertex
+from pythonalgos.graph.edge import Edge
 from os import path
 
-""" Module that defines a tracing class to be used for tracing of algorithms in relation
+""" Module that defines a tracing class to be used for tracing of cyclic algorithms in relation
 to directed graphs
 """
 
-class VizTracing:
-    """ Class that is accessed in a static way. It contains functions for tracing algorithms
+class VizCyclicTracing:
+    """ Class that is accessed in a static way. It contains functions for tracing cyclic algorithms
     in relation to directed graphs 
 
     states structure:
@@ -17,12 +17,12 @@ class VizTracing:
 
     For example:
         vertex_states=[
-                        {VizTracing.ACTIVATED: {"fillcolor":"red", "style": "filled"}}, 
-                        {VizTracing.IN_CYCLE: {"fillcolor":"blue", "style": "filled"}},
-                        {VizTracing.VISISTED: {"fillcolor":"gray", "style": "filled"}}])
+                        {VizCyclicTracing.ACTIVATED: {"fillcolor":"red", "style": "filled"}}, 
+                        {VizCyclicTracing.IN_CYCLE: {"fillcolor":"blue", "style": "filled"}},
+                        {VizCyclicTracing.VISISTED: {"fillcolor":"gray", "style": "filled"}}])
 
-    VizTracing.ACTIVATED takes precedence over VizTracing.IN_CYCLE takes predecence over
-    VizTracing.VISITED by definition of the list
+    VizCyclicTracing.ACTIVATED takes precedence over VizCyclicTracing.IN_CYCLE takes predecence over
+    VizCyclicTracing.VISITED by definition of the list
 
     """
 
@@ -54,17 +54,17 @@ class VizTracing:
 
         """
 
-        VizTracing.tracing = True
-        VizTracing.path = path
-        VizTracing.directed_graph = directed_graph
-        VizTracing.vertex_states = vertex_states or [{VizTracing.DEFAULT: VizTracing.DEFAULT_STATE}]
-        VizTracing.edge_states = edge_states or [{VizTracing.DEFAULT: VizTracing.DEFAULT_STATE}]
-        VizTracing.snapshot_no = 1
+        VizCyclicTracing.tracing = True
+        VizCyclicTracing.path = path
+        VizCyclicTracing.directed_graph = directed_graph
+        VizCyclicTracing.vertex_states = vertex_states or [{VizCyclicTracing.DEFAULT: VizCyclicTracing.DEFAULT_STATE}]
+        VizCyclicTracing.edge_states = edge_states or [{VizCyclicTracing.DEFAULT: VizCyclicTracing.DEFAULT_STATE}]
+        VizCyclicTracing.snapshot_no = 1
 
 
     @classmethod
     def disable(cls):
-        VizTracing.tracing = False
+        VizCyclicTracing.tracing = False
 
     @classmethod
     def change_activated_vertex(cls, directed_graph, vertex: Vertex):
@@ -76,13 +76,13 @@ class VizTracing:
             vertex(Vertex): the vertex to be activated
         """
 
-        if not VizTracing.tracing:
+        if not VizCyclicTracing.tracing:
             return
         else:
-            VizTracing.set_status(directed_graph, vertex, VizTracing.ACTIVATED)
+            VizCyclicTracing.set_status(directed_graph, vertex, VizCyclicTracing.ACTIVATED)
             for label, v in directed_graph.get_vertices().items():
                 if label != vertex.get_label():
-                    VizTracing.reset_status(directed_graph, v, VizTracing.ACTIVATED)
+                    VizCyclicTracing.reset_status(directed_graph, v, VizCyclicTracing.ACTIVATED)
 
     @classmethod
     def set_status(cls, directed_graph, object, status):
@@ -94,7 +94,7 @@ class VizTracing:
             status(str): the status to be set
         """
 
-        if not VizTracing.tracing:
+        if not VizCyclicTracing.tracing:
             return
         else:
             object.set_attr(status, True)
@@ -109,7 +109,7 @@ class VizTracing:
             status(str): the status to be reset
         """
 
-        if not VizTracing.tracing:
+        if not VizCyclicTracing.tracing:
             return
         else:
             object.set_attr(status, False)
@@ -124,42 +124,42 @@ class VizTracing:
 
         """ 
 
-        if not VizTracing.tracing:
+        if not VizCyclicTracing.tracing:
             return
         else:
-            graph = Digraph(format=VizTracing.IMAGE_TYPE)
-            for label, vertex in VizTracing.directed_graph._vertices.items():
+            graph = Digraph(format=VizCyclicTracing.IMAGE_TYPE)
+            for label, vertex in VizCyclicTracing.directed_graph._vertices.items():
                 found = False; default_state = None
-                for state in VizTracing.vertex_states:
+                for state in VizCyclicTracing.vertex_states:
                     attr_name, attr_values = next(iter(state.items()))
-                    if attr_name != VizTracing.DEFAULT and vertex.get_attr(attr_name):
+                    if attr_name != VizCyclicTracing.DEFAULT and vertex.get_attr(attr_name):
                         graph.node(str(label), label=None, _attributes=None, **attr_values)
                         found = True
                         break
-                    elif attr_name == VizTracing.DEFAULT:
+                    elif attr_name == VizCyclicTracing.DEFAULT:
                         default_state = attr_values
                 if not found:
-                    graph.node(str(label), default_state or VizTracing.DEFAULT_STATE)
+                    graph.node(str(label), default_state or VizCyclicTracing.DEFAULT_STATE)
 
                 for edge in vertex.get_edges():
                     found = False; default_state = None
-                    for state in VizTracing.edge_states:
+                    for state in VizCyclicTracing.edge_states:
                         attr_name, attr_values = next(iter(state.items()))
-                        if attr_name != VizTracing.DEFAULT and edge.get_attr(attr_name):
+                        if attr_name != VizCyclicTracing.DEFAULT and edge.get_attr(attr_name):
                             graph.edge(
                                 str(edge.get_tail().get_label()), 
                                 str(edge.get_head().get_label()),
                                 label=None, _attributes=None, **attr_values)
                             found = True
                             break
-                        elif attr_name == VizTracing.DEFAULT:
+                        elif attr_name == VizCyclicTracing.DEFAULT:
                             default_state = attr_values
                     if not found:
                         graph.edge(
                             str(edge.get_tail().get_label()), 
                             str(edge.get_head().get_label()))
              
-            graph.render(path.join(VizTracing.path, 
-                VizTracing.IMAGE_NAME_PREFIX + ("{:04d}".format(VizTracing.snapshot_no))))
-            VizTracing.snapshot_no += 1
+            graph.render(path.join(VizCyclicTracing.path, 
+                VizCyclicTracing.IMAGE_NAME_PREFIX + ("{:04d}".format(VizCyclicTracing.snapshot_no))))
+            VizCyclicTracing.snapshot_no += 1
     
