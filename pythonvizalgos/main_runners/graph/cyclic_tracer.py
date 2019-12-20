@@ -2,15 +2,16 @@ import os
 import sys
 """ This python file is being run as main, so packages don't exist. Append the root path
 of the project """
-root_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+root_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(
+    os.path.realpath(__file__)))))
 sys.path.append(root_dir)
 import cv2
-from graph.viz_cyclic_tracing import VizCyclicTracing
 from pythonalgos.util.logging import Logging
 from pythonalgos.util import path_tools as pt
-from util import video_tools as vt
+from pythonvizalgos.util import video_tools as vt
+from pythonvizalgos.graph.viz_cyclic_tracing import VizCyclicTracing
 from pythonalgos.graph.directed_graph import DirectedGraph
-from main_runners.viz_tracing_advisor import VizCyclicTracingAdvisor
+from pythonvizalgos.main_runners.graph.advisors.viz_tracing_advisor import VizCyclicTracingAdvisor
 
 RESOURCES_PATH = "python-resources"
 

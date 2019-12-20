@@ -1,0 +1,23 @@
+Metadata-Version: 2.1
+Name: python-algos
+Version: 0.12
+Summary: A set of algorithms and data structures
+Home-page: https://github.com/evowilliamson/python-algos
+Author: Evo Williamson
+Author-email: evowilliamson@gmail.com
+License: GNU General Public License, version 2
+Project-URL: Documentation, https://readthedocs.org/projects/python-algos/
+Project-URL: Source Code, https://github.com/evowilliamson/python-algos/
+Description: UNKNOWN
+Keywords: data structures algorithms graphs directed graphs acyclic
+Platform: UNKNOWN
+Classifier: License :: OSI Approved :: GNU General Public License v2 (GPLv2)
+Classifier: Development Status :: 4 - Beta
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Information Technology
+Classifier: Topic :: Software Development
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Operating System :: OS Independent
+Description-Content-Type: text/markdown
