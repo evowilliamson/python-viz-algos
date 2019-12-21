@@ -2,4 +2,3 @@ setuptools
 graphviz
 opencv-python
 python-algos
-blockcypher
