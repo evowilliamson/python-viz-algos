@@ -1,10 +1,25 @@
 import os
 import sys
+
+# TODO: Move to python-algos package
+def append_to_path(top_parent_package):
+    """ Function that searches up the folder tree and finds the top package and
+    then adds the package to sys.path
+
+    Args:
+        top_parent_package(str): The top parent package to find
+
+    """
+
+    name = os.path.realpath(__file__)
+    while name.split("/")[-1] != top_parent_package:
+        name = os.path.dirname(name)
+    sys.path.append(os.path.dirname(name))    
+
+
 """ This python file is being run as main, so packages don't exist. Append the root path
 of the project """
-root_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(
-    os.path.realpath(__file__)))))
-sys.path.append(root_dir)
+append_to_path("pythonvizalgos")
 import cv2
 from pythonalgos.util.logging import Logging
 from pythonalgos.util import path_tools as pt
@@ -82,7 +97,8 @@ def viztrace_no_cycle():
     viztrace({0: [1], 1: [2], 2: [3],
               3: [4, 11], 4: [5], 5:[6], 6:[7, 8], 7: [], 8: [9], 9: [10], 10:[],
               11: [12], 12: [8, 13], 13:[14], 14:[]}, "no_cycle")
-    
+
+
 
 if __name__ == '__main__':
     init()
