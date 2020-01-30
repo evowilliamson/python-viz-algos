@@ -1,4 +1,5 @@
 *.pyc
 venv/
 .vscode/
-
+.eggs/
+python_viz_algos.egg-info/
