@@ -80,8 +80,8 @@ class VizCyclicTracing:
             return
         else:
             VizCyclicTracing.set_status(directed_graph, vertex, VizCyclicTracing.ACTIVATED)
-            for label, v in directed_graph.get_vertices().items():
-                if label != vertex.get_label():
+            for v in directed_graph.get_vertices():
+                if str(vertex.get_label()) != str(vertex.get_label()):
                     VizCyclicTracing.reset_status(directed_graph, v, VizCyclicTracing.ACTIVATED)
 
     @classmethod
@@ -128,18 +128,18 @@ class VizCyclicTracing:
             return
         else:
             graph = Digraph(format=VizCyclicTracing.IMAGE_TYPE)
-            for label, vertex in VizCyclicTracing.directed_graph._vertices.items():
+            for vertex in VizCyclicTracing.directed_graph.get_vertices():
                 found = False; default_state = None
                 for state in VizCyclicTracing.vertex_states:
                     attr_name, attr_values = next(iter(state.items()))
                     if attr_name != VizCyclicTracing.DEFAULT and vertex.get_attr(attr_name):
-                        graph.node(str(label), label=None, _attributes=None, **attr_values)
+                        graph.node(str(vertex.get_label()), label=None, _attributes=None, **attr_values)
                         found = True
                         break
                     elif attr_name == VizCyclicTracing.DEFAULT:
                         default_state = attr_values
                 if not found:
-                    graph.node(str(label), default_state or VizCyclicTracing.DEFAULT_STATE)
+                    graph.node(str(vertex.get_label()), default_state or VizCyclicTracing.DEFAULT_STATE)
 
                 for edge in vertex.get_edges():
                     found = False; default_state = None

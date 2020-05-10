@@ -3,6 +3,7 @@
     "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
     "python.jediEnabled": false,
     "files.exclude": {
+        "**/*.pyc": {"when": "$(basename).py"},
         "**/__pycache__": true
     },
     "workbench.settings.editor": "json",
@@ -25,5 +26,6 @@
     ],
     "python.testing.pytestEnabled": false,
     "python.testing.nosetestsEnabled": false,
-    "python.testing.unittestEnabled": true    
+    "python.testing.unittestEnabled": true    ,
+    "python.linting.pycodestyleEnabled": true
 }

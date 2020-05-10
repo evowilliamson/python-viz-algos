@@ -1,5 +1,6 @@
 import unittest
 from pythonalgos.graph.directed_graph import DirectedGraph
+from pythonalgos.graph.directed_graph import DirectedGraph
 from pythonvizalgos.graph.viz_cyclic_tracing import VizCyclicTracing
 import os
 import time
@@ -55,8 +56,8 @@ class TestVizCyclicTracing(unittest.TestCase):
                 {VizCyclicTracing.ACTIVATED: {"fillcolor":"red", "style": "filled"}}, 
                 {VizCyclicTracing.IN_CYCLE: {"fillcolor":"blue", "style": "filled"}}])        
         VizCyclicTracing.change_activated_vertex(self.directed_graph, vertex_1)
-        for label, vertex in self.directed_graph.get_vertices().items():
-            if vertex_1.get_label() == label:
+        for vertex in self.directed_graph.get_vertices():
+            if str(vertex_1.get_label()) == str(vertex.get_label()):
                 self.assertTrue(vertex.get_attr(VizCyclicTracing.ACTIVATED))
             else:
                 self.assertFalse(vertex.get_attr(VizCyclicTracing.ACTIVATED))
@@ -75,8 +76,8 @@ class TestVizCyclicTracing(unittest.TestCase):
                 {VizCyclicTracing.IN_CYCLE: {"fillcolor":"blue", "style": "filled"}}])        
         VizCyclicTracing.set_status(self.directed_graph, vertex_5, VizCyclicTracing.IN_CYCLE)
         VizCyclicTracing.set_status(self.directed_graph, vertex_6, VizCyclicTracing.IN_CYCLE)
-        for label, vertex in self.directed_graph.get_vertices().items():
-            if vertex_5.get_label() == label or vertex_6.get_label() == label:
+        for vertex in self.directed_graph.get_vertices():
+            if str(vertex_5.get_label()) == str(vertex.get_label()) or str(vertex_6.get_label()) == str(vertex.get_label()):
                 self.assertTrue(vertex.get_attr(VizCyclicTracing.IN_CYCLE))
             else:
                 self.assertFalse(vertex.get_attr(VizCyclicTracing.IN_CYCLE))
