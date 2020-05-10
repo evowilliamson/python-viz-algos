@@ -26,7 +26,6 @@ from pythonalgos.util import path_tools as pt  # noqa
 from pythonvizalgos.util import video_tools as vt  # noqa
 from pythonvizalgos.graph.viz_cyclic_tracing import VizCyclicTracing  # noqa
 from pythonalgos.graph.directed_graph import DirectedGraph  # noqa
-from pythonalgos.graph.vertex import Vertex  # noqa
 from pythonvizalgos.main_runners.graph.advisors.viz_tracing_advisor \
     import VizCyclicTracingAdvisor  # noqa
 

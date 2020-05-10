@@ -1,6 +1,5 @@
 from graphviz import Digraph
 from pythonalgos.graph.vertex import Vertex
-from pythonalgos.graph.edge import Edge
 from os import path
 
 """ Module that defines a tracing class to be used for tracing of cyclic
