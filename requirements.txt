@@ -1,4 +1,4 @@
 setuptools
 graphviz
 opencv-python
-python-algos
+python-algos==0.16
