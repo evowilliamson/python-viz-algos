@@ -1,11 +1,8 @@
 from graphviz import Digraph
 from pythonalgos.graph.vertex import Vertex
 from os import path
-from pythonalgos.graph.algorithm_ordering import AlgorithmOrdering
 from pythonalgos.util import path_tools as pt
-from typing import Mapping, List, Any
 from pythonvizalgos.util import video_tools as vt
-from pythonvizalgos.graph.viz_cyclic_tracing import VizCyclicTracing
 from pythonalgos.graph.directed_graph import DirectedGraph
 from pythonvizalgos.main_runners.graph.advisors.viz_tracing_advisor \
     import VizCyclicTracingAdvisor
@@ -187,7 +184,7 @@ class VizCyclicTracing:
             VizCyclicTracing.snapshot_no += 1
 
     @staticmethod
-    def execute(vertices: Mapping[Any, List[Any]], resource_path: str):
+    def execute(directed_graph: DirectedGraph, resource_path: str):
         """ Main function that takes a number of vertices (of a directed graph),
         invokes the cycle check functionality (which in turn creates the traced
         images), and converts the images to a video
@@ -198,8 +195,6 @@ class VizCyclicTracing:
             resource_path: the path that should contain the generated resources
         """
 
-        directed_graph = DirectedGraph(
-            vertices, algorithm_ordering=AlgorithmOrdering.ASC)
         work_path = os.path.join(resource_path)
         pt.create_dir_in_user_home(work_path)
         VizCyclicTracing.enable(
