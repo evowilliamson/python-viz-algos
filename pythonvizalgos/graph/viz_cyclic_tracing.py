@@ -1,3 +1,4 @@
+from pythonalgos.graph.vertex import Vertex
 from pythonalgos.util import path_tools as pt
 from pythonvizalgos.util import video_tools as vt
 from pythonalgos.graph.directed_graph import DirectedGraph
@@ -54,7 +55,8 @@ class VizCyclicTracingAdvisor(VizTracingAdvisor):
     """
 
     @classmethod
-    def cycle_reported_recursive(cls, directed_graph, vertex):
+    def cycle_reported_recursive(cls, directed_graph: DirectedGraph,
+                                 vertex: Vertex):
         """ Function that is used along the way back from the origin
         of the cycle detection to the initial state. Along the way,
         all vertices are tagged with the state in_cycle
@@ -71,7 +73,8 @@ class VizCyclicTracingAdvisor(VizTracingAdvisor):
         VizCyclicTracing.snapshot()
 
     @classmethod
-    def cycle_found(cls, directed_graph, tail, head):
+    def cycle_found(cls, directed_graph: DirectedGraph, tail: Vertex,
+                    head: Vertex):
         """ Changes the state of a vertex when the vertex is part of a cycle
 
         Args:
@@ -87,7 +90,8 @@ class VizCyclicTracingAdvisor(VizTracingAdvisor):
         VizCyclicTracing.snapshot()
 
     @classmethod
-    def no_cycle_reported_recursive(cls, directed_graph, vertex):
+    def no_cycle_reported_recursive(cls, directed_graph: DirectedGraph,
+                                    vertex: Vertex):
         """ Changes focus to the vertex and takes a snapshot
 
         Args:
@@ -98,4 +102,3 @@ class VizCyclicTracingAdvisor(VizTracingAdvisor):
 
         VizCyclicTracing.change_activated_vertex(directed_graph, vertex)
         VizCyclicTracing.snapshot()
-

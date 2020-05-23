@@ -1,9 +1,11 @@
 from graphviz import Digraph
 from pythonalgos.graph.vertex import Vertex
+from pythonalgos.graph.edge import Edge
 from pythonalgos.util.advisor import Advisor
 from os import path
 from pythonalgos.util import path_tools as pt
 from pythonalgos.graph.directed_graph import DirectedGraph
+from typing import List, Mapping, Union
 
 
 class VizTracing:
@@ -25,8 +27,9 @@ class VizTracing:
     DISABLED = "disabled"
 
     @classmethod
-    def enable(cls, path, directed_graph, vertex_states=None,
-               edge_states=None):
+    def enable(cls, path: str, directed_graph: DirectedGraph,
+               vertex_states: List[Mapping[str, Mapping[str, str]]] = None,
+               edge_states: List[Mapping[str, Mapping[str, str]]] = None):
         """ Class method that initialises the tracing functionality
 
         Args:
@@ -47,16 +50,17 @@ class VizTracing:
         VizTracing.snapshot_no = 1
 
     @classmethod
-    def disable(cls, ):
+    def disable(cls):
         VizTracing.tracing = False
 
     @classmethod
-    def set_status(cls, directed_graph, object, status):
+    def set_status(cls, directed_graph: DirectedGraph,
+                   object: Union[Vertex, Edge], status: str):
         """ Function that tags the vertex as with the provided status
 
         Args:
             directed_graph(DirectedGraph): directed graph object
-            object: the vertex of edge for which the status must be set
+            object: the vertex or edge for which the status must be set
             status(str): the status to be set
         """
 
@@ -66,7 +70,8 @@ class VizTracing:
             object.set_attr(status, True)
 
     @classmethod
-    def reset_status(cls, directed_graph, object, status):
+    def reset_status(cls, directed_graph: DirectedGraph,
+                     object: Union[Vertex, Edge], status: str):
         """ Function that resets the status of the object
 
         Args:
@@ -81,7 +86,8 @@ class VizTracing:
             object.set_attr(status, False)
 
     @classmethod
-    def change_activated_vertex(cls, directed_graph, vertex: Vertex):
+    def change_activated_vertex(cls, directed_graph: DirectedGraph,
+                                vertex: Vertex):
         """ Function that sets the attribute "active" of the vertex to true.
         It deactivates all other vertices
 
@@ -101,7 +107,7 @@ class VizTracing:
                         directed_graph, v, VizTracing.ACTIVATED)
 
     @classmethod
-    def snapshot(cls, ):
+    def snapshot(cls):
         """ Take a snapshot of the current directed graph
 
         Args:
@@ -187,7 +193,7 @@ class VizTracingAdvisor(Advisor):
     """
 
     @classmethod
-    def visit_vertex(cls, directed_graph, vertex):
+    def visit_vertex(cls, directed_graph: DirectedGraph, vertex: Vertex):
         """ Function that is used to tag vertices with the state "visisted",
         if these vertices have been visited once. So next time, when another
         predecessor of a tagged vertex is being considered, it is skipped
@@ -203,7 +209,8 @@ class VizTracingAdvisor(Advisor):
         VizTracing.snapshot()
 
     @classmethod
-    def vertex_already_visited(cls, directed_graph, edge):
+    def vertex_already_visited(cls, directed_graph: DirectedGraph,
+                               edge: Edge):
         """ Function that takes a snapshot after having disabled the
         edge. This is to indicate that the transition cannot be taken
 
