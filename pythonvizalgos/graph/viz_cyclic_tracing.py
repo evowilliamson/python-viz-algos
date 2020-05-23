@@ -1,12 +1,7 @@
-from graphviz import Digraph
-from pythonalgos.graph.vertex import Vertex
-from pythonalgos.util.advisor import Advisor
-from os import path
 from pythonalgos.util import path_tools as pt
 from pythonvizalgos.util import video_tools as vt
 from pythonalgos.graph.directed_graph import DirectedGraph
-import os
-from pythonvizalgos.graph.viz_tracing import VizTracing
+from pythonvizalgos.graph.viz_tracing import VizTracing, VizTracingAdvisor
 
 
 """ Module that defines a tracing class to be used for tracing of cyclic
@@ -35,8 +30,8 @@ class VizCyclicTracing(VizTracing):
 
     """
 
-    @staticmethod
-    def execute(directed_graph: DirectedGraph, resource_path: str):
+    @classmethod
+    def execute(cls, directed_graph: DirectedGraph, resource_path: str):
         """ Main function that takes a number of vertices
         (of a directed graph), invokes the cycle check functionality
         (which in turn creates the traced images), and converts the images
@@ -53,15 +48,13 @@ class VizCyclicTracing(VizTracing):
         vt.convert_images_to_video(pt.get_dir_in_user_home(resource_path))
 
 
-class VizCyclicTracingAdvisor(Advisor):
+class VizCyclicTracingAdvisor(VizTracingAdvisor):
     """ Module that contains the logic for inserting advice at join points for
     visualization of the cyclic check algorithm
     """
 
-    def __init__(self):
-        super().__init__()
-
-    def cycle_reported_recursive(self, directed_graph, vertex):
+    @classmethod
+    def cycle_reported_recursive(cls, directed_graph, vertex):
         """ Function that is used along the way back from the origin
         of the cycle detection to the initial state. Along the way,
         all vertices are tagged with the state in_cycle
@@ -77,22 +70,8 @@ class VizCyclicTracingAdvisor(Advisor):
         VizCyclicTracing.change_activated_vertex(directed_graph, vertex)
         VizCyclicTracing.snapshot()
 
-    def visit_vertex(self, directed_graph, vertex):
-        """ Function that is used to tag vertices with the state "visisted",
-        if these vertices have been visited once. So next time, when another
-        predecessor of a tagged vertex is being considered, it is skipped
-
-        Args:
-            directed_graph (DirectedGraph): The directed graph
-            vertex: the vertex that should get the status "visited"
-
-        """
-        VizCyclicTracing.change_activated_vertex(directed_graph, vertex)
-        VizCyclicTracing.set_status(
-            directed_graph, vertex, VizCyclicTracing.VISISTED)
-        VizCyclicTracing.snapshot()
-
-    def cycle_found(self, directed_graph, tail, head):
+    @classmethod
+    def cycle_found(cls, directed_graph, tail, head):
         """ Changes the state of a vertex when the vertex is part of a cycle
 
         Args:
@@ -107,7 +86,8 @@ class VizCyclicTracingAdvisor(Advisor):
         VizCyclicTracing.change_activated_vertex(directed_graph, head)
         VizCyclicTracing.snapshot()
 
-    def no_cycle_reported_recursive(self, directed_graph, vertex):
+    @classmethod
+    def no_cycle_reported_recursive(cls, directed_graph, vertex):
         """ Changes focus to the vertex and takes a snapshot
 
         Args:
@@ -119,18 +99,3 @@ class VizCyclicTracingAdvisor(Advisor):
         VizCyclicTracing.change_activated_vertex(directed_graph, vertex)
         VizCyclicTracing.snapshot()
 
-    def vertex_already_visited(self, directed_graph, edge):
-        """ Function that takes a snapshot after having disabled the
-        edge. This is to indicate that the transition cannot be taken
-
-        Args:
-            directed_graph(DirectedGraph): The directed graph
-            edge(Edge): the edge to be disabled
-        """
-
-        VizCyclicTracing.set_status(
-            directed_graph, edge, VizCyclicTracing.DISABLED)
-        VizCyclicTracing.snapshot()
-        VizCyclicTracing.reset_status(
-            directed_graph, edge, VizCyclicTracing.DISABLED)
-        VizCyclicTracing.snapshot()
