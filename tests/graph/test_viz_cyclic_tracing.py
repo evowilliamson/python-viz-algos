@@ -50,6 +50,7 @@ class TestVizCyclicTracing(unittest.TestCase):
                     {VizCyclicTracing.VISISTED:
                         {"fillcolor": "gray", "style": "filled"}}])
         VizCyclicTracing.execute(self.directed_graph, resource_path=dir)
+        self.assertTrue(True)
 
     def test_VizCyclicTracing_cyclic(self):
         """ Functions more as a demonstration than as a test. It will create
@@ -76,6 +77,7 @@ class TestVizCyclicTracing(unittest.TestCase):
                     {VizCyclicTracing.VISISTED:
                         {"fillcolor": "gray", "style": "filled"}}])
         VizCyclicTracing.execute(self.directed_graph, resource_path=dir)
+        self.assertTrue(True)
 
     def test_VizCyclicTracing_default(self):
         pt.create_dir_in_user_home(TestVizCyclicTracing.RESOURCES_PATH_RECYCLE)
