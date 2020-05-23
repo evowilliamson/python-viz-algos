@@ -1,6 +1,6 @@
 from graphviz import Digraph
 from pythonalgos.graph.vertex import Vertex
-from os import path
+from os import path, stat
 
 """ Module that defines a tracing class to be used for tracing of cyclic
 algorithms in relation to directed graphs """
@@ -44,8 +44,8 @@ class VizCyclicTracing:
     VISISTED = "visited"
     DISABLED = "disabled"
 
-    @classmethod
-    def enable(cls, path, directed_graph, vertex_states=None,
+    @staticmethod
+    def enable(path, directed_graph, vertex_states=None,
                edge_states=None):
         """ Class method that initialises the tracing functionality
 
@@ -68,12 +68,12 @@ class VizCyclicTracing:
             [{VizCyclicTracing.DEFAULT: VizCyclicTracing.DEFAULT_STATE}]
         VizCyclicTracing.snapshot_no = 1
 
-    @classmethod
-    def disable(cls):
+    @staticmethod
+    def disable():
         VizCyclicTracing.tracing = False
 
-    @classmethod
-    def change_activated_vertex(cls, directed_graph, vertex: Vertex):
+    @staticmethod
+    def change_activated_vertex(directed_graph, vertex: Vertex):
         """ Function that sets the attribute "active" of the vertex to true.
         It deactivates all other vertices
 
@@ -175,3 +175,33 @@ class VizCyclicTracing:
                 VizCyclicTracing.path, VizCyclicTracing.IMAGE_NAME_PREFIX +
                 ("{:04d}".format(VizCyclicTracing.snapshot_no))))
             VizCyclicTracing.snapshot_no += 1
+
+    @staticmethod
+    def execute(vertices: Mapping[Any, List[Any]], resource_path: str):
+        """ Main function that takes a number of vertices (of a directed graph),
+        invokes the cycle check functionality (which in turn creates the traced
+        images), and converts the images to a video
+
+        Args:
+            vertices(dict): a dictionar with vertices and for each vertex its
+                destination vertices
+            resource_path: the path that should contain the generated resources
+        """
+
+        directed_graph = DirectedGraph(
+            vertices, algorithm_ordering=AlgorithmOrdering.ASC)
+        work_path = os.path.join(RESOURCES_PATH, resource_path)
+        pt.create_dir_in_user_home(work_path)
+        VizCyclicTracing.enable(
+            pt.get_dir_in_user_home(work_path),
+            directed_graph,
+            vertex_states=[
+                        {VizCyclicTracing.ACTIVATED:
+                            {"fillcolor": "red", "style": "filled"}},
+                        {VizCyclicTracing.IN_CYCLE:
+                            {"fillcolor": "blue", "style": "filled"}},
+                        {VizCyclicTracing.VISISTED:
+                            {"fillcolor": "gray", "style": "filled"}}],
+            edge_states=[{VizCyclicTracing.DISABLED: {"color": "red"}}])
+        directed_graph.is_cyclic(VizCyclicTracingAdvisor())
+        vt.convert_images_to_video(pt.get_dir_in_user_home(work_path))
