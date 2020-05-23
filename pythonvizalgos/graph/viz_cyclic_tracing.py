@@ -1,6 +1,16 @@
 from graphviz import Digraph
 from pythonalgos.graph.vertex import Vertex
-from os import path, stat
+from os import path
+from pythonalgos.graph.algorithm_ordering import AlgorithmOrdering
+from pythonalgos.util import path_tools as pt
+from typing import Mapping, List, Any
+from pythonvizalgos.util import video_tools as vt
+from pythonvizalgos.graph.viz_cyclic_tracing import VizCyclicTracing
+from pythonalgos.graph.directed_graph import DirectedGraph
+from pythonvizalgos.main_runners.graph.advisors.viz_tracing_advisor \
+    import VizCyclicTracingAdvisor
+import os
+
 
 """ Module that defines a tracing class to be used for tracing of cyclic
 algorithms in relation to directed graphs """
@@ -92,8 +102,8 @@ class VizCyclicTracing:
                     VizCyclicTracing.reset_status(
                         directed_graph, v, VizCyclicTracing.ACTIVATED)
 
-    @classmethod
-    def set_status(cls, directed_graph, object, status):
+    @staticmethod
+    def set_status(directed_graph, object, status):
         """ Function that tags the vertex as with the provided status
 
         Args:
@@ -107,8 +117,8 @@ class VizCyclicTracing:
         else:
             object.set_attr(status, True)
 
-    @classmethod
-    def reset_status(cls, directed_graph, object, status):
+    @staticmethod
+    def reset_status(directed_graph, object, status):
         """ Function that resets the status of the object
 
         Args:
@@ -122,8 +132,8 @@ class VizCyclicTracing:
         else:
             object.set_attr(status, False)
 
-    @classmethod
-    def snapshot(cls):
+    @staticmethod
+    def snapshot():
         """ Take a snapshot of the current directed graph
 
         Args:
@@ -190,7 +200,7 @@ class VizCyclicTracing:
 
         directed_graph = DirectedGraph(
             vertices, algorithm_ordering=AlgorithmOrdering.ASC)
-        work_path = os.path.join(RESOURCES_PATH, resource_path)
+        work_path = os.path.join(resource_path)
         pt.create_dir_in_user_home(work_path)
         VizCyclicTracing.enable(
             pt.get_dir_in_user_home(work_path),
