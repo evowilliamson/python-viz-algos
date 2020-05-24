@@ -7,6 +7,9 @@ from pythonalgos.util import path_tools as pt
 from pythonalgos.graph.directed_graph import DirectedGraph
 from typing import List, Mapping, Union
 
+""" Module that defines a tracing class to be used for tracing of all sorts
+of algorithms in relation to directed graphs """
+
 
 class VizTracing:
 
