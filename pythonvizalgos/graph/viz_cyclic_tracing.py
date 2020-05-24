@@ -32,10 +32,6 @@ class VizCyclicTracing(VizTracing):
     """
 
     @classmethod
-    def testit(cls):
-        print("child")
-
-    @classmethod
     def execute(cls, directed_graph: DirectedGraph, resource_path: str):
         """ Main function that takes a number of vertices
         (of a directed graph), invokes the cycle check functionality

@@ -30,8 +30,8 @@ class VizTracing:
     DISABLED: str = "disabled"
 
     @classmethod
-    def testit(cls):
-        pass
+    def get_vertex_label_attributes(cls) -> List[str]:
+        return []
 
     @classmethod
     def enable(cls, path: str, directed_graph: DirectedGraph,
@@ -126,8 +126,7 @@ class VizTracing:
 
         """
 
-        cls.testit()
-
+        # vertex_states: List[Mapping[str, Mapping[str, str]]]
         if not VizTracing.tracing:
             return
         else:
@@ -138,15 +137,15 @@ class VizTracing:
                     attr_name, attr_values = next(iter(state.items()))
                     if attr_name != VizTracing.DEFAULT and\
                             vertex.get_attr(attr_name):
-                        graph.node(str(vertex.get_label()), label=None,
-                                   _attributes=None, **attr_values)
+                        graph.node(VizTracing.get_extended_label(vertex),
+                                   label=None, _attributes=None, **attr_values)
                         found = True
                         break
                     elif attr_name == VizTracing.DEFAULT:
                         default_state = attr_values
                 if not found:
-                    graph.node(str(vertex.get_label()), default_state or
-                               VizTracing.DEFAULT_STATE)
+                    graph.node(VizTracing.get_extended_label(vertex),
+                               default_state or VizTracing.DEFAULT_STATE)
 
                 for edge in vertex.get_edges():
                     found, default_state = False, None
@@ -194,6 +193,21 @@ class VizTracing:
                         {VizTracing.VISISTED:
                             {"fillcolor": "gray", "style": "filled"}}],
             edge_states=[{VizTracing.DISABLED: {"color": "red"}}])
+
+    @classmethod
+    def get_extended_label(cls, vertex: Vertex) -> str:
+        """ This method, possibly, extends the passed label by
+        adding more information, if available, dependending on the
+        visualizer class
+        """
+
+        label = vertex.get_label()
+
+        l: List[str] =\
+            [label + str(vertex.get_attrs()[label])
+             for label in VizTracing.get_vertex_label_attributes()
+             if label in vertex.get_attrs()]
+        return str(label) + " " + ",".join(l)
 
 
 class VizTracingAdvisor(Advisor):
