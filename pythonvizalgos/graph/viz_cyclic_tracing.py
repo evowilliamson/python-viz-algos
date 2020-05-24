@@ -29,7 +29,6 @@ class VizCyclicTracing(VizTracing):
 
     VizCyclicTracing.ACTIVATED takes precedence over VizCyclicTracing.IN_CYCLE
     takes predecence over VizCyclicTracing.VISITED by definition of the list
-
     """
 
     @classmethod
@@ -65,7 +64,6 @@ class VizCyclicTracingAdvisor(VizTracingAdvisor):
         Args:
             directed_graph (DirectedGraph): The directed graph
             vertex: the vertex that should get the status activated
-
         """
 
         VizCyclicTracing.set_status(
@@ -82,7 +80,6 @@ class VizCyclicTracingAdvisor(VizTracingAdvisor):
             directed_graph (DirectedGraph): The directed graph
             tail: the tail vertex that should get the status activated
             head: the head vertex that should get the in_cycle status
-
         """
 
         VizCyclicTracing.set_status(
@@ -103,12 +100,3 @@ class VizCyclicTracingAdvisor(VizTracingAdvisor):
 
         VizCyclicTracing.change_activated_vertex(directed_graph, vertex)
         VizCyclicTracing.snapshot()
-
-    @classmethod
-    def add_vertex_to_stack(cls, directed_graph: DirectedGraph,
-                            vertex: Vertex) -> None:
-        pass
-
-    @classmethod
-    def reverse_directed_graph(cls, directed_graph: DirectedGraph) -> None:
-        pass
