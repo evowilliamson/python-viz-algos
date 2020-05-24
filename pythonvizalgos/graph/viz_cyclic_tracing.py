@@ -32,6 +32,10 @@ class VizCyclicTracing(VizTracing):
     """
 
     @classmethod
+    def testit(cls):
+        print("child")
+
+    @classmethod
     def execute(cls, directed_graph: DirectedGraph, resource_path: str):
         """ Main function that takes a number of vertices
         (of a directed graph), invokes the cycle check functionality
@@ -44,7 +48,7 @@ class VizCyclicTracing(VizTracing):
             resource_path: the path that should contain the generated resources
         """
 
-        VizTracing.execute(directed_graph, resource_path)
+        super(VizCyclicTracing, cls).execute(directed_graph, resource_path)
         directed_graph.is_cyclic(VizCyclicTracingAdvisor())
         vt.convert_images_to_video(pt.get_dir_in_user_home(resource_path))
 

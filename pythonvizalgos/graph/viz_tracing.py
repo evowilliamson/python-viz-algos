@@ -5,7 +5,7 @@ from pythonalgos.util.advisor import Advisor
 from os import path
 from pythonalgos.util import path_tools as pt
 from pythonalgos.graph.directed_graph import DirectedGraph
-from typing import List, Mapping, Union
+from typing import List, Mapping, Union, Any, Optional
 
 """ Module that defines a tracing class to be used for tracing of all sorts
 of algorithms in relation to directed graphs """
@@ -13,21 +13,25 @@ of algorithms in relation to directed graphs """
 
 class VizTracing:
 
-    tracing = False
+    tracing: bool = False
     path: str
-    directed_graph = None
+    directed_graph: Optional[DirectedGraph]
     vertex_states = list()
     edge_states = list()
 
-    IMAGE_NAME_PREFIX = "VIZ_TRACING_"
-    DEFAULT = "default"
-    IMAGE_TYPE = "png"
+    IMAGE_NAME_PREFIX: str = "VIZ_TRACING_"
+    DEFAULT: str = "default"
+    IMAGE_TYPE: str = "png"
     DEFAULT_STATE = None
 
-    ACTIVATED = "activated"
-    VISISTED = "visited"
-    IN_CYCLE = "in_cycle"
-    DISABLED = "disabled"
+    ACTIVATED: str = "activated"
+    VISISTED: str = "visited"
+    IN_CYCLE: str = "in_cycle"
+    DISABLED: str = "disabled"
+
+    @classmethod
+    def testit(cls):
+        pass
 
     @classmethod
     def enable(cls, path: str, directed_graph: DirectedGraph,
@@ -58,8 +62,9 @@ class VizTracing:
 
     @classmethod
     def set_status(cls, directed_graph: DirectedGraph,
-                   object: Union[Vertex, Edge], status: str):
-        """ Function that tags the vertex as with the provided status
+                   object: Union[Vertex, Edge], status: str,
+                   value: Any = True):
+        """ Function that tags the vertex with the provided status
 
         Args:
             directed_graph(DirectedGraph): directed graph object
@@ -70,11 +75,12 @@ class VizTracing:
         if not VizTracing.tracing:
             return
         else:
-            object.set_attr(status, True)
+            object.set_attr(status, value)
 
     @classmethod
     def reset_status(cls, directed_graph: DirectedGraph,
-                     object: Union[Vertex, Edge], status: str):
+                     object: Union[Vertex, Edge], status: str,
+                     value: Any = False):
         """ Function that resets the status of the object
 
         Args:
@@ -86,7 +92,7 @@ class VizTracing:
         if not VizTracing.tracing:
             return
         else:
-            object.set_attr(status, False)
+            object.set_attr(status, value)
 
     @classmethod
     def change_activated_vertex(cls, directed_graph: DirectedGraph,
@@ -119,6 +125,8 @@ class VizTracing:
                 be started on
 
         """
+
+        cls.testit()
 
         if not VizTracing.tracing:
             return
@@ -165,10 +173,8 @@ class VizTracing:
 
     @classmethod
     def execute(cls, directed_graph: DirectedGraph, resource_path: str):
-        """ Main function that takes a number of vertices
-        (of a directed graph), invokes the cycle check functionality
-        (which in turn creates the traced images), and converts the
-        images to a video.
+        """ Template method that prepares the generation of the tracing.
+        It's called by the child classes of this class.
 
         Args:
             vertices(dict): a dictionar with vertices and for each vertex its

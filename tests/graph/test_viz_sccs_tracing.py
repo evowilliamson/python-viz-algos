@@ -25,7 +25,7 @@ class TestVizCyclicTracing(unittest.TestCase):
                          3: [4, 6], 4: [5, 6], 5: [5], 6: [6]}
         self.directed_graph = DirectedGraph(self.vertices)
 
-    def test_VizCyclicTracing_acyclic(self):
+    def test_VizSccTracing_nontrivial(self):
         """ Functions more as a demonstration than as a test. It will create
         the animation for an acyclic graph"""
 
