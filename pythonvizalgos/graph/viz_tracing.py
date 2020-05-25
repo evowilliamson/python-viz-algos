@@ -95,6 +95,20 @@ class VizTracing:
             object.set_attr(status, value)
 
     @classmethod
+    def reset_attrs(cls, directed_graph: DirectedGraph):
+        """ Function that resets all attributes of a vertex
+
+        Args:
+            directed_graph(DirectedGraph): directed graph object
+        """
+
+        if not VizTracing.tracing:
+            return
+        else:
+            for v in directed_graph.get_vertices():
+                v.reset_attrs
+
+    @classmethod
     def change_activated_vertex(cls, directed_graph: DirectedGraph,
                                 vertex: Vertex):
         """ Function that sets the attribute "active" of the vertex to true.
@@ -114,6 +128,37 @@ class VizTracing:
                 if str(v.get_label()) != str(vertex.get_label()):
                     VizTracing.reset_status(
                         directed_graph, v, VizTracing.ACTIVATED)
+
+    @classmethod
+    def deactivate_graph(cls, directed_graph: DirectedGraph):
+        """ Method that resets the whole graph
+
+        Args:
+            directed_graph: the directed graph
+        """
+
+        if not VizTracing.tracing:
+            return
+        else:
+            for v in directed_graph.get_vertices():
+                VizTracing.reset_status(
+                    directed_graph, v, VizTracing.ACTIVATED)
+
+    @classmethod
+    def activate_graph(cls, directed_graph: DirectedGraph):
+        """ Function that sets the attribute "active" of all vertices to
+        true.
+
+        Args:
+            directed_graph(DirectedGraph): directed graph object
+        """
+
+        if not VizTracing.tracing:
+            return
+        else:
+            for v in directed_graph.get_vertices():
+                VizTracing.set_status(
+                    directed_graph, v, VizTracing.ACTIVATED)
 
     @classmethod
     def snapshot(cls):

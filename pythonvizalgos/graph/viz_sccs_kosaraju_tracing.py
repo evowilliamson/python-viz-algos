@@ -90,10 +90,15 @@ class VizSccsKosarajuTracingAdvisor(VizTracingAdvisor):
 
     @classmethod
     def reverse_directed_graph(cls, directed_graph: DirectedGraph) -> None:
-        """ Advice that handles the reversing of the directed graph
+        """ Advice that handles the reversing of the directed graph. 
+        Basically resetting the whole graph, clearing all stastusses
 
         Args:
             directed_graph(DirectedGraph): The directed graph
         """
 
-        pass
+        VizTracing.reset_attrs(directed_graph)
+        VizTracing.activate_graph(directed_graph)
+        VizSccsKosarajuTracing.snapshot()
+        VizTracing.deactivate_graph(directed_graph)
+        VizSccsKosarajuTracing.snapshot()
