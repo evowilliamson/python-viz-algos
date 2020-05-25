@@ -24,7 +24,7 @@ class VizSccsKosarajuTracing(VizTracing):
                             {"fillcolor":"red", "style": "filled"}},
                         {VizCyclicTracing.IN_CYCLE:
                             {"fillcolor":"blue", "style": "filled"}},
-                        {VizCyclicTracing.VISISTED:
+                        {VizCyclicTracing.VISITED:
                             {"fillcolor":"gray", "style": "filled"}}])
 
     VizCyclicTracing.ACTIVATED takes precedence over VizCyclicTracing.IN_CYCLE
@@ -34,7 +34,7 @@ class VizSccsKosarajuTracing(VizTracing):
     SCC_IDX = "C"
     STACK_IDX = "S"
 
-    label_attributes = [STACK_IDX, SCC_IDX]
+    LABEL_ATTRIBUTES = [STACK_IDX, SCC_IDX]
 
     @classmethod
     def get_vertex_label_attributes(cls) -> List[str]:
@@ -43,7 +43,7 @@ class VizSccsKosarajuTracing(VizTracing):
 
         """
 
-        return VizSccsKosarajuTracing.label_attributes
+        return VizSccsKosarajuTracing.LABEL_ATTRIBUTES
 
     @classmethod
     def execute(cls, directed_graph: DirectedGraph, resource_path: str,
@@ -90,7 +90,7 @@ class VizSccsKosarajuTracingAdvisor(VizTracingAdvisor):
 
     @classmethod
     def reverse_directed_graph(cls, directed_graph: DirectedGraph) -> None:
-        """ Advice that handles the reversing of the directed graph. 
+        """ Advice that handles the reversing of the directed graph.
         Basically resetting the whole graph, clearing all stastusses
 
         Args:

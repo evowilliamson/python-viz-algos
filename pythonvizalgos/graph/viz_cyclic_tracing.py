@@ -24,7 +24,7 @@ class VizCyclicTracing(VizTracing):
                             {"fillcolor":"red", "style": "filled"}},
                         {VizCyclicTracing.IN_CYCLE:
                             {"fillcolor":"blue", "style": "filled"}},
-                        {VizCyclicTracing.VISISTED:
+                        {VizCyclicTracing.VISITED:
                             {"fillcolor":"gray", "style": "filled"}}])
 
     VizCyclicTracing.ACTIVATED takes precedence over VizCyclicTracing.IN_CYCLE

@@ -13,7 +13,7 @@ import inspect
 class TestVizCyclicTracing(unittest.TestCase):
 
     DIGRAPH_VIZ = "digraph_viz"
-    RESOURCES_PATH = "python-test-resources"
+    RESOURCES_PATH = "python-test-resources/cyclic"
     RESOURCES_PATH_RECYCLE = RESOURCES_PATH + "/recycle"
 
     @classmethod
@@ -29,7 +29,6 @@ class TestVizCyclicTracing(unittest.TestCase):
         """ Functions more as a demonstration than as a test. It will create
         the animation for an acyclic graph"""
 
-        Logging.enable()
         self.vertices = {0: [1], 1: [2, 3], 2: [3],
                          3: [4, 6], 4: [5, 6], 5: [7, 8], 6: [7, 8],
                          7: [9, 10, 11], 8: [11, 12], 9: [],
@@ -47,7 +46,7 @@ class TestVizCyclicTracing(unittest.TestCase):
                         {"fillcolor": "red", "style": "filled"}},
                     {VizCyclicTracing.IN_CYCLE:
                         {"fillcolor": "blue", "style": "filled"}},
-                    {VizCyclicTracing.VISISTED:
+                    {VizCyclicTracing.VISITED:
                         {"fillcolor": "gray", "style": "filled"}}])
         VizCyclicTracing.execute(self.directed_graph, resource_path=dir)
         self.assertTrue(True)
@@ -56,7 +55,6 @@ class TestVizCyclicTracing(unittest.TestCase):
         """ Functions more as a demonstration than as a test. It will create
         the animation for a cyclic graph"""
 
-        Logging.enable()
         self.vertices = {0: [1], 1: [2, 3], 2: [3],
                          3: [4, 6], 4: [5, 6], 5: [7, 8], 6: [7, 8],
                          7: [9, 10, 11], 8: [3], 9: [],
@@ -74,7 +72,7 @@ class TestVizCyclicTracing(unittest.TestCase):
                         {"fillcolor": "red", "style": "filled"}},
                     {VizCyclicTracing.IN_CYCLE:
                         {"fillcolor": "blue", "style": "filled"}},
-                    {VizCyclicTracing.VISISTED:
+                    {VizCyclicTracing.VISITED:
                         {"fillcolor": "gray", "style": "filled"}}])
         VizCyclicTracing.execute(self.directed_graph, resource_path=dir)
         self.assertTrue(True)

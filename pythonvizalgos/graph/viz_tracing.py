@@ -25,7 +25,7 @@ class VizTracing:
     DEFAULT_STATE = None
 
     ACTIVATED: str = "activated"
-    VISISTED: str = "visited"
+    VISITED: str = "visited"
     IN_CYCLE: str = "in_cycle"
     DISABLED: str = "disabled"
 
@@ -171,29 +171,32 @@ class VizTracing:
 
         """
 
-        # vertex_states: List[Mapping[str, Mapping[str, str]]]
         if not VizTracing.tracing:
             return
         else:
             graph = Digraph(format=VizTracing.IMAGE_TYPE)
             for vertex in VizTracing.directed_graph.get_vertices():
-                found, default_state = False, None
+                found = False
+                default_state: Union[Mapping[str, str], None] = {}
                 for state in VizTracing.vertex_states:
                     attr_name, attr_values = next(iter(state.items()))
                     if attr_name != VizTracing.DEFAULT and\
                             vertex.get_attr(attr_name):
-                        graph.node(VizTracing.get_extended_label(vertex),
-                                   label=None, _attributes=None, **attr_values)
+                        graph.node(name=str(vertex.get_label()),
+                                   label=VizTracing.get_extended_label(vertex),
+                                   _attributes=None, **attr_values)
                         found = True
                         break
                     elif attr_name == VizTracing.DEFAULT:
                         default_state = attr_values
                 if not found:
-                    graph.node(VizTracing.get_extended_label(vertex),
-                               default_state or VizTracing.DEFAULT_STATE)
+                    graph.node(name=str(vertex.get_label()),
+                               label=VizTracing.get_extended_label(vertex),
+                               _attributes=None, **default_state or {})
 
                 for edge in vertex.get_edges():
-                    found, default_state = False, None
+                    found = False
+                    default_state: Union[Mapping[str, str], None] = {}
                     for state in VizTracing.edge_states:
                         attr_name, attr_values = next(iter(state.items()))
                         if attr_name != VizTracing.DEFAULT and \
@@ -235,7 +238,7 @@ class VizTracing:
                             {"fillcolor": "red", "style": "filled"}},
                         {VizTracing.IN_CYCLE:
                             {"fillcolor": "blue", "style": "filled"}},
-                        {VizTracing.VISISTED:
+                        {VizTracing.VISITED:
                             {"fillcolor": "gray", "style": "filled"}}],
             edge_states=[{VizTracing.DISABLED: {"color": "red"}}])
 
@@ -252,7 +255,10 @@ class VizTracing:
             [label + str(vertex.get_attrs()[label])
              for label in VizTracing.get_vertex_label_attributes()
              if label in vertex.get_attrs()]
-        return str(label) + " " + ",".join(l)
+        if l:
+            return str(label) + " " + ",".join(l)
+        else:
+            return str(label)
 
 
 class VizTracingAdvisor(Advisor):
@@ -262,7 +268,7 @@ class VizTracingAdvisor(Advisor):
 
     @classmethod
     def visit_vertex(cls, directed_graph: DirectedGraph, vertex: Vertex):
-        """ Function that is used to tag vertices with the state "visisted",
+        """ Function that is used to tag vertices with the state "VISITED",
         if these vertices have been visited once. So next time, when another
         predecessor of a tagged vertex is being considered, it is skipped
 
@@ -273,7 +279,7 @@ class VizTracingAdvisor(Advisor):
         """
         VizTracing.change_activated_vertex(directed_graph, vertex)
         VizTracing.set_status(
-            directed_graph, vertex, VizTracing.VISISTED)
+            directed_graph, vertex, VizTracing.VISITED)
         VizTracing.snapshot()
 
     @classmethod
