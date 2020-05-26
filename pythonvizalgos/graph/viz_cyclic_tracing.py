@@ -31,8 +31,7 @@ class VizCyclicTracing(VizTracing):
     takes predecence over VizCyclicTracing.VISITED by definition of the list
     """
 
-    @classmethod
-    def execute(cls, directed_graph: DirectedGraph, resource_path: str):
+    def execute(self, directed_graph: DirectedGraph, resource_path: str):
         """ Main function that takes a number of vertices
         (of a directed graph), invokes the cycle check functionality
         (which in turn creates the traced images), and converts the images
@@ -44,8 +43,8 @@ class VizCyclicTracing(VizTracing):
             resource_path: the path that should contain the generated resources
         """
 
-        super(VizCyclicTracing, cls).execute(directed_graph, resource_path)
-        directed_graph.is_cyclic(VizCyclicTracingAdvisor())
+        super().execute(directed_graph, resource_path)
+        directed_graph.is_cyclic(VizCyclicTracingAdvisor(self))
         vt.convert_images_to_video(pt.get_dir_in_user_home(resource_path))
 
 
@@ -54,8 +53,10 @@ class VizCyclicTracingAdvisor(VizTracingAdvisor):
     visualization of the cyclic check algorithm
     """
 
-    @classmethod
-    def cycle_reported_recursive(cls, directed_graph: DirectedGraph,
+    def __init__(self, viz_tracing: VizTracing):
+        super().__init__(viz_tracing)
+
+    def cycle_reported_recursive(self, directed_graph: DirectedGraph,
                                  vertex: Vertex) -> None:
         """ Function that is used along the way back from the origin
         of the cycle detection to the initial state. Along the way,
@@ -66,13 +67,12 @@ class VizCyclicTracingAdvisor(VizTracingAdvisor):
             vertex: the vertex that should get the status activated
         """
 
-        VizCyclicTracing.set_status(
+        self.viz_tracing.set_status(
             directed_graph, vertex, VizCyclicTracing.IN_CYCLE)
-        VizCyclicTracing.change_activated_vertex(directed_graph, vertex)
-        VizCyclicTracing.snapshot()
+        self.viz_tracing.change_activated_vertex(directed_graph, vertex)
+        self.viz_tracing.snapshot(directed_graph)
 
-    @classmethod
-    def cycle_found(cls, directed_graph: DirectedGraph, tail: Vertex,
+    def cycle_found(self, directed_graph: DirectedGraph, tail: Vertex,
                     head: Vertex) -> None:
         """ Changes the state of a vertex when the vertex is part of a cycle
 
@@ -82,13 +82,12 @@ class VizCyclicTracingAdvisor(VizTracingAdvisor):
             head: the head vertex that should get the in_cycle status
         """
 
-        VizCyclicTracing.set_status(
+        self.viz_tracing.set_status(
             directed_graph, head, VizCyclicTracing.IN_CYCLE)
-        VizCyclicTracing.change_activated_vertex(directed_graph, head)
-        VizCyclicTracing.snapshot()
+        self.viz_tracing.change_activated_vertex(directed_graph, head)
+        self.viz_tracing.snapshot(directed_graph)
 
-    @classmethod
-    def no_cycle_reported_recursive(cls, directed_graph: DirectedGraph,
+    def no_cycle_reported_recursive(self, directed_graph: DirectedGraph,
                                     vertex: Vertex) -> None:
         """ Changes focus to the vertex and takes a snapshot
 
@@ -98,5 +97,5 @@ class VizCyclicTracingAdvisor(VizTracingAdvisor):
 
         """
 
-        VizCyclicTracing.change_activated_vertex(directed_graph, vertex)
-        VizCyclicTracing.snapshot()
+        self.viz_tracing.change_activated_vertex(directed_graph, vertex)
+        self.viz_tracing.snapshot(directed_graph)

@@ -13,12 +13,6 @@ of algorithms in relation to directed graphs """
 
 class VizTracing:
 
-    tracing: bool = False
-    path: str
-    directed_graph: Optional[DirectedGraph]
-    vertex_states = list()
-    edge_states = list()
-
     IMAGE_NAME_PREFIX: str = "VIZ_TRACING_"
     DEFAULT: str = "default"
     IMAGE_TYPE: str = "png"
@@ -29,15 +23,14 @@ class VizTracing:
     IN_CYCLE: str = "in_cycle"
     DISABLED: str = "disabled"
 
-    @classmethod
-    def get_vertex_label_attributes(cls) -> List[str]:
+    def get_vertex_label_attributes(self) -> List[str]:
         return []
 
-    @classmethod
-    def enable(cls, path: str, directed_graph: DirectedGraph,
-               vertex_states: List[Mapping[str, Mapping[str, str]]] = None,
-               edge_states: List[Mapping[str, Mapping[str, str]]] = None):
-        """ Class method that initialises the tracing functionality
+    def __init__(self, path: str, directed_graph: DirectedGraph,
+                 vertex_states: List[Mapping[str, Mapping[str, str]]] = None,
+                 edge_states: List[Mapping[str, Mapping[str, str]]] = None) \
+            -> None:
+        """ Method that initialises the tracing functionality
 
         Args:
             path: the path that will contain the generated trace images
@@ -47,24 +40,18 @@ class VizTracing:
             edge_states(list): a list of stated definitions (see class) for
                 the edges"""
 
-        VizTracing.tracing = True
-        VizTracing.path = path
-        VizTracing.directed_graph = directed_graph
-        VizTracing.vertex_states = vertex_states or\
+        self.path = path
+        self.directed_graph = directed_graph
+        self.vertex_states = vertex_states or\
             [{VizTracing.DEFAULT: VizTracing.DEFAULT_STATE}]
-        VizTracing.edge_states = edge_states or\
+        self.edge_states = edge_states or\
             [{VizTracing.DEFAULT: VizTracing.DEFAULT_STATE}]
-        VizTracing.snapshot_no = 1
+        self.snapshot_no = 1
 
-    @classmethod
-    def disable(cls):
-        VizTracing.tracing = False
-
-    @classmethod
-    def set_status(cls, directed_graph: DirectedGraph,
+    def set_status(self, directed_graph: DirectedGraph,
                    object: Union[Vertex, Edge], status: str,
                    value: Any = True):
-        """ Function that tags the vertex with the provided status
+        """ Method that tags the vertex with the provided status
 
         Args:
             directed_graph(DirectedGraph): directed graph object
@@ -72,16 +59,12 @@ class VizTracing:
             status(str): the status to be set
         """
 
-        if not VizTracing.tracing:
-            return
-        else:
-            object.set_attr(status, value)
+        object.set_attr(status, value)
 
-    @classmethod
-    def reset_status(cls, directed_graph: DirectedGraph,
+    def reset_status(self, directed_graph: DirectedGraph,
                      object: Union[Vertex, Edge], status: str,
                      value: Any = False):
-        """ Function that resets the status of the object
+        """ Method that resets the status of the object
 
         Args:
             directed_graph(DirectedGraph): directed graph object
@@ -89,29 +72,21 @@ class VizTracing:
             status(str): the status to be reset
         """
 
-        if not VizTracing.tracing:
-            return
-        else:
-            object.set_attr(status, value)
+        object.set_attr(status, value)
 
-    @classmethod
-    def reset_attrs(cls, directed_graph: DirectedGraph):
-        """ Function that resets all attributes of a vertex
+    def reset_attrs(self, directed_graph: DirectedGraph):
+        """ Method that resets all attributes of a vertex
 
         Args:
             directed_graph(DirectedGraph): directed graph object
         """
 
-        if not VizTracing.tracing:
-            return
-        else:
-            for v in directed_graph.get_vertices():
-                v.reset_attrs
+        for v in directed_graph.get_vertices():
+            v.reset_attrs
 
-    @classmethod
-    def change_activated_vertex(cls, directed_graph: DirectedGraph,
+    def change_activated_vertex(self, directed_graph: DirectedGraph,
                                 vertex: Vertex):
-        """ Function that sets the attribute "active" of the vertex to true.
+        """ Method that sets the attribute "active" of the vertex to true.
         It deactivates all other vertices
 
         Args:
@@ -119,33 +94,23 @@ class VizTracing:
             vertex(Vertex): the vertex to be activated
         """
 
-        if not VizTracing.tracing:
-            return
-        else:
-            VizTracing.set_status(
-                directed_graph, vertex, VizTracing.ACTIVATED)
-            for v in directed_graph.get_vertices():
-                if str(v.get_label()) != str(vertex.get_label()):
-                    VizTracing.reset_status(
-                        directed_graph, v, VizTracing.ACTIVATED)
+        self.set_status(
+            directed_graph, vertex, VizTracing.ACTIVATED)
+        for v in directed_graph.get_vertices():
+            if str(v.get_label()) != str(vertex.get_label()):
+                self.reset_status(directed_graph, v, VizTracing.ACTIVATED)
 
-    @classmethod
-    def deactivate_graph(cls, directed_graph: DirectedGraph):
+    def deactivate_graph(self, directed_graph: DirectedGraph):
         """ Method that resets the whole graph
 
         Args:
             directed_graph: the directed graph
         """
 
-        if not VizTracing.tracing:
-            return
-        else:
-            for v in directed_graph.get_vertices():
-                VizTracing.reset_status(
-                    directed_graph, v, VizTracing.ACTIVATED)
+        for v in directed_graph.get_vertices():
+            self.reset_status(directed_graph, v, VizTracing.ACTIVATED)
 
-    @classmethod
-    def activate_graph(cls, directed_graph: DirectedGraph):
+    def activate_graph(self, directed_graph: DirectedGraph):
         """ Function that sets the attribute "active" of all vertices to
         true.
 
@@ -153,15 +118,10 @@ class VizTracing:
             directed_graph(DirectedGraph): directed graph object
         """
 
-        if not VizTracing.tracing:
-            return
-        else:
-            for v in directed_graph.get_vertices():
-                VizTracing.set_status(
-                    directed_graph, v, VizTracing.ACTIVATED)
+        for v in directed_graph.get_vertices():
+            self.set_status(directed_graph, v, VizTracing.ACTIVATED)
 
-    @classmethod
-    def snapshot(cls):
+    def snapshot(self, DirectedGraph: DirectedGraph):
         """ Take a snapshot of the current directed graph
 
         Args:
@@ -171,55 +131,51 @@ class VizTracing:
 
         """
 
-        if not VizTracing.tracing:
-            return
-        else:
-            graph = Digraph(format=VizTracing.IMAGE_TYPE)
-            for vertex in VizTracing.directed_graph.get_vertices():
+        graph = Digraph(format=VizTracing.IMAGE_TYPE)
+        for vertex in self.directed_graph.get_vertices():
+            found = False
+            default_state: Union[Mapping[str, str], None] = {}
+            for state in self.vertex_states:
+                attr_name, attr_values = next(iter(state.items()))
+                if attr_name != VizTracing.DEFAULT and\
+                        vertex.get_attr(attr_name):
+                    graph.node(name=str(vertex.get_label()),
+                               label=self.get_extended_label(vertex),
+                               _attributes=None, **attr_values)
+                    found = True
+                    break
+                elif attr_name == VizTracing.DEFAULT:
+                    default_state = attr_values
+            if not found:
+                graph.node(name=str(vertex.get_label()),
+                           label=self.get_extended_label(vertex),
+                           _attributes=None, **default_state or {})
+
+            for edge in vertex.get_edges():
                 found = False
                 default_state: Union[Mapping[str, str], None] = {}
-                for state in VizTracing.vertex_states:
+                for state in self.edge_states:
                     attr_name, attr_values = next(iter(state.items()))
-                    if attr_name != VizTracing.DEFAULT and\
-                            vertex.get_attr(attr_name):
-                        graph.node(name=str(vertex.get_label()),
-                                   label=VizTracing.get_extended_label(vertex),
-                                   _attributes=None, **attr_values)
+                    if attr_name != VizTracing.DEFAULT and \
+                            edge.get_attr(attr_name):
+                        graph.edge(
+                            str(edge.get_tail().get_label()),
+                            str(edge.get_head().get_label()),
+                            label=None, _attributes=None, **attr_values)
                         found = True
                         break
                     elif attr_name == VizTracing.DEFAULT:
                         default_state = attr_values
                 if not found:
-                    graph.node(name=str(vertex.get_label()),
-                               label=VizTracing.get_extended_label(vertex),
-                               _attributes=None, **default_state or {})
+                    graph.edge(
+                        str(edge.get_tail().get_label()),
+                        str(edge.get_head().get_label()))
+        graph.render(path.join(
+            self.path, VizTracing.IMAGE_NAME_PREFIX +
+            ("{:04d}".format(self.snapshot_no))))
+        self.snapshot_no += 1
 
-                for edge in vertex.get_edges():
-                    found = False
-                    default_state: Union[Mapping[str, str], None] = {}
-                    for state in VizTracing.edge_states:
-                        attr_name, attr_values = next(iter(state.items()))
-                        if attr_name != VizTracing.DEFAULT and \
-                                edge.get_attr(attr_name):
-                            graph.edge(
-                                str(edge.get_tail().get_label()),
-                                str(edge.get_head().get_label()),
-                                label=None, _attributes=None, **attr_values)
-                            found = True
-                            break
-                        elif attr_name == VizTracing.DEFAULT:
-                            default_state = attr_values
-                    if not found:
-                        graph.edge(
-                            str(edge.get_tail().get_label()),
-                            str(edge.get_head().get_label()))
-            graph.render(path.join(
-                VizTracing.path, VizTracing.IMAGE_NAME_PREFIX +
-                ("{:04d}".format(VizTracing.snapshot_no))))
-            VizTracing.snapshot_no += 1
-
-    @classmethod
-    def execute(cls, directed_graph: DirectedGraph, resource_path: str):
+    def execute(self, directed_graph: DirectedGraph, resource_path: str):
         """ Template method that prepares the generation of the tracing.
         It's called by the child classes of this class.
 
@@ -230,20 +186,8 @@ class VizTracing:
         """
 
         pt.create_dir_in_user_home(resource_path)
-        VizTracing.enable(
-            pt.get_dir_in_user_home(resource_path),
-            directed_graph,
-            vertex_states=[
-                        {VizTracing.ACTIVATED:
-                            {"fillcolor": "red", "style": "filled"}},
-                        {VizTracing.IN_CYCLE:
-                            {"fillcolor": "blue", "style": "filled"}},
-                        {VizTracing.VISITED:
-                            {"fillcolor": "gray", "style": "filled"}}],
-            edge_states=[{VizTracing.DISABLED: {"color": "red"}}])
 
-    @classmethod
-    def get_extended_label(cls, vertex: Vertex) -> str:
+    def get_extended_label(self, vertex: Vertex) -> str:
         """ This method, possibly, extends the passed label by
         adding more information, if available, dependending on the
         visualizer class
@@ -253,7 +197,7 @@ class VizTracing:
 
         l: List[str] =\
             [label + str(vertex.get_attrs()[label])
-             for label in VizTracing.get_vertex_label_attributes()
+             for label in self.get_vertex_label_attributes()
              if label in vertex.get_attrs()]
         if l:
             return str(label) + " " + ",".join(l)
@@ -266,8 +210,11 @@ class VizTracingAdvisor(Advisor):
     visualization of the cyclic check algorithm
     """
 
-    @classmethod
-    def visit_vertex(cls, directed_graph: DirectedGraph, vertex: Vertex):
+    def __init__(self, viz_tracing: VizTracing):
+        super().__init__()
+        self.viz_tracing = viz_tracing
+
+    def visit_vertex(self, directed_graph: DirectedGraph, vertex: Vertex):
         """ Function that is used to tag vertices with the state "VISITED",
         if these vertices have been visited once. So next time, when another
         predecessor of a tagged vertex is being considered, it is skipped
@@ -277,13 +224,12 @@ class VizTracingAdvisor(Advisor):
             vertex: the vertex that should get the status "visited"
 
         """
-        VizTracing.change_activated_vertex(directed_graph, vertex)
-        VizTracing.set_status(
+        self.viz_tracing.change_activated_vertex(directed_graph, vertex)
+        self.viz_tracing.set_status(
             directed_graph, vertex, VizTracing.VISITED)
-        VizTracing.snapshot()
+        self.viz_tracing.snapshot(directed_graph)
 
-    @classmethod
-    def vertex_already_visited(cls, directed_graph: DirectedGraph,
+    def vertex_already_visited(self, directed_graph: DirectedGraph,
                                edge: Edge):
         """ Function that takes a snapshot after having disabled the
         edge. This is to indicate that the transition cannot be taken
@@ -293,9 +239,9 @@ class VizTracingAdvisor(Advisor):
             edge(Edge): the edge to be disabled
         """
 
-        VizTracing.set_status(
+        self.viz_tracing.set_status(
             directed_graph, edge, VizTracing.DISABLED)
-        VizTracing.snapshot()
-        VizTracing.reset_status(
+        self.viz_tracing.snapshot(directed_graph)
+        self.viz_tracing.reset_status(
             directed_graph, edge, VizTracing.DISABLED)
-        VizTracing.snapshot()
+        self.viz_tracing.snapshot(directed_graph)
