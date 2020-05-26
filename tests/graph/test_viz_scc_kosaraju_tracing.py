@@ -1,14 +1,13 @@
 import unittest
-from pythonalgos.graph.directed_graph import DirectedGraph
-from pythonalgos.graph.directed_graph import DirectedGraph
+from pythonalgos.graph.directed_graph import DirectedGraph, Vertex
 from pythonalgos.graph.algorithm_ordering import AlgorithmOrdering
 from pythonvizalgos.graph.viz_scc_kosaraju_tracing\
     import VizSccsKosarajuTracing
 import os
-from pythonalgos.util.logging import Logging
 import pythonalgos.util.path_tools as pt
 from os import path
 import inspect
+from typing import List, Set
 
 
 class TestVizSccsKosarajuTracing(unittest.TestCase):
@@ -36,16 +35,19 @@ class TestVizSccsKosarajuTracing(unittest.TestCase):
                           algorithm_ordering=AlgorithmOrdering.ASC)
         dir = TestVizSccsKosarajuTracing.RESOURCES_PATH + "/" + \
             inspect.currentframe().f_code.co_name
-        VizSccsKosarajuTracing.enable(
-            pt.get_dir_in_user_home(dir),
-            self.directed_graph,
-            vertex_states=[
+        viz_sccs_kosaraju_tracing: VizSccsKosarajuTracing =\
+            VizSccsKosarajuTracing(
+                path=pt.get_dir_in_user_home(dir),
+                directed_graph=self.directed_graph,
+                vertex_states=[
                     {VizSccsKosarajuTracing.ACTIVATED:
                         {"fillcolor": "red", "style": "filled"}},
+                    {VizSccsKosarajuTracing.IN_CYCLE:
+                        {"fillcolor": "blue", "style": "filled"}},
                     {VizSccsKosarajuTracing.VISITED:
                         {"fillcolor": "gray", "style": "filled"}}])
-        VizSccsKosarajuTracing.execute(self.directed_graph, resource_path=dir,
-                                       nontrivial=True)
+        viz_sccs_kosaraju_tracing.execute(resource_path=dir,
+                                          nontrivial=True)
         self.assertTrue(True)
 
     def tearDown(self):

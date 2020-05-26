@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Mapping, Set
 from pythonalgos.graph.vertex import Vertex
 from pythonalgos.util import path_tools as pt
 from pythonvizalgos.util import video_tools as vt
@@ -36,8 +36,7 @@ class VizSccsKosarajuTracing(VizTracing):
 
     LABEL_ATTRIBUTES = [STACK_IDX, SCC_IDX]
 
-    @classmethod
-    def get_vertex_label_attributes(cls) -> List[str]:
+    def get_vertex_label_attributes(self) -> List[str]:
         """ This classmethod retrieves the list of vertex label attributes
         of this class.
 
@@ -45,10 +44,15 @@ class VizSccsKosarajuTracing(VizTracing):
 
         return VizSccsKosarajuTracing.LABEL_ATTRIBUTES
 
-    @classmethod
-    def execute(cls, directed_graph: DirectedGraph, resource_path: str,
-                nontrivial: bool = True) -> None:
-        """ Main function that takes a number of vertices
+    def __init__(self, path: str, directed_graph: DirectedGraph,
+                 vertex_states: List[Mapping[str, Mapping[str, str]]] = None,
+                 edge_states: List[Mapping[str, Mapping[str, str]]] = None) \
+            -> None:
+        super().__init__(path=path, directed_graph=directed_graph,
+                         vertex_states=vertex_states, edge_states=edge_states)
+
+    def execute(self, resource_path: str, nontrivial: bool):
+        """ Method that takes a number of vertices
         (of a directed graph), invokes the kosaraju sccs functionality
         (which in turn creates the traced images), and converts the images
         to a video.
@@ -59,10 +63,10 @@ class VizSccsKosarajuTracing(VizTracing):
             resource_path: the path that should contain the generated resources
         """
 
-        VizTracing.execute(directed_graph, resource_path)
-        directed_graph.\
-            create_sccs_kosaraju_dfs(nontrivial,
-                                     VizSccsKosarajuTracingAdvisor())
+        super().execute(resource_path)
+        self.get_directed_graph().\
+            create_sccs_kosaraju_dfs(
+                nontrivial, VizSccsKosarajuTracingAdvisor(self))
         vt.convert_images_to_video(pt.get_dir_in_user_home(resource_path))
 
 
@@ -71,8 +75,7 @@ class VizSccsKosarajuTracingAdvisor(VizTracingAdvisor):
     visualization of the sccs kosaraju algorithm
     """
 
-    @classmethod
-    def add_vertex_to_stack(cls, directed_graph: DirectedGraph,
+    def add_vertex_to_stack(self, directed_graph: DirectedGraph,
                             vertex: Vertex,
                             idx: int) -> None:
         """ Advice that adds the vertex to the stack.
@@ -81,15 +84,13 @@ class VizSccsKosarajuTracingAdvisor(VizTracingAdvisor):
             directed_graph(DirectedGraph): The directed graph
             vertex: the vertex that should get the status
             idx: the index of the vertex in the stack
-
         """
 
-        VizSccsKosarajuTracing.set_status(
-            directed_graph, vertex, VizSccsKosarajuTracing.STACK_IDX, idx)
-        VizSccsKosarajuTracing.snapshot()
+        self.viz_tracing.set_status(vertex, VizSccsKosarajuTracing.STACK_IDX,
+                                    idx)
+        self.viz_tracing.snapshot(directed_graph)
 
-    @classmethod
-    def reverse_directed_graph(cls, directed_graph: DirectedGraph) -> None:
+    def reverse_directed_graph(self, directed_graph: DirectedGraph) -> None:
         """ Advice that handles the reversing of the directed graph.
         Basically resetting the whole graph, clearing all stastusses
 
@@ -97,8 +98,8 @@ class VizSccsKosarajuTracingAdvisor(VizTracingAdvisor):
             directed_graph(DirectedGraph): The directed graph
         """
 
-        VizTracing.reset_attrs(directed_graph)
-        VizTracing.activate_graph(directed_graph)
-        VizSccsKosarajuTracing.snapshot()
-        VizTracing.deactivate_graph(directed_graph)
-        VizSccsKosarajuTracing.snapshot()
+        self.viz_tracing.reset_attrs(directed_graph)
+        self.viz_tracing.activate_graph(directed_graph)
+        self.viz_tracing.snapshot(directed_graph)
+        self.viz_tracing.deactivate_graph(directed_graph)
+        self.viz_tracing.snapshot(directed_graph)
