@@ -48,26 +48,25 @@ class VizTracing:
             [{VizTracing.DEFAULT: VizTracing.DEFAULT_STATE}]
         self.snapshot_no = 1
 
-    def set_status(self, directed_graph: DirectedGraph,
-                   object: Union[Vertex, Edge], status: str,
+    def get_directed_graph(self) -> DirectedGraph:
+        return self.directed_graph
+
+    def set_status(self, object: Union[Vertex, Edge], status: str,
                    value: Any = True):
         """ Method that tags the vertex with the provided status
 
         Args:
-            directed_graph(DirectedGraph): directed graph object
             object: the vertex or edge for which the status must be set
             status(str): the status to be set
         """
 
         object.set_attr(status, value)
 
-    def reset_status(self, directed_graph: DirectedGraph,
-                     object: Union[Vertex, Edge], status: str,
+    def reset_status(self, object: Union[Vertex, Edge], status: str,
                      value: Any = False):
         """ Method that resets the status of the object
 
         Args:
-            directed_graph(DirectedGraph): directed graph object
             object: the vertex of edge for which the status must be reset
             status(str): the status to be reset
         """
@@ -78,11 +77,12 @@ class VizTracing:
         """ Method that resets all attributes of a vertex
 
         Args:
-            directed_graph(DirectedGraph): directed graph object
+            directed_graph (DirectedGraph): The directed graph
+            vertex(Vertex): the vertex to be activated
         """
 
         for v in directed_graph.get_vertices():
-            v.reset_attrs
+            v.reset_attrs()
 
     def change_activated_vertex(self, directed_graph: DirectedGraph,
                                 vertex: Vertex):
@@ -90,49 +90,45 @@ class VizTracing:
         It deactivates all other vertices
 
         Args:
-            directed_graph(DirectedGraph): directed graph object
+            directed_graph (DirectedGraph): The directed graph
             vertex(Vertex): the vertex to be activated
         """
 
-        self.set_status(
-            directed_graph, vertex, VizTracing.ACTIVATED)
+        self.set_status(vertex, VizTracing.ACTIVATED)
         for v in directed_graph.get_vertices():
             if str(v.get_label()) != str(vertex.get_label()):
-                self.reset_status(directed_graph, v, VizTracing.ACTIVATED)
+                self.reset_status(v, VizTracing.ACTIVATED)
 
     def deactivate_graph(self, directed_graph: DirectedGraph):
         """ Method that resets the whole graph
 
         Args:
-            directed_graph: the directed graph
+            directed_graph (DirectedGraph): The directed graph
         """
 
         for v in directed_graph.get_vertices():
-            self.reset_status(directed_graph, v, VizTracing.ACTIVATED)
+            self.reset_status(v, VizTracing.ACTIVATED)
 
     def activate_graph(self, directed_graph: DirectedGraph):
-        """ Function that sets the attribute "active" of all vertices to
+        """ Method that sets the attribute "active" of all vertices to
         true.
 
         Args:
-            directed_graph(DirectedGraph): directed graph object
+            directed_graph (DirectedGraph): The directed graph
         """
 
         for v in directed_graph.get_vertices():
-            self.set_status(directed_graph, v, VizTracing.ACTIVATED)
+            self.set_status(v, VizTracing.ACTIVATED)
 
-    def snapshot(self, DirectedGraph: DirectedGraph):
+    def snapshot(self, directed_graph: DirectedGraph):
         """ Take a snapshot of the current directed graph
-
+        
         Args:
-            file_name(str): path and file for the file to be generated
-            view_type(bool): True if the attached program for the file is to
-                be started on
-
+            directed_graph (DirectedGraph): The directed graph
         """
 
         graph = Digraph(format=VizTracing.IMAGE_TYPE)
-        for vertex in self.directed_graph.get_vertices():
+        for vertex in directed_graph.get_vertices():
             found = False
             default_state: Union[Mapping[str, str], None] = {}
             for state in self.vertex_states:
@@ -175,13 +171,11 @@ class VizTracing:
             ("{:04d}".format(self.snapshot_no))))
         self.snapshot_no += 1
 
-    def execute(self, directed_graph: DirectedGraph, resource_path: str):
+    def execute(self, resource_path: str):
         """ Template method that prepares the generation of the tracing.
         It's called by the child classes of this class.
 
         Args:
-            vertices(dict): a dictionar with vertices and for each vertex its
-                destination vertices
             resource_path: the path that should contain the generated resources
         """
 
@@ -225,8 +219,7 @@ class VizTracingAdvisor(Advisor):
 
         """
         self.viz_tracing.change_activated_vertex(directed_graph, vertex)
-        self.viz_tracing.set_status(
-            directed_graph, vertex, VizTracing.VISITED)
+        self.viz_tracing.set_status(vertex, VizTracing.VISITED)
         self.viz_tracing.snapshot(directed_graph)
 
     def vertex_already_visited(self, directed_graph: DirectedGraph,
@@ -239,9 +232,7 @@ class VizTracingAdvisor(Advisor):
             edge(Edge): the edge to be disabled
         """
 
-        self.viz_tracing.set_status(
-            directed_graph, edge, VizTracing.DISABLED)
+        self.viz_tracing.set_status(edge, VizTracing.DISABLED)
         self.viz_tracing.snapshot(directed_graph)
-        self.viz_tracing.reset_status(
-            directed_graph, edge, VizTracing.DISABLED)
+        self.viz_tracing.reset_status(edge, VizTracing.DISABLED)
         self.viz_tracing.snapshot(directed_graph)

@@ -39,8 +39,8 @@ class TestVizCyclicTracing(unittest.TestCase):
         dir = TestVizCyclicTracing.RESOURCES_PATH + "/" + \
             inspect.currentframe().f_code.co_name
         viz_cyclic_tracing: VizCyclicTracing = VizCyclicTracing(
-            pt.get_dir_in_user_home(dir),
-            self.directed_graph,
+            path=pt.get_dir_in_user_home(dir),
+            directed_graph=self.directed_graph,
             vertex_states=[
                     {VizCyclicTracing.ACTIVATED:
                         {"fillcolor": "red", "style": "filled"}},
@@ -48,7 +48,7 @@ class TestVizCyclicTracing(unittest.TestCase):
                         {"fillcolor": "blue", "style": "filled"}},
                     {VizCyclicTracing.VISITED:
                         {"fillcolor": "gray", "style": "filled"}}])
-        viz_cyclic_tracing.execute(self.directed_graph, resource_path=dir)
+        viz_cyclic_tracing.execute(resource_path=dir)
         self.assertTrue(True)
 
     def test_VizCyclicTracing_cyclic(self):
@@ -65,8 +65,8 @@ class TestVizCyclicTracing(unittest.TestCase):
         dir = TestVizCyclicTracing.RESOURCES_PATH + "/" + \
             inspect.currentframe().f_code.co_name
         viz_cyclic_tracing: VizCyclicTracing = VizCyclicTracing(
-            pt.get_dir_in_user_home(dir),
-            self.directed_graph,
+            path=pt.get_dir_in_user_home(dir),
+            directed_graph=self.directed_graph,
             vertex_states=[
                     {VizCyclicTracing.ACTIVATED:
                         {"fillcolor": "red", "style": "filled"}},
@@ -74,7 +74,7 @@ class TestVizCyclicTracing(unittest.TestCase):
                         {"fillcolor": "blue", "style": "filled"}},
                     {VizCyclicTracing.VISITED:
                         {"fillcolor": "gray", "style": "filled"}}])
-        viz_cyclic_tracing.execute(self.directed_graph, resource_path=dir)
+        viz_cyclic_tracing.execute(resource_path=dir)
         self.assertTrue(True)
 
     def tearDown(self):

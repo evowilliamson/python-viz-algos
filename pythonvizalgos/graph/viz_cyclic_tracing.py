@@ -1,4 +1,4 @@
-from typing import NoReturn
+from typing import List, Mapping
 from pythonalgos.graph.vertex import Vertex
 from pythonalgos.util import path_tools as pt
 from pythonvizalgos.util import video_tools as vt
@@ -31,7 +31,14 @@ class VizCyclicTracing(VizTracing):
     takes predecence over VizCyclicTracing.VISITED by definition of the list
     """
 
-    def execute(self, directed_graph: DirectedGraph, resource_path: str):
+    def __init__(self, path: str, directed_graph: DirectedGraph,
+                 vertex_states: List[Mapping[str, Mapping[str, str]]] = None,
+                 edge_states: List[Mapping[str, Mapping[str, str]]] = None) \
+            -> None:
+        super().__init__(path=path, directed_graph=directed_graph,
+                         vertex_states=vertex_states, edge_states=edge_states)
+
+    def execute(self, resource_path: str):
         """ Main function that takes a number of vertices
         (of a directed graph), invokes the cycle check functionality
         (which in turn creates the traced images), and converts the images
@@ -43,8 +50,8 @@ class VizCyclicTracing(VizTracing):
             resource_path: the path that should contain the generated resources
         """
 
-        super().execute(directed_graph, resource_path)
-        directed_graph.is_cyclic(VizCyclicTracingAdvisor(self))
+        super().execute(resource_path)
+        self.get_directed_graph().is_cyclic(VizCyclicTracingAdvisor(self))
         vt.convert_images_to_video(pt.get_dir_in_user_home(resource_path))
 
 
@@ -67,8 +74,7 @@ class VizCyclicTracingAdvisor(VizTracingAdvisor):
             vertex: the vertex that should get the status activated
         """
 
-        self.viz_tracing.set_status(
-            directed_graph, vertex, VizCyclicTracing.IN_CYCLE)
+        self.viz_tracing.set_status(vertex, VizCyclicTracing.IN_CYCLE)
         self.viz_tracing.change_activated_vertex(directed_graph, vertex)
         self.viz_tracing.snapshot(directed_graph)
 
@@ -82,8 +88,7 @@ class VizCyclicTracingAdvisor(VizTracingAdvisor):
             head: the head vertex that should get the in_cycle status
         """
 
-        self.viz_tracing.set_status(
-            directed_graph, head, VizCyclicTracing.IN_CYCLE)
+        self.viz_tracing.set_status(head, VizCyclicTracing.IN_CYCLE)
         self.viz_tracing.change_activated_vertex(directed_graph, head)
         self.viz_tracing.snapshot(directed_graph)
 
