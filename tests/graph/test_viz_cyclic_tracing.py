@@ -4,9 +4,7 @@ from pythonalgos.graph.directed_graph import DirectedGraph
 from pythonalgos.graph.algorithm_ordering import AlgorithmOrdering
 from pythonvizalgos.graph.viz_cyclic_tracing import VizCyclicTracing
 import os
-from pythonalgos.util.logging import Logging
 import pythonalgos.util.path_tools as pt
-from os import path
 import inspect
 
 

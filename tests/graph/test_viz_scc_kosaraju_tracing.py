@@ -5,9 +5,7 @@ from pythonvizalgos.graph.viz_scc_kosaraju_tracing\
     import VizSccsKosarajuTracing
 import os
 import pythonalgos.util.path_tools as pt
-from os import path
 import inspect
-from typing import List, Set
 
 
 class TestVizSccsKosarajuTracing(unittest.TestCase):
