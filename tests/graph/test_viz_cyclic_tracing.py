@@ -12,7 +12,6 @@ class TestVizCyclicTracing(unittest.TestCase):
 
     DIGRAPH_VIZ = "digraph_viz"
     RESOURCES_PATH = "python-test-resources/cyclic"
-    RESOURCES_PATH_RECYCLE = RESOURCES_PATH + "/recycle"
 
     @classmethod
     def setUpClass(cls):
@@ -74,11 +73,6 @@ class TestVizCyclicTracing(unittest.TestCase):
                         {"fillcolor": "gray", "style": "filled"}}])
         viz_cyclic_tracing.execute(resource_path=dir)
         self.assertTrue(True)
-
-    def tearDown(self):
-        pt.clean_dir_in_user_home(TestVizCyclicTracing.RESOURCES_PATH_RECYCLE)
-        self.assertFalse(os.path.exists(pt.get_dir_in_user_home(
-            TestVizCyclicTracing.RESOURCES_PATH_RECYCLE)))
 
 
 if __name__ == '__main__':

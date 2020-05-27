@@ -12,7 +12,6 @@ class TestVizSccsKosarajuTracing(unittest.TestCase):
 
     DIGRAPH_VIZ = "digraph_viz"
     RESOURCES_PATH = "python-test-resources/scc_kosaraju"
-    RESOURCES_PATH_RECYCLE = RESOURCES_PATH + "/recycle"
 
     @classmethod
     def setUpClass(cls):
@@ -47,12 +46,6 @@ class TestVizSccsKosarajuTracing(unittest.TestCase):
         viz_sccs_kosaraju_tracing.execute(resource_path=dir,
                                           nontrivial=True)
         self.assertTrue(True)
-
-    def tearDown(self):
-        pt.clean_dir_in_user_home(
-            TestVizSccsKosarajuTracing.RESOURCES_PATH_RECYCLE)
-        self.assertFalse(os.path.exists(pt.get_dir_in_user_home(
-            TestVizSccsKosarajuTracing.RESOURCES_PATH_RECYCLE)))
 
 
 if __name__ == '__main__':
