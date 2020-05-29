@@ -89,6 +89,7 @@ class VizSccsKosarajuTracingAdvisor(VizTracingAdvisor):
         self.viz_tracing.set_status(vertex, VizSccsKosarajuTracing.STACK_IDX,
                                     idx)
         self.viz_tracing.snapshot(directed_graph)
+        print(vertex.get_label())
 
     def reverse_directed_graph(self, directed_graph: DirectedGraph) -> None:
         """ Advice that handles the reversing of the directed graph.
