@@ -8,12 +8,20 @@ G.add_edge('b', 'c', weight=0.2)
 G.add_edge('c', 'd', weight=0.1)
 G.add_edge('d', 'a', weight=0.1)
 
+G.add_node('a')
+G.add_node('b')
+G.add_node('c')
+G.add_node('d')
+G.add_node('e')
+
 elarge = [(u, v) for (u, v, d) in G.edges(data=True)]
+nodes = [n for n in G.nodes]
 
 pos = nx.planar_layout(G)  # positions for all nodes
 
 # nodes
-nx.draw_networkx_nodes(G, pos, node_size=700, node_color='white', linewidths=1.0, edgecolors='black')
+nx.draw_networkx_nodes(G, pos, nodelist=nodes, node_size=700,
+                       node_color='white', linewidths=1.0, edgecolors='black')
 
 # edges
 nx.draw_networkx_edges(G, pos, edgelist=elarge,

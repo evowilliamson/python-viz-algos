@@ -3,8 +3,8 @@ from pythonalgos.graph.vertex import Vertex
 from pythonalgos.util import path_tools as pt
 from pythonvizalgos.util import video_tools as vt
 from pythonalgos.graph.directed_graph import DirectedGraph
-from pythonvizalgos.graph.viz_tracing_graphviz import\
-    VizTracingGraphviz
+from pythonvizalgos.graph.viz_tracing_networkx import\
+    VizTracingNetworkx
 from pythonvizalgos.graph.viz_tracing import\
     VizTracingAdvisor
 
@@ -13,7 +13,7 @@ from pythonvizalgos.graph.viz_tracing import\
 sccs algorithms in relation to directed graphs """
 
 
-class VizSccsKosarajuTracing(VizTracingGraphviz):
+class VizSccsKosarajuTracing(VizTracingNetworkx):
     """ Class that is accessed in a static way. It contains functions for
     tracing cyclic algorithms in relation to directed graphs
 
