@@ -5,7 +5,7 @@ from pythonalgos.util.advisor import Advisor
 from os import path
 from pythonalgos.util import path_tools as pt
 from pythonalgos.graph.directed_graph import DirectedGraph
-from typing import List, Mapping, Union, Any, Optional
+from typing import List, Mapping, Union, Any
 
 """ Module that defines a tracing class to be used for tracing of all sorts
 of algorithms in relation to directed graphs """
@@ -13,9 +13,7 @@ of algorithms in relation to directed graphs """
 
 class VizTracing:
 
-    IMAGE_NAME_PREFIX: str = "VIZ_TRACING_"
     DEFAULT: str = "default"
-    IMAGE_TYPE: str = "png"
     DEFAULT_STATE = None
 
     ACTIVATED: str = "activated"
@@ -127,49 +125,7 @@ class VizTracing:
             directed_graph (DirectedGraph): The directed graph
         """
 
-        graph = Digraph(format=VizTracing.IMAGE_TYPE)
-        for vertex in directed_graph.get_vertices():
-            found = False
-            default_state: Union[Mapping[str, str], None] = {}
-            for state in self.vertex_states:
-                attr_name, attr_values = next(iter(state.items()))
-                if attr_name != VizTracing.DEFAULT and\
-                        vertex.get_attr(attr_name):
-                    graph.node(name=str(vertex.get_label()),
-                               label=self.get_extended_label(vertex),
-                               _attributes=None, **attr_values)
-                    found = True
-                    break
-                elif attr_name == VizTracing.DEFAULT:
-                    default_state = attr_values
-            if not found:
-                graph.node(name=str(vertex.get_label()),
-                           label=self.get_extended_label(vertex),
-                           _attributes=None, **default_state or {})
-
-            for edge in vertex.get_edges():
-                found = False
-                default_state: Union[Mapping[str, str], None] = {}
-                for state in self.edge_states:
-                    attr_name, attr_values = next(iter(state.items()))
-                    if attr_name != VizTracing.DEFAULT and \
-                            edge.get_attr(attr_name):
-                        graph.edge(
-                            str(edge.get_tail().get_label()),
-                            str(edge.get_head().get_label()),
-                            label=None, _attributes=None, **attr_values)
-                        found = True
-                        break
-                    elif attr_name == VizTracing.DEFAULT:
-                        default_state = attr_values
-                if not found:
-                    graph.edge(
-                        str(edge.get_tail().get_label()),
-                        str(edge.get_head().get_label()))
-        graph.render(path.join(
-            self.path, VizTracing.IMAGE_NAME_PREFIX +
-            ("{:04d}".format(self.snapshot_no))))
-        self.snapshot_no += 1
+    pass
 
     def execute(self, resource_path: str):
         """ Template method that prepares the generation of the tracing.

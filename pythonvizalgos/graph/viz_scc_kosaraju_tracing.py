@@ -3,14 +3,14 @@ from pythonalgos.graph.vertex import Vertex
 from pythonalgos.util import path_tools as pt
 from pythonvizalgos.util import video_tools as vt
 from pythonalgos.graph.directed_graph import DirectedGraph
-from pythonvizalgos.graph.viz_tracing import VizTracing, VizTracingAdvisor
+from pythonvizalgos.graph.viz_tracing import VizTracingGraphviz, VizTracingGraphvizAdvisor
 
 
 """ Module that defines a tracing class to be used for tracing of kosoraju
 sccs algorithms in relation to directed graphs """
 
 
-class VizSccsKosarajuTracing(VizTracing):
+class VizSccsKosarajuTracing(VizTracingGraphviz):
     """ Class that is accessed in a static way. It contains functions for
     tracing cyclic algorithms in relation to directed graphs
 
@@ -70,7 +70,7 @@ class VizSccsKosarajuTracing(VizTracing):
         vt.convert_images_to_video(pt.get_dir_in_user_home(resource_path))
 
 
-class VizSccsKosarajuTracingAdvisor(VizTracingAdvisor):
+class VizSccsKosarajuTracingAdvisor(VizTracingGraphvizAdvisor):
     """ Module that contains the logic for inserting advice at join points for
     visualization of the sccs kosaraju algorithm
     """

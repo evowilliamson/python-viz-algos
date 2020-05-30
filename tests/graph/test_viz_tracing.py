@@ -8,7 +8,7 @@ from os import path
 import inspect
 
 
-class TestVizTracing(unittest.TestCase):
+class TestVizTracingGraphviz(unittest.TestCase):
 
     DIGRAPH_VIZ = "digraph_viz"
     RESOURCES_PATH = "python-test-resources"
@@ -16,14 +16,15 @@ class TestVizTracing(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        pt.clean_dir_in_user_home(TestVizTracing.RESOURCES_PATH_RECYCLE)
+        pt.clean_dir_in_user_home(
+            TestVizTracingGraphviz.RESOURCES_PATH_RECYCLE)
 
     def setUp(self):
         self.vertices = {0: [1], 1: [2, 3], 2: [3],
                          3: [4, 6], 4: [5, 6], 5: [5], 6: [6]}
         self.directed_graph = DirectedGraph(self.vertices)
 
-    def test_VizTracing_vertex_only(self):
+    def test_VizTracingGraphviz_vertex_only(self):
         self.vertices = {0: [1], 1: [2, 3], 2: [3],
                          3: [4, 6], 4: [5, 6], 5: [5], 6: [6]}
         self.directed_graph = DirectedGraph(self.vertices)
@@ -31,7 +32,7 @@ class TestVizTracing(unittest.TestCase):
         vertex_1.set_attr("activated", True)
         vertex_2 = self.directed_graph.get_vertex(2)
         vertex_2.set_attr("in_cycle", True)
-        dir = TestVizTracing.RESOURCES_PATH_RECYCLE + "/" + \
+        dir = TestVizTracingGraphviz.RESOURCES_PATH_RECYCLE + "/" + \
             inspect.currentframe().f_code.co_name
         pt.create_dir_in_user_home(dir)
         viz_cyclic_tracing: VizCyclicTracing = VizCyclicTracing(
@@ -45,12 +46,12 @@ class TestVizTracing(unittest.TestCase):
         viz_cyclic_tracing.snapshot(self.directed_graph)
         self.assertTrue(True)
 
-    def test_VizTracing_activate_vertex(self):
+    def test_VizTracingGraphviz_activate_vertex(self):
         self.vertices = {0: [1], 1: [2, 3], 2: [3],
                          3: [4, 6], 4: [5, 6], 5: [5], 6: [6]}
         self.directed_graph = DirectedGraph(self.vertices)
         vertex_1 = self.directed_graph.get_vertex(1)
-        dir = TestVizTracing.RESOURCES_PATH_RECYCLE + "/" + \
+        dir = TestVizTracingGraphviz.RESOURCES_PATH_RECYCLE + "/" + \
             inspect.currentframe().f_code.co_name
         viz_cyclic_tracing: VizCyclicTracing = VizCyclicTracing(
             path=pt.get_dir_in_user_home(dir),
@@ -68,13 +69,13 @@ class TestVizTracing(unittest.TestCase):
             else:
                 self.assertFalse(vertex.get_attr(VizCyclicTracing.ACTIVATED))
 
-    def test_VizTracing_set_status(self):
+    def test_VizTracingGraphviz_set_status(self):
         self.vertices = {0: [1], 1: [2, 3], 2: [3],
                          3: [4, 6], 4: [5, 6], 5: [5], 6: [6]}
         self.directed_graph = DirectedGraph(self.vertices)
         vertex_5 = self.directed_graph.get_vertex(5)
         vertex_6 = self.directed_graph.get_vertex(6)
-        dir = TestVizTracing.RESOURCES_PATH_RECYCLE + "/" + \
+        dir = TestVizTracingGraphviz.RESOURCES_PATH_RECYCLE + "/" + \
             inspect.currentframe().f_code.co_name
         viz_cyclic_tracing: VizCyclicTracing = VizCyclicTracing(
             path=pt.get_dir_in_user_home(dir),
@@ -93,8 +94,8 @@ class TestVizTracing(unittest.TestCase):
             else:
                 self.assertFalse(vertex.get_attr(VizCyclicTracing.IN_CYCLE))
 
-    def test_VizTracing_snapshot(self):
-        dir = TestVizTracing.RESOURCES_PATH_RECYCLE + "/" + \
+    def test_VizTracingGraphviz_snapshot(self):
+        dir = TestVizTracingGraphviz.RESOURCES_PATH_RECYCLE + "/" + \
             inspect.currentframe().f_code.co_name
         viz_cyclic_tracing: VizCyclicTracing = VizCyclicTracing(
             path=pt.get_dir_in_user_home(dir),
@@ -113,7 +114,7 @@ class TestVizTracing(unittest.TestCase):
             VizCyclicTracing.IMAGE_TYPE)))
 
     def tearDown(self):
-        dir = TestVizTracing.RESOURCES_PATH_RECYCLE
+        dir = TestVizTracingGraphviz.RESOURCES_PATH_RECYCLE
         pt.clean_dir_in_user_home(dir)
         self.assertFalse(os.path.exists(pt.get_dir_in_user_home(dir)))
 

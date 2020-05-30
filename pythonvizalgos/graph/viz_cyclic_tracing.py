@@ -1,16 +1,19 @@
+from pythonvizalgos.graph.viz_tracing import VizTracingAdvisor
 from typing import List, Mapping
 from pythonalgos.graph.vertex import Vertex
 from pythonalgos.util import path_tools as pt
 from pythonvizalgos.util import video_tools as vt
 from pythonalgos.graph.directed_graph import DirectedGraph
-from pythonvizalgos.graph.viz_tracing import VizTracing, VizTracingAdvisor
+from pythonvizalgos.graph.viz_tracing_graphviz import\
+    VizTracingGraphviz
+from pythonvizalgos.graph.viz_tracing import VizTracingAdvisor
 
 
 """ Module that defines a tracing class to be used for tracing of cyclic
 algorithms in relation to directed graphs """
 
 
-class VizCyclicTracing(VizTracing):
+class VizCyclicTracing(VizTracingGraphviz):
     """ Class that is accessed in a static way. It contains functions for
     tracing cyclic algorithms in relation to directed graphs
 
@@ -60,7 +63,7 @@ class VizCyclicTracingAdvisor(VizTracingAdvisor):
     visualization of the cyclic check algorithm
     """
 
-    def __init__(self, viz_tracing: VizTracing):
+    def __init__(self, viz_tracing: VizTracingGraphviz):
         super().__init__(viz_tracing)
 
     def cycle_reported_recursive(self, directed_graph: DirectedGraph,
