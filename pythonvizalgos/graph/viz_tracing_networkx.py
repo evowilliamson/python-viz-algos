@@ -1,4 +1,4 @@
-from pythonvizalgos.graph.viz_tracing import VizTracing
+from pythonvizalgos.graph.viz_tracing import VizTracing, DEFAULT, DEFAULT_STATE
 from pythonalgos.graph.vertex import Vertex
 from pythonalgos.graph.edge import Edge
 from pythonalgos.graph.directed_graph import DirectedGraph
@@ -29,8 +29,8 @@ class VizTracingNetworkx(VizTracing):
     NODE_FONT_FAMILY: str = 'sans-serif'
 
     def __init__(self, path: str, directed_graph: DirectedGraph,
-                 vertex_states: List[Mapping[str, Mapping[str, str]]] = None,
-                 edge_states: List[Mapping[str, Mapping[str, str]]] = None) \
+                 vertex_states: List[Mapping[str, Mapping[str, str]]],
+                 edge_states: List[Mapping[str, Mapping[str, str]]]) \
             -> None:
         """ Method that initialises the tracing functionality
 
@@ -68,13 +68,8 @@ class VizTracingNetworkx(VizTracing):
 
         pos = nx.planar_layout(dg)
 
-        nx.draw_networkx_nodes(
-            G=dg, pos=pos, nodelist=nodes,
-            node_size=VizTracingNetworkx.NODE_SIZE,
-            # node_color=VizTracingNetworkx.NODE_FILL_COLOR,
-            linewidths=VizTracingNetworkx.NODE_LINE_WITH,
-            edgecolors=VizTracingNetworkx.NODE_LINE_COLOR
-            )
+        self.draw_nodes(dg, pos, nodes, VizTracing.ACTIVATED)
+        self.draw_nodes(dg, pos, nodes, VizTracing.ACTIVATED)
 
         nx.draw_networkx_edges(
             G=dg, pos=pos, edgelist=edges,
@@ -108,11 +103,35 @@ class VizTracingNetworkx(VizTracing):
         for vertex in directed_graph.get_vertices():
             if VizTracing.ACTIVATED in vertex.get_attrs():
                 mapping[VizTracing.ACTIVATED].append(vertex)
+            elif VizTracing.VISITED in vertex.get_attrs():
+                mapping[VizTracing.VISITED].append(vertex)
             else:
-                mapping[VizTracing.DEFAULT].append(vertex)
+                mapping[DEFAULT].append(vertex)
 
         return mapping
 
-    def draw_nodes(self, node_list: List[Vertex]) -> None:
+    def draw_nodes(self, dg: nx.DiGraph, pos, node_list: List[Vertex],
+                   state: str) -> None:
         """ Method that draws the nodes
+
+        """
+
+        # TODO: refactor to dict
+        fill_color: str = "white"
+        for mapping in self.get_vertex_states():
+            if mapping[state] == state:
+                fill_color = mapping[state]["fill_color"]
+                break
+
+        nx.draw_networkx_nodes(
+            G=dg, pos=pos, nodelist=node_list,
+            node_size=VizTracingNetworkx.NODE_SIZE,
+            node_color=fill_color,
+            linewidths=VizTracingNetworkx.NODE_LINE_WITH,
+            edgecolors=VizTracingNetworkx.NODE_LINE_COLOR
+            )
+
+
+
+
 

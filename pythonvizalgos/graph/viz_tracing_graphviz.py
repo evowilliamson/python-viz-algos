@@ -1,4 +1,4 @@
-from pythonvizalgos.graph.viz_tracing import VizTracing
+from pythonvizalgos.graph.viz_tracing import VizTracing, DEFAULT_STATE, DEFAULT
 from graphviz import Digraph
 from pythonalgos.graph.vertex import Vertex
 from pythonalgos.graph.edge import Edge
@@ -18,8 +18,8 @@ class VizTracingGraphviz(VizTracing):
     IMAGE_TYPE: str = "png"
 
     def __init__(self, path: str, directed_graph: DirectedGraph,
-                 vertex_states: List[Mapping[str, Mapping[str, str]]] = None,
-                 edge_states: List[Mapping[str, Mapping[str, str]]] = None) \
+                 vertex_states: List[Mapping[str, Mapping[str, str]]],
+                 edge_states: List[Mapping[str, Mapping[str, str]]]) \
             -> None:
         """ Method that initialises the tracing functionality
 
@@ -48,14 +48,14 @@ class VizTracingGraphviz(VizTracing):
             default_state: Union[Mapping[str, str], None] = {}
             for state in self.vertex_states:
                 attr_name, attr_values = next(iter(state.items()))
-                if attr_name != VizTracing.DEFAULT and\
+                if attr_name != DEFAULT and\
                         vertex.get_attr(attr_name):
                     graph.node(name=str(vertex.get_label()),
                                label=self.get_extended_label(vertex),
                                _attributes=None, **attr_values)
                     found = True
                     break
-                elif attr_name == VizTracing.DEFAULT:
+                elif attr_name == DEFAULT:
                     default_state = attr_values
             if not found:
                 graph.node(name=str(vertex.get_label()),
@@ -67,7 +67,7 @@ class VizTracingGraphviz(VizTracing):
                 default_state: Union[Mapping[str, str], None] = {}
                 for state in self.edge_states:
                     attr_name, attr_values = next(iter(state.items()))
-                    if attr_name != VizTracing.DEFAULT and \
+                    if attr_name != DEFAULT and \
                             edge.get_attr(attr_name):
                         graph.edge(
                             str(edge.get_tail().get_label()),
@@ -75,7 +75,7 @@ class VizTracingGraphviz(VizTracing):
                             label=None, _attributes=None, **attr_values)
                         found = True
                         break
-                    elif attr_name == VizTracing.DEFAULT:
+                    elif attr_name == DEFAULT:
                         default_state = attr_values
                 if not found:
                     graph.edge(

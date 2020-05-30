@@ -48,8 +48,8 @@ class VizSccsKosarajuTracing(VizTracingNetworkx):
         return VizSccsKosarajuTracing.LABEL_ATTRIBUTES
 
     def __init__(self, path: str, directed_graph: DirectedGraph,
-                 vertex_states: List[Mapping[str, Mapping[str, str]]] = None,
-                 edge_states: List[Mapping[str, Mapping[str, str]]] = None) \
+                 vertex_states: List[Mapping[str, Mapping[str, str]]],
+                 edge_states: List[Mapping[str, Mapping[str, str]]]) \
             -> None:
         super().__init__(path=path, directed_graph=directed_graph,
                          vertex_states=vertex_states, edge_states=edge_states)
