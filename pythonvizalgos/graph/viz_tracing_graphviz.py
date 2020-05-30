@@ -42,7 +42,7 @@ class VizTracingGraphviz(VizTracing):
             directed_graph (DirectedGraph): The directed graph
         """
 
-        graph = Digraph(format=VizTracing.IMAGE_TYPE)
+        graph = Digraph(format=VizTracingGraphviz.IMAGE_TYPE)
         for vertex in directed_graph.get_vertices():
             found = False
             default_state: Union[Mapping[str, str], None] = {}
@@ -82,6 +82,6 @@ class VizTracingGraphviz(VizTracing):
                         str(edge.get_tail().get_label()),
                         str(edge.get_head().get_label()))
         graph.render(path.join(
-            self.path, VizTracing.IMAGE_NAME_PREFIX +
+            self.path, VizTracingGraphviz.IMAGE_NAME_PREFIX +
             ("{:04d}".format(self.snapshot_no))))
         self.snapshot_no += 1
