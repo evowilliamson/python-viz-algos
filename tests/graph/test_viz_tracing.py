@@ -2,6 +2,7 @@ import unittest
 from pythonalgos.graph.directed_graph import DirectedGraph
 from pythonalgos.graph.directed_graph import DirectedGraph
 from pythonvizalgos.graph.viz_cyclic_tracing import VizCyclicTracing
+from pythonvizalgos.graph.viz_tracing import VizTracing
 import os
 import pythonalgos.util.path_tools as pt
 from os import path
@@ -39,7 +40,7 @@ class TestVizTracingGraphviz(unittest.TestCase):
             path=pt.get_dir_in_user_home(dir),
             directed_graph=self.directed_graph,
             vertex_states=[
-                    {VizCyclicTracing.ACTIVATED:
+                    {VizTracing.ACTIVATED:
                         {"fillcolor": "red", "style": "filled"}},
                     {VizCyclicTracing.IN_CYCLE:
                         {"fillcolor": "blue", "style": "filled"}}])
@@ -57,7 +58,7 @@ class TestVizTracingGraphviz(unittest.TestCase):
             path=pt.get_dir_in_user_home(dir),
             directed_graph=self.directed_graph,
             vertex_states=[
-                    {VizCyclicTracing.ACTIVATED:
+                    {VizTracing.ACTIVATED:
                         {"fillcolor": "red", "style": "filled"}},
                     {VizCyclicTracing.IN_CYCLE:
                         {"fillcolor": "blue", "style": "filled"}}])
@@ -65,9 +66,9 @@ class TestVizTracingGraphviz(unittest.TestCase):
                                                    vertex_1)
         for vertex in self.directed_graph.get_vertices():
             if str(vertex_1.get_label()) == str(vertex.get_label()):
-                self.assertTrue(vertex.get_attr(VizCyclicTracing.ACTIVATED))
+                self.assertTrue(vertex.get_attr(VizTracing.ACTIVATED))
             else:
-                self.assertFalse(vertex.get_attr(VizCyclicTracing.ACTIVATED))
+                self.assertFalse(vertex.get_attr(VizTracing.ACTIVATED))
 
     def test_VizTracingGraphviz_set_status(self):
         self.vertices = {0: [1], 1: [2, 3], 2: [3],
@@ -81,7 +82,7 @@ class TestVizTracingGraphviz(unittest.TestCase):
             path=pt.get_dir_in_user_home(dir),
             directed_graph=self.directed_graph,
             vertex_states=[
-                    {VizCyclicTracing.ACTIVATED:
+                    {VizTracing.ACTIVATED:
                         {"fillcolor": "red", "style": "filled"}},
                     {VizCyclicTracing.IN_CYCLE:
                         {"fillcolor": "blue", "style": "filled"}}])

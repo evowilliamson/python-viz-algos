@@ -1,8 +1,6 @@
-from graphviz import Digraph
 from pythonalgos.graph.vertex import Vertex
 from pythonalgos.graph.edge import Edge
 from pythonalgos.util.advisor import Advisor
-from os import path
 from pythonalgos.util import path_tools as pt
 from pythonalgos.graph.directed_graph import DirectedGraph
 from typing import List, Mapping, Union, Any
@@ -11,22 +9,24 @@ from typing import List, Mapping, Union, Any
 of algorithms in relation to directed graphs """
 
 
-class VizTracing:
+DEFAULT: str = "default"
+DEFAULT_STATE = None
 
-    DEFAULT: str = "default"
-    DEFAULT_STATE = None
+
+class VizTracing:
 
     ACTIVATED: str = "activated"
     VISITED: str = "visited"
-    IN_CYCLE: str = "in_cycle"
     DISABLED: str = "disabled"
 
     def get_vertex_label_attributes(self) -> List[str]:
         return []
 
     def __init__(self, path: str, directed_graph: DirectedGraph,
-                 vertex_states: List[Mapping[str, Mapping[str, str]]] = None,
-                 edge_states: List[Mapping[str, Mapping[str, str]]] = None) \
+                 vertex_states: List[Mapping[str, Mapping[str, str]]] =
+                 [{DEFAULT: {"fillcolor": "white", "style": "filled"}}],
+                 edge_states: List[Mapping[str, Mapping[str, str]]] =
+                 [{DEFAULT: {}}]) \
             -> None:
         """ Method that initialises the tracing functionality
 
@@ -40,11 +40,8 @@ class VizTracing:
 
         self.path = path
         self.directed_graph = directed_graph
-        self.vertex_states = vertex_states or\
-            [{VizTracing.DEFAULT: VizTracing.DEFAULT_STATE}]
-        self.edge_states = edge_states or\
-            [{VizTracing.DEFAULT: VizTracing.DEFAULT_STATE}]
-        self.snapshot_no = 1
+        self.vertex_states = vertex_states
+        self.edge_states = edge_states
 
     def get_directed_graph(self) -> DirectedGraph:
         return self.directed_graph
@@ -120,7 +117,7 @@ class VizTracing:
 
     def snapshot(self, directed_graph: DirectedGraph):
         """ Take a snapshot of the current directed graph
-        
+
         Args:
             directed_graph (DirectedGraph): The directed graph
         """
@@ -153,6 +150,12 @@ class VizTracing:
             return str(label) + " " + ",".join(l)
         else:
             return str(label)
+
+    def get_vertex_states(self) -> List[Mapping[str, Mapping[str, str]]]:
+        return self.vertex_states
+
+    def get_edge_states(self) -> List[Mapping[str, Mapping[str, str]]]:
+        return self.edge_states
 
 
 class VizTracingAdvisor(Advisor):

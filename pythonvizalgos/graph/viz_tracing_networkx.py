@@ -2,7 +2,7 @@ from pythonvizalgos.graph.viz_tracing import VizTracing
 from pythonalgos.graph.vertex import Vertex
 from pythonalgos.graph.edge import Edge
 from pythonalgos.graph.directed_graph import DirectedGraph
-from typing import List, Mapping
+from typing import List, Mapping, Dict
 import matplotlib.pyplot as plt
 import networkx as nx
 
@@ -15,7 +15,7 @@ class VizTracingNetworkx(VizTracing):
     NODE_FILL_COLOR: str = 'white'
     NODE_LINE_WITH: float = 1.0
     NODE_LINE_COLOR = 'black'
-    NODE_SIZE: int = 500
+    NODE_SIZE: int = 2000
 
     EDGE_WIDTH: float = 1.0
     EDGE_COLOR: str = 'black'
@@ -55,7 +55,8 @@ class VizTracingNetworkx(VizTracing):
         dg = nx.DiGraph()
         vertex: Vertex
         for vertex in directed_graph.get_vertices():
-            dg.add_node(vertex.get_label())
+            dg.add_node(
+                vertex.get_label())
 
         edge: Edge
         for edge in directed_graph.get_edges():
@@ -68,23 +69,50 @@ class VizTracingNetworkx(VizTracing):
         pos = nx.planar_layout(dg)
 
         nx.draw_networkx_nodes(
-            dg, pos=pos, nodelist=nodes,
+            G=dg, pos=pos, nodelist=nodes,
             node_size=VizTracingNetworkx.NODE_SIZE,
-            node_color=VizTracingNetworkx.NODE_FILL_COLOR,
+            # node_color=VizTracingNetworkx.NODE_FILL_COLOR,
             linewidths=VizTracingNetworkx.NODE_LINE_WITH,
-            edgecolors=VizTracingNetworkx.NODE_LINE_COLOR)
+            edgecolors=VizTracingNetworkx.NODE_LINE_COLOR
+            )
 
         nx.draw_networkx_edges(
-            dg, pos=pos, edgelist=edges,
+            G=dg, pos=pos, edgelist=edges,
             width=VizTracingNetworkx.EDGE_WIDTH,
             edge_color=VizTracingNetworkx.EDGE_COLOR,
             style=VizTracingNetworkx.EDGE_STYLE,
             arrowsize=VizTracingNetworkx.EDGE_ARROW_SIZE)
 
         nx.draw_networkx_labels(
-            dg, pos=pos,
+            G=dg, pos=pos,
             font_size=VizTracingNetworkx.NODE_FONT_SIZE,
             font_family=VizTracingNetworkx.NODE_FONT_FAMILY)
 
         plt.axis('off')
         plt.show()
+
+    def create_node_buckets(self, directed_graph: DirectedGraph) ->\
+            Dict[str, List[Vertex]]:
+        """ Create different buckets that fit nodes with the
+        same characteristics
+
+        Args:
+            directed_graph: The directed graph
+
+        Returns:
+            A dictionary that contains lists of vertices per
+            characteristic
+        """
+
+        mapping: Dict[str, List[Vertex]] = dict()
+        for vertex in directed_graph.get_vertices():
+            if VizTracing.ACTIVATED in vertex.get_attrs():
+                mapping[VizTracing.ACTIVATED].append(vertex)
+            else:
+                mapping[VizTracing.DEFAULT].append(vertex)
+
+        return mapping
+
+    def draw_nodes(self, node_list: List[Vertex]) -> None:
+        """ Method that draws the nodes
+

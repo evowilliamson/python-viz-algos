@@ -3,7 +3,7 @@ from pythonalgos.graph.directed_graph import DirectedGraph
 from pythonalgos.graph.directed_graph import DirectedGraph
 from pythonalgos.graph.algorithm_ordering import AlgorithmOrdering
 from pythonvizalgos.graph.viz_cyclic_tracing import VizCyclicTracing
-import os
+from pythonvizalgos.graph.viz_tracing import VizTracing
 import pythonalgos.util.path_tools as pt
 import inspect
 
@@ -39,7 +39,7 @@ class TestVizCyclicTracing(unittest.TestCase):
             path=pt.get_dir_in_user_home(dir),
             directed_graph=self.directed_graph,
             vertex_states=[
-                    {VizCyclicTracing.ACTIVATED:
+                    {VizTracing.ACTIVATED:
                         {"fillcolor": "red", "style": "filled"}},
                     {VizCyclicTracing.IN_CYCLE:
                         {"fillcolor": "blue", "style": "filled"}},
@@ -65,7 +65,7 @@ class TestVizCyclicTracing(unittest.TestCase):
             path=pt.get_dir_in_user_home(dir),
             directed_graph=self.directed_graph,
             vertex_states=[
-                    {VizCyclicTracing.ACTIVATED:
+                    {VizTracing.ACTIVATED:
                         {"fillcolor": "red", "style": "filled"}},
                     {VizCyclicTracing.IN_CYCLE:
                         {"fillcolor": "blue", "style": "filled"}},

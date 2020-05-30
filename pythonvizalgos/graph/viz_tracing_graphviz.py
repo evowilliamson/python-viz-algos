@@ -37,7 +37,7 @@ class VizTracingGraphviz(VizTracing):
 
     def snapshot(self, directed_graph: DirectedGraph):
         """ Take a snapshot of the current directed graph
-        
+
         Args:
             directed_graph (DirectedGraph): The directed graph
         """

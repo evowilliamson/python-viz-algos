@@ -14,6 +14,9 @@ algorithms in relation to directed graphs """
 
 
 class VizCyclicTracing(VizTracingGraphviz):
+
+    IN_CYCLE: str = "in_cycle"
+
     """ Class that is accessed in a static way. It contains functions for
     tracing cyclic algorithms in relation to directed graphs
 

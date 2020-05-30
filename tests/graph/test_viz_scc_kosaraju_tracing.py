@@ -3,7 +3,7 @@ from pythonalgos.graph.directed_graph import DirectedGraph, Vertex
 from pythonalgos.graph.algorithm_ordering import AlgorithmOrdering
 from pythonvizalgos.graph.viz_scc_kosaraju_tracing\
     import VizSccsKosarajuTracing
-import os
+from pythonvizalgos.graph.viz_tracing import VizTracing
 import pythonalgos.util.path_tools as pt
 import inspect
 
@@ -37,11 +37,9 @@ class TestVizSccsKosarajuTracing(unittest.TestCase):
                 path=pt.get_dir_in_user_home(dir),
                 directed_graph=self.directed_graph,
                 vertex_states=[
-                    {VizSccsKosarajuTracing.ACTIVATED:
+                    {VizTracing.ACTIVATED:
                         {"fillcolor": "red", "style": "filled"}},
-                    {VizSccsKosarajuTracing.IN_CYCLE:
-                        {"fillcolor": "blue", "style": "filled"}},
-                    {VizSccsKosarajuTracing.VISITED:
+                    {VizTracing.VISITED:
                         {"fillcolor": "gray", "style": "filled"}}])
         viz_sccs_kosaraju_tracing.execute(resource_path=dir,
                                           nontrivial=True)
