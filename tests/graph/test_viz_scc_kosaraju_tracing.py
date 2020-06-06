@@ -36,14 +36,14 @@ class TestVizSccsKosarajuTracing(unittest.TestCase):
             VizSccsKosarajuTracing(
                 path=pt.get_dir_in_user_home(dir),
                 directed_graph=self.directed_graph,
-                vertex_states=[
-                    {VizTracing.ACTIVATED:
-                        {"fillcolor": "red", "style": "filled"}},
-                    {VizTracing.VISITED:
-                        {"fillcolor": "gray", "style": "filled"}},
-                    {VizTracing.DEFAULT:
-                        {"fillcolor": "white", "style": "filled"}}
-                    ],
+                vertex_states={
+                    VizTracing.ACTIVATED:
+                        {"fillcolor": "red", "style": "filled"},
+                    VizTracing.VISITED:
+                        {"fillcolor": "gray", "style": "filled"},
+                    VizTracing.DEFAULT:
+                        {"fillcolor": "white", "style": "filled"}
+                    },
                 edge_states={})
         viz_sccs_kosaraju_tracing.execute(resource_path=dir,
                                           nontrivial=True)

@@ -2,7 +2,7 @@ from pythonvizalgos.graph.viz_tracing import VizTracing
 from pythonalgos.graph.vertex import Vertex
 from pythonalgos.graph.edge import Edge
 from pythonalgos.graph.directed_graph import DirectedGraph
-from typing import List, Mapping, Dict
+from typing import List, Mapping, Dict, Any, Set
 import matplotlib.pyplot as plt
 import networkx as nx
 
@@ -15,7 +15,7 @@ class VizTracingNetworkx(VizTracing):
     NODE_FILL_COLOR: str = 'white'
     NODE_LINE_WITH: float = 1.0
     NODE_LINE_COLOR = 'black'
-    NODE_SIZE: int = 2000
+    NODE_SIZE: int = 300
 
     EDGE_WIDTH: float = 1.0
     EDGE_COLOR: str = 'black'
@@ -29,11 +29,10 @@ class VizTracingNetworkx(VizTracing):
     NODE_FONT_FAMILY: str = "sans-serif"
 
     FILL_COLOR = "fillcolor"
-    DEFAULT_FILL_COLOR = "white"
 
     def __init__(self, path: str, directed_graph: DirectedGraph,
-                 vertex_states: List[Mapping[str, Mapping[str, str]]],
-                 edge_states: List[Mapping[str, Mapping[str, str]]]) \
+                 vertex_states: Mapping[str, Mapping[str, str]],
+                 edge_states: Mapping[str, Mapping[str, str]]) \
             -> None:
         """ Method that initialises the tracing functionality
 
@@ -50,8 +49,8 @@ class VizTracingNetworkx(VizTracing):
         self.check_states(vertex_states, edge_states)
 
     def check_states(self,
-                     vertex_states: List[Mapping[str, Mapping[str, str]]],
-                     edge_states: List[Mapping[str, Mapping[str, str]]]):
+                     vertex_states: Mapping[str, Mapping[str, str]],
+                     edge_states: Mapping[str, Mapping[str, str]]):
         """ This method checks whether the vertex states have the correct
         properties """
 
@@ -91,14 +90,27 @@ class VizTracingNetworkx(VizTracing):
             dg.add_edge(
                 edge.get_tail().get_label(), edge.get_head().get_label())
 
-        nodes, edges = [n for n in dg.nodes()], \
-                       [(u, v) for (u, v, _) in dg.edges(data=True)]
+        edges = [(u, v) for (u, v, _) in dg.edges(data=True)]
 
         pos = nx.planar_layout(dg)
 
-        self.draw_nodes(dg, pos, nodes, VizTracing.ACTIVATED)
-        self.draw_nodes(dg, pos, nodes, VizTracing.VISITED)
-        self.draw_nodes(dg, pos, nodes, VizTracing.DEFAULT)
+        activated_nodes = self.get_nodes_by_state(directed_graph,
+                                                  VizTracing.ACTIVATED)
+        visisted_nodes =\
+            self.get_nodes_by_state(directed_graph,
+                                    VizTracing.VISITED) -\
+            activated_nodes
+
+        default_nodes = {vertex.get_label()
+                         for vertex in directed_graph.get_vertices()} -\
+            visisted_nodes - activated_nodes
+
+        self.draw_nodes(dg, pos, list(activated_nodes), directed_graph,
+                        VizTracing.ACTIVATED)
+        self.draw_nodes(dg, pos, list(visisted_nodes), directed_graph,
+                        VizTracing.VISITED)
+        self.draw_nodes(dg, pos, list(default_nodes), directed_graph,
+                        VizTracing.DEFAULT)
 
         nx.draw_networkx_edges(
             G=dg, pos=pos, edgelist=edges,
@@ -140,15 +152,13 @@ class VizTracingNetworkx(VizTracing):
 
         return mapping
 
-    def draw_nodes(self, dg: nx.DiGraph, pos, node_list: List[Vertex],
+    def draw_nodes(self, dg: nx.DiGraph, pos, node_list: List[Any],
+                   directed_graph: DirectedGraph,
                    state: str) -> None:
         """ Method that draws the nodes """
 
-        fill_color: str = VizTracingNetworkx.DEFAULT_FILL_COLOR
-        for mapping in self.get_vertex_states():
-            if state in mapping:
-                fill_color = mapping[state][VizTracingNetworkx.FILL_COLOR]
-                break
+        fill_color =\
+            self.get_vertex_states()[state][VizTracingNetworkx.FILL_COLOR]
 
         nx.draw_networkx_nodes(
             G=dg, pos=pos, nodelist=node_list,
@@ -157,3 +167,9 @@ class VizTracingNetworkx(VizTracing):
             linewidths=VizTracingNetworkx.NODE_LINE_WITH,
             edgecolors=VizTracingNetworkx.NODE_LINE_COLOR
         )
+
+    def get_nodes_by_state(self, directed_graph: DirectedGraph,
+                           state: str) -> Set[str]:
+
+        return {vertex.get_label() for vertex in directed_graph.get_vertices()
+                if vertex.has_enabled_attr(state)}

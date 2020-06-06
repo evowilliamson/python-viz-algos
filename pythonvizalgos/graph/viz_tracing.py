@@ -22,8 +22,8 @@ class VizTracing:
         return []
 
     def __init__(self, path: str, directed_graph: DirectedGraph,
-                 vertex_states: List[Mapping[str, Mapping[str, str]]],
-                 edge_states: List[Mapping[str, Mapping[str, str]]]) -> None:
+                 vertex_states: Mapping[str, Mapping[str, str]],
+                 edge_states: Mapping[str, Mapping[str, str]]) -> None:
         """ Method that initialises the tracing functionality
 
         Args:
@@ -147,10 +147,10 @@ class VizTracing:
         else:
             return str(label)
 
-    def get_vertex_states(self) -> List[Mapping[str, Mapping[str, str]]]:
+    def get_vertex_states(self) -> Mapping[str, Mapping[str, str]]:
         return self.vertex_states
 
-    def get_edge_states(self) -> List[Mapping[str, Mapping[str, str]]]:
+    def get_edge_states(self) -> Mapping[str, Mapping[str, str]]:
         return self.edge_states
 
 
