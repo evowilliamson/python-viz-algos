@@ -7,6 +7,7 @@ from pythonvizalgos.graph.viz_tracing_networkx import\
     VizTracingNetworkx
 from pythonvizalgos.graph.viz_tracing import\
     VizTracingAdvisor
+from pythonvizalgos.graph.viz_tracing import VizTracing
 
 
 """ Module that defines a tracing class to be used for tracing of kosoraju
@@ -49,10 +50,28 @@ class VizSccsKosarajuTracing(VizTracingNetworkx):
 
     def __init__(self, path: str, directed_graph: DirectedGraph,
                  vertex_states: List[Mapping[str, Mapping[str, str]]],
-                 edge_states: List[Mapping[str, Mapping[str, str]]]) \
-            -> None:
+                 edge_states: List[Mapping[str, Mapping[str, str]]]) -> None:
         super().__init__(path=path, directed_graph=directed_graph,
                          vertex_states=vertex_states, edge_states=edge_states)
+        self.check_states(vertex_states, edge_states)
+
+    def check_states(self,
+                     vertex_states: List[Mapping[str, Mapping[str, str]]],
+                     edge_states: List[Mapping[str, Mapping[str, str]]]):
+        """ This method checks whether the vertex states have the correct
+        properties """
+
+        if VizTracing.ACTIVATED not in vertex_states:
+            raise Exception(
+                VizTracing.ACTIVATED + " not found in vertex states")
+
+        if VizTracing.VISITED not in vertex_states:
+            raise Exception(
+                VizTracing.VISITED + " not found in vertex states")
+
+        if VizTracing.DEFAULT not in vertex_states:
+            raise Exception(
+                VizTracing.DEFAULT + " not found in vertex states")
 
     def execute(self, resource_path: str, nontrivial: bool):
         """ Method that takes a number of vertices
@@ -70,7 +89,6 @@ class VizSccsKosarajuTracing(VizTracingNetworkx):
         self.get_directed_graph().\
             create_sccs_kosaraju_dfs(
                 nontrivial, VizSccsKosarajuTracingAdvisor(self))
-        vt.convert_images_to_video(pt.get_dir_in_user_home(resource_path))
 
 
 class VizSccsKosarajuTracingAdvisor(VizTracingAdvisor):

@@ -25,6 +25,7 @@ class TestVizTracingGraphviz(unittest.TestCase):
                          3: [4, 6], 4: [5, 6], 5: [5], 6: [6]}
         self.directed_graph = DirectedGraph(self.vertices)
 
+    @unittest.skip
     def test_VizTracingGraphviz_vertex_only(self):
         self.vertices = {0: [1], 1: [2, 3], 2: [3],
                          3: [4, 6], 4: [5, 6], 5: [5], 6: [6]}
@@ -47,6 +48,7 @@ class TestVizTracingGraphviz(unittest.TestCase):
         viz_cyclic_tracing.snapshot(self.directed_graph)
         self.assertTrue(True)
 
+    @unittest.skip
     def test_VizTracingGraphviz_activate_vertex(self):
         self.vertices = {0: [1], 1: [2, 3], 2: [3],
                          3: [4, 6], 4: [5, 6], 5: [5], 6: [6]}
@@ -70,6 +72,7 @@ class TestVizTracingGraphviz(unittest.TestCase):
             else:
                 self.assertFalse(vertex.get_attr(VizTracing.ACTIVATED))
 
+    @unittest.skip
     def test_VizTracingGraphviz_set_status(self):
         self.vertices = {0: [1], 1: [2, 3], 2: [3],
                          3: [4, 6], 4: [5, 6], 5: [5], 6: [6]}
@@ -95,6 +98,7 @@ class TestVizTracingGraphviz(unittest.TestCase):
             else:
                 self.assertFalse(vertex.get_attr(VizCyclicTracing.IN_CYCLE))
 
+    @unittest.skip
     def test_VizTracingGraphviz_snapshot(self):
         dir = TestVizTracingGraphviz.RESOURCES_PATH_RECYCLE + "/" + \
             inspect.currentframe().f_code.co_name

@@ -22,6 +22,7 @@ class TestVizCyclicTracing(unittest.TestCase):
                          3: [4, 6], 4: [5, 6], 5: [5], 6: [6]}
         self.directed_graph = DirectedGraph(self.vertices)
 
+    @unittest.skip
     def test_VizCyclicTracing_acyclic(self):
         """ Functions more as a demonstration than as a test. It will create
         the animation for an acyclic graph"""
@@ -48,6 +49,7 @@ class TestVizCyclicTracing(unittest.TestCase):
         viz_cyclic_tracing.execute(resource_path=dir)
         self.assertTrue(True)
 
+    @unittest.skip
     def test_VizCyclicTracing_cyclic(self):
         """ Functions more as a demonstration than as a test. It will create
         the animation for a cyclic graph"""

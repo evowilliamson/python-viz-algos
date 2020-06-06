@@ -40,7 +40,11 @@ class TestVizSccsKosarajuTracing(unittest.TestCase):
                     {VizTracing.ACTIVATED:
                         {"fillcolor": "red", "style": "filled"}},
                     {VizTracing.VISITED:
-                        {"fillcolor": "gray", "style": "filled"}}])
+                        {"fillcolor": "gray", "style": "filled"}},
+                    {VizTracing.DEFAULT:
+                        {"fillcolor": "white", "style": "filled"}}
+                    ],
+                edge_states={})
         viz_sccs_kosaraju_tracing.execute(resource_path=dir,
                                           nontrivial=True)
         self.assertTrue(True)

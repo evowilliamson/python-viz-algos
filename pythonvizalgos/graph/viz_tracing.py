@@ -9,25 +9,21 @@ from typing import List, Mapping, Union, Any
 of algorithms in relation to directed graphs """
 
 
-DEFAULT: str = "default"
-DEFAULT_STATE = None
-
-
 class VizTracing:
 
     ACTIVATED: str = "activated"
     VISITED: str = "visited"
     DISABLED: str = "disabled"
 
+    DEFAULT: str = "default"
+    DEFAULT_STATE = None
+
     def get_vertex_label_attributes(self) -> List[str]:
         return []
 
     def __init__(self, path: str, directed_graph: DirectedGraph,
-                 vertex_states: List[Mapping[str, Mapping[str, str]]] =
-                 [{DEFAULT: {"fillcolor": "white", "style": "filled"}}],
-                 edge_states: List[Mapping[str, Mapping[str, str]]] =
-                 [{DEFAULT: {}}]) \
-            -> None:
+                 vertex_states: List[Mapping[str, Mapping[str, str]]],
+                 edge_states: List[Mapping[str, Mapping[str, str]]]) -> None:
         """ Method that initialises the tracing functionality
 
         Args:

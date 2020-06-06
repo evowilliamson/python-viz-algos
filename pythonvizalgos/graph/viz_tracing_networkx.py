@@ -1,4 +1,4 @@
-from pythonvizalgos.graph.viz_tracing import VizTracing, DEFAULT, DEFAULT_STATE
+from pythonvizalgos.graph.viz_tracing import VizTracing
 from pythonalgos.graph.vertex import Vertex
 from pythonalgos.graph.edge import Edge
 from pythonalgos.graph.directed_graph import DirectedGraph
@@ -26,7 +26,10 @@ class VizTracingNetworkx(VizTracing):
     IMAGE_TYPE: str = "png"
 
     NODE_FONT_SIZE: int = 15
-    NODE_FONT_FAMILY: str = 'sans-serif'
+    NODE_FONT_FAMILY: str = "sans-serif"
+
+    FILL_COLOR = "fillcolor"
+    DEFAULT_FILL_COLOR = "white"
 
     def __init__(self, path: str, directed_graph: DirectedGraph,
                  vertex_states: List[Mapping[str, Mapping[str, str]]],
@@ -44,6 +47,31 @@ class VizTracingNetworkx(VizTracing):
 
         super().__init__(path=path, directed_graph=directed_graph,
                          vertex_states=vertex_states, edge_states=edge_states)
+        self.check_states(vertex_states, edge_states)
+
+    def check_states(self,
+                     vertex_states: List[Mapping[str, Mapping[str, str]]],
+                     edge_states: List[Mapping[str, Mapping[str, str]]]):
+        """ This method checks whether the vertex states have the correct
+        properties """
+
+        if VizTracingNetworkx.FILL_COLOR not in\
+                vertex_states[VizTracing.ACTIVATED]:
+            raise Exception(
+                VizTracingNetworkx.FILL_COLOR + " not found in vertex state" +
+                VizTracing.ACTIVATED)
+
+        if VizTracingNetworkx.FILL_COLOR not in\
+                vertex_states[VizTracing.VISITED]:
+            raise Exception(
+                VizTracingNetworkx.FILL_COLOR + " not found in vertex state" +
+                VizTracing.VISITED)
+
+        if VizTracingNetworkx.FILL_COLOR not in\
+                vertex_states[VizTracing.DEFAULT]:
+            raise Exception(
+                VizTracingNetworkx.FILL_COLOR + " not found in vertex state" +
+                VizTracing.DEFAULT)
 
     def snapshot(self, directed_graph: DirectedGraph):
         """ Take a snapshot of the current directed graph
@@ -69,7 +97,8 @@ class VizTracingNetworkx(VizTracing):
         pos = nx.planar_layout(dg)
 
         self.draw_nodes(dg, pos, nodes, VizTracing.ACTIVATED)
-        self.draw_nodes(dg, pos, nodes, VizTracing.ACTIVATED)
+        self.draw_nodes(dg, pos, nodes, VizTracing.VISITED)
+        self.draw_nodes(dg, pos, nodes, VizTracing.DEFAULT)
 
         nx.draw_networkx_edges(
             G=dg, pos=pos, edgelist=edges,
@@ -85,6 +114,7 @@ class VizTracingNetworkx(VizTracing):
 
         plt.axis('off')
         plt.show()
+        a = 100
 
     def create_node_buckets(self, directed_graph: DirectedGraph) ->\
             Dict[str, List[Vertex]]:
@@ -106,21 +136,18 @@ class VizTracingNetworkx(VizTracing):
             elif VizTracing.VISITED in vertex.get_attrs():
                 mapping[VizTracing.VISITED].append(vertex)
             else:
-                mapping[DEFAULT].append(vertex)
+                mapping[VizTracing.DEFAULT].append(vertex)
 
         return mapping
 
     def draw_nodes(self, dg: nx.DiGraph, pos, node_list: List[Vertex],
                    state: str) -> None:
-        """ Method that draws the nodes
+        """ Method that draws the nodes """
 
-        """
-
-        # TODO: refactor to dict
-        fill_color: str = "white"
+        fill_color: str = VizTracingNetworkx.DEFAULT_FILL_COLOR
         for mapping in self.get_vertex_states():
-            if mapping[state] == state:
-                fill_color = mapping[state]["fill_color"]
+            if state in mapping:
+                fill_color = mapping[state][VizTracingNetworkx.FILL_COLOR]
                 break
 
         nx.draw_networkx_nodes(
@@ -129,9 +156,4 @@ class VizTracingNetworkx(VizTracing):
             node_color=fill_color,
             linewidths=VizTracingNetworkx.NODE_LINE_WITH,
             edgecolors=VizTracingNetworkx.NODE_LINE_COLOR
-            )
-
-
-
-
-
+        )
